@@ -1,18 +1,20 @@
+import { MyHttpException } from './my-http.exception';
+
 export interface ExceptionDefinition {
   readonly status: number;
-  readonly resultCode: number;
-  readonly resultMessage: string;
+  readonly code: number;
+  readonly message: string;
   optionalInfo?: Record<string, any>;
 }
 
-const defineException = (status: number, resultCode: number, resultMessage: string, optionalInfo?: Record<string, any>): ExceptionDefinition => ({
+const defineException = (status: number, code: number, message: string, optionalInfo?: Record<string, any>): ExceptionDefinition => ({
   status,
-  resultCode,
-  resultMessage,
+  code,
+  message,
   optionalInfo,
 });
 
-const definedException = {
+export const definedException = {
   badRequest: defineException(400, 104000, 'bad request'),
   tooMany: defineException(400, 104001, 'too many requests'),
   productUpdated: defineException(400, 104002, 'product updated'),
@@ -27,4 +29,62 @@ const definedException = {
   externalServerError: defineException(500, 105001, 'external server error'),
 };
 
-export default definedException;
+export class BadRequest extends MyHttpException {
+  constructor(message: string | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string') {
+      super({ ...definedException.badRequest, message, optionalInfo });
+    } else {
+      super({ ...definedException.badRequest, optionalInfo: message });
+    }
+  }
+}
+
+export class Unauthorized extends MyHttpException {
+  constructor(message: string | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string') {
+      super({ ...definedException.unauthorized, message, optionalInfo });
+    } else {
+      super({ ...definedException.unauthorized, optionalInfo: message });
+    }
+  }
+}
+
+export class Forbidden extends MyHttpException {
+  constructor(message: string | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string') {
+      super({ ...definedException.forbidden, message, optionalInfo });
+    } else {
+      super({ ...definedException.forbidden, optionalInfo: message });
+    }
+  }
+}
+
+export class NotFound extends MyHttpException {
+  constructor(message: string | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string') {
+      super({ ...definedException.notFound, message, optionalInfo });
+    } else {
+      super({ ...definedException.notFound, optionalInfo: message });
+    }
+  }
+}
+
+export class ServerError extends MyHttpException {
+  constructor(message: string | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string') {
+      super({ ...definedException.serverError, message, optionalInfo });
+    } else {
+      super({ ...definedException.serverError, optionalInfo: message });
+    }
+  }
+}
+
+export class ExternalServerError extends MyHttpException {
+  constructor(message: string | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string') {
+      super({ ...definedException.externalServerError, message, optionalInfo });
+    } else {
+      super({ ...definedException.externalServerError, optionalInfo: message });
+    }
+  }
+}

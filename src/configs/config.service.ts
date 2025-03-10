@@ -52,6 +52,10 @@ export class EnvironmentVariables {
   @IsBoolean()
   SM_DB_SYNC: boolean = false;
 
+  @Type(() => Number)
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  SM_BYCRYPT_SALT: number;
+
   SM_S3_PUBLIC_ACCESS_KEY_ID = '';
 
   SM_S3_PUBLIC_SECRET_ACCESS_KEY = '';

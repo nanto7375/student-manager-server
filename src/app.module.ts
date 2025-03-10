@@ -11,6 +11,9 @@ import { ResponseInterceptor } from './common/response.interceptor';
 import { ConfigDynamicModule } from '@src/configs/config.module';
 import { MyLoggerModule } from './configs/logger/my-logger.module';
 import { MySqlConfigService } from './configs/mysql';
+import { AuthModule } from './auth/auth.module';
+import { AdminModule } from './admin/admin.module';
+import { StudentModule } from './student/student.module';
 
 @Module({
   imports: [
@@ -21,6 +24,9 @@ import { MySqlConfigService } from './configs/mysql';
     ]),
     MyLoggerModule,
     TypeOrmModule.forRootAsync({ useClass: MySqlConfigService }),
+    AuthModule,
+    AdminModule,
+    StudentModule,
   ],
   controllers: [AppController],
   providers: [
