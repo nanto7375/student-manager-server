@@ -1,0 +1,97 @@
+import { plainToInstance, Transform, Type } from 'class-transformer';
+import {
+  IsBoolean,
+  IsIn,
+  IsNumber,
+  IsOptional,
+  validateSync,
+} from 'class-validator';
+
+export enum DatabaseDialect {
+  Mysql = 'mysql',
+}
+
+export enum Environment {
+  Development = 'development',
+  Production = 'production',
+  Local = 'local',
+  Test = 'test',
+}
+
+export class EnvironmentVariables {
+  // Common
+  @IsOptional()
+  @IsIn([
+    Environment.Development,
+    Environment.Production,
+    Environment.Local,
+    Environment.Test,
+  ])
+  SM_ENV: Environment = Environment.Development;
+
+  @Type(() => Number)
+  @IsOptional()
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  SM_PORT: number = 3000;
+
+  @IsOptional()
+  SM_LOG_LEVEL: 'error' | 'warn' | 'info' | 'verbose' | 'debug' = 'info';
+
+  // Database Information
+  SM_MYSQL_DB: string;
+
+  SM_MYSQL_DB_USER: string;
+
+  SM_MYSQL_DB_PASSWORD: string;
+
+  SM_MYSQL_DB_HOST: string;
+
+  SM_JWT_SECRET: string;
+
+  // Timezone / Locale -> 서버별로 설정시 변경
+  @IsOptional()
+  TZ: string = 'Asia/Seoul';
+  @IsOptional()
+  locale: string = 'ko-KR';
+
+  @Type(() => String)
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    else return false;
+  })
+  @IsOptional()
+  @IsBoolean()
+  DB_SYNC: boolean = false;
+
+  AWS_S3_PUBLIC_ACCESS_KEY_ID = '';
+
+  AWS_S3_PUBLIC_SECRET_ACCESS_KEY = '';
+
+  AWS_S3_PRIVATE_ACCESS_KEY_ID = '';
+
+  AWS_S3_PRIVATE_SECRET_ACCESS_KEY = '';
+
+  AWS_S3_BUCKET = '';
+
+  AWS_S3_REGION = '';
+
+  FIREBASE_PROJECT_ID = '';
+
+  FIREBASE_PRIVATE_KEY = '';
+
+  FIREBASE_CLIENT_EMAIL = '';
+}
+
+export const validateConfig = (env: Record<string, any>) => {
+  const envInstance = plainToInstance(EnvironmentVariables, env, {
+    enableImplicitConversion: true,
+    exposeDefaultValues: true,
+    exposeUnsetFields: true,
+  });
+
+  validateSync(envInstance, {
+    enableDebugMessages: true,
+  });
+
+  return envInstance;
+};
