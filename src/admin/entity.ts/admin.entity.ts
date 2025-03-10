@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export enum AdminRoleType {
   SUPER_ADMIN = 'super_admin',
@@ -38,10 +38,10 @@ export class Admin {
   @Column()
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ unique: true })
   email: string;
 
-  @Column({ nullable: true })
+  @Column()
   phone: string;
 
   @Column({ default: AdminRoleType.STAFF, comment: 'super_admin, admin, manager, staff' })

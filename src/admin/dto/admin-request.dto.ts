@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsPhoneNumber, IsString, MinLength } from 'class-validator';
 import { AdminRoleType } from '../entity.ts/admin.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -28,4 +28,11 @@ export class AdminCreateDto {
   @IsNotEmpty()
   @ApiProperty({ description: 'role', enum: AdminRoleType })
   role: AdminRoleType;
+}
+
+export class AdminUpdateDto extends AdminCreateDto {
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ description: 'id' })
+  id: number;
 }

@@ -37,6 +37,8 @@ export class EnvironmentVariables {
 
   SM_JWT_SECRET: string;
 
+  SM_JWT_REFRESH_SECRET: string;
+
   // Timezone / Locale -> 서버별로 설정시 변경
   @IsOptional()
   SM_TZ: string = 'Asia/Seoul';

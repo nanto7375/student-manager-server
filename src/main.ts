@@ -1,14 +1,17 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { type NestExpressApplication } from '@nestjs/platform-express';
+
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
 import * as timezone from 'dayjs/plugin/timezone';
-import { ConfigService } from '@nestjs/config';
+import * as cookieParser from 'cookie-parser';
+
+import { AppModule } from './app.module';
 import { logger } from './configs/logger/winston-logger';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { Environment } from './configs/config.service';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { type NestExpressApplication } from '@nestjs/platform-express';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -37,6 +40,7 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: serverVersion,
   });
+  app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   if (configService.get('NAWS_ENV') !== Environment.Production) setSwagger(app, serverVersion);

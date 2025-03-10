@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { ArgumentsHost, Catch, ExceptionFilter, NotFoundException } from '@nestjs/common';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
-import definedException from '@src/common/exception/definition.exception';
+import { definedException } from '@src/common/exception/definition.exception';
 import { MyHttpException } from './exception/my-http.exception';
 import { Throttle } from '@nestjs/throttler';
 
@@ -11,8 +11,8 @@ abstract class MyExceptionFilter implements ExceptionFilter {
 
   respond(response: Response, exception: MyHttpException) {
     return response.status(exception.status).json({
-      resultCode: exception.resultCode || 309999,
-      resultMessage: exception.message || 'server error',
+      code: exception.code || 105999,
+      message: exception.message || 'server error',
       optionalInfo: exception.optionalInfo,
     });
   }
@@ -30,9 +30,9 @@ export class GlobalExceptionFilter extends MyExceptionFilter {
 
     const status = myHttpException.status;
     if (status >= 500) {
-      this.logger.error({ message: exception.message, status: myHttpException.status, resultCode: myHttpException.resultCode }, exception.stack);
+      this.logger.error({ message: exception.message, status: myHttpException.status, code: myHttpException.code }, exception.stack);
     } else {
-      this.logger.warn({ message: exception.message, status: myHttpException.status, resultCode: myHttpException.resultCode }, exception.stack);
+      this.logger.warn({ message: exception.message, status: myHttpException.status, code: myHttpException.code }, exception.stack);
     }
 
     return this.respond(host.switchToHttp().getResponse(), myHttpException);
