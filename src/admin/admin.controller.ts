@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
@@ -7,6 +7,7 @@ import { AdminDto } from './dto/admin-response.dto';
 import { Auth } from '@src/auth/auth.decorator';
 import { AdminRoleType } from './entity.ts/admin.entity';
 import { getOffset } from '@src/common/utils/etc';
+import { ApiOkResponsePaginated } from '@src/common/swagger-paginated-response';
 
 @Controller('admins')
 export class AdminController {
@@ -31,8 +32,16 @@ export class AdminController {
   @Get()
   @Auth(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 조회' })
-  @ApiOkResponse({ type: [AdminDto] })
+  @ApiOkResponsePaginated(AdminDto)
   async getAdmins(@Query('limit') limit: number = 20, @Query('page') page: number = 1) {
-    return toInstance(AdminDto, await this.adminService.getAdmins(limit, getOffset(page, limit)));
+    const [admins, count] = await this.adminService.getAdmins(limit, getOffset(page, limit));
+    return { data: toInstance(AdminDto, admins), count };
+  }
+
+  @Delete(':id')
+  @Auth(AdminRoleType.ADMIN)
+  @ApiOperation({ summary: '관리자 삭제' })
+  async deleteAdmin(@Param('id', ParseIntPipe) id: number) {
+    await this.adminService.deleteAdmin(id);
   }
 }

@@ -27,11 +27,20 @@ export class AdminService {
   }
 
   async updateAdmin(id: number, updateAdminDto: AdminUpdateDto) {
-    const admin = await this.adminRepository.findOne({ where: { id } });
-    if (!admin) throw new NotFound('존재하지 않는 관리자입니다.');
-
+    await this.getAdminOrThrow(id);
     await this.adminRepository.update(id, updateAdminDto);
     return this.adminRepository.findOne({ where: { id } });
+  }
+
+  async deleteAdmin(id: number) {
+    await this.getAdminOrThrow(id);
+    await this.adminRepository.softDelete(id);
+  }
+
+  async getAdminOrThrow(id: number) {
+    const admin = await this.adminRepository.findOne({ where: { id } });
+    if (!admin) throw new NotFound('존재하지 않는 관리자입니다.');
+    return admin;
   }
 
   async getAdminByEmailOrThrow(email: string) {
@@ -41,10 +50,10 @@ export class AdminService {
   }
 
   async getAdmins(offset: number, limit: number) {
-    const [admins, total] = await this.adminRepository.findAndCount({
+    return this.adminRepository.findAndCount({
       skip: offset,
       take: limit,
+      order: { createdAt: 'DESC' },
     });
-    return { admins, total };
   }
 }
