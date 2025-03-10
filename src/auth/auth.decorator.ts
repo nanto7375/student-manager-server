@@ -4,7 +4,8 @@ import { AuthGuard } from './auth.guard';
 import { AdminRoleType } from '@src/admin/entity.ts/admin.entity';
 import { AdminLevel } from '@src/admin/admin-level.decorator';
 
-export function Auth(adminType: AdminRoleType | (new (...args: any[]) => CanActivate) | null = null, ...guards: (new (...args: any[]) => CanActivate)[]) {
+type ReturnCanActivateType = new (...args: any[]) => CanActivate;
+export function Auth(adminType: AdminRoleType | ReturnCanActivateType | null = null, ...guards: ReturnCanActivateType[]) {
   if (typeof adminType === 'function') {
     return applyDecorators(
       ApiBearerAuth('accessJWT'), //

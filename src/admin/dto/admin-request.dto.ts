@@ -1,6 +1,6 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsPhoneNumber, IsString, MinLength } from 'class-validator';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { AdminRoleType } from '../entity.ts/admin.entity';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class AdminCreateDto {
   @IsString()
@@ -15,12 +15,13 @@ export class AdminCreateDto {
   name: string;
 
   @IsEmail()
-  @ApiProperty({ description: '이메일', nullable: true })
-  email: string = '';
+  @IsNotEmpty()
+  @ApiProperty({ description: '이메일' })
+  email: string;
 
   @IsString()
   @IsNotEmpty()
-  @IsPhoneNumber()
+  @IsPhoneNumber('KR')
   @ApiProperty({ description: '전화번호' })
   phone: string;
 
@@ -30,9 +31,20 @@ export class AdminCreateDto {
   role: AdminRoleType;
 }
 
-export class AdminUpdateDto extends AdminCreateDto {
+export class AdminUpdateDto {
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty({ description: 'id' })
   id: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsPhoneNumber('KR')
+  @ApiProperty({ description: '전화번호' })
+  phone: string;
+
+  @IsEnum(AdminRoleType)
+  @IsNotEmpty()
+  @ApiProperty({ description: 'role', enum: AdminRoleType })
+  role: AdminRoleType;
 }

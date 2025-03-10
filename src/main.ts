@@ -16,7 +16,7 @@ import { Environment } from './configs/config.service';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const setSwagger = (app: NestExpressApplication, serverVersion: string) => {
+const setSwagger = (app: NestExpressApplication) => {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Student Manager Server') //
     .setDescription('Student Manager API description')
@@ -24,7 +24,7 @@ const setSwagger = (app: NestExpressApplication, serverVersion: string) => {
     .addBearerAuth({ name: 'Authorization', type: 'http', scheme: 'Bearer', in: 'header' }, 'accessJWT')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup(`/v${serverVersion}`, app, swaggerDocument, { swaggerOptions: { defaultModelExpandDepth: 5, defaultModelsExpandDepth: 5 } });
+  SwaggerModule.setup(`api`, app, swaggerDocument, { swaggerOptions: { defaultModelExpandDepth: 5, defaultModelsExpandDepth: 5 } });
 };
 
 async function bootstrap() {
@@ -43,7 +43,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  if (configService.get('NAWS_ENV') !== Environment.Production) setSwagger(app, serverVersion);
+  if (configService.get('NAWS_ENV') !== Environment.Production) setSwagger(app);
 
   const port = configService.get('SM_PORT');
   await app.listen(port, () => {

@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export enum AdminRoleType {
   SUPER_ADMIN = 'super_admin',
@@ -19,13 +19,6 @@ export const getAdminRoleLevel = (role: AdminRoleType) => {
       return 1;
   }
 };
-
-export enum AdminPermission {
-  CREATE = 'create',
-  READ = 'read',
-  UPDATE = 'update',
-  DELETE = 'delete',
-}
 
 @Entity()
 export class Admin {
