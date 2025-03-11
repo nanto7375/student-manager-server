@@ -11,9 +11,9 @@ abstract class MyExceptionFilter implements ExceptionFilter {
 
   respond(response: Response, exception: MyHttpException) {
     return response.status(exception.status).json({
-      code: exception.code || 105999,
-      message: exception.message || 'server error',
-      optionalInfo: exception.optionalInfo,
+      code: exception.code,
+      message: exception.message,
+      ...(exception.optionalInfo && { optionalInfo: exception.optionalInfo }),
     });
   }
 }
@@ -28,8 +28,7 @@ export class GlobalExceptionFilter extends MyExceptionFilter {
   catch(exception: MyHttpException, host: ArgumentsHost) {
     const myHttpException = exception instanceof MyHttpException ? exception : new MyHttpException(definedException.serverError, exception);
 
-    const status = myHttpException.status;
-    if (status >= 500) {
+    if (myHttpException.status >= 500) {
       this.logger.error({ message: exception.message, status: myHttpException.status, code: myHttpException.code }, exception.stack);
     } else {
       this.logger.warn({ message: exception.message, status: myHttpException.status, code: myHttpException.code }, exception.stack);

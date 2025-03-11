@@ -26,8 +26,8 @@ export const definedException = {
 };
 
 export class BadRequest extends MyHttpException {
-  constructor(message?: string | Record<string, any>, optionalInfo?: Record<string, any>) {
-    if (typeof message === 'string') {
+  constructor(message?: string | Error | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string' || message instanceof Error) {
       super({ ...definedException.badRequest, optionalInfo }, message);
     } else {
       super({ ...definedException.badRequest, optionalInfo: message });
@@ -36,8 +36,8 @@ export class BadRequest extends MyHttpException {
 }
 
 export class Unauthorized extends MyHttpException {
-  constructor(message?: string | Record<string, any>, optionalInfo?: Record<string, any>) {
-    if (typeof message === 'string') {
+  constructor(message?: string | Error | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string' || message instanceof Error) {
       super({ ...definedException.unauthorized, optionalInfo }, message);
     } else {
       super({ ...definedException.unauthorized, optionalInfo: message });
@@ -46,8 +46,8 @@ export class Unauthorized extends MyHttpException {
 }
 
 export class Forbidden extends MyHttpException {
-  constructor(message?: string | Record<string, any>, optionalInfo?: Record<string, any>) {
-    if (typeof message === 'string') {
+  constructor(message?: string | Error | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string' || message instanceof Error) {
       super({ ...definedException.forbidden, optionalInfo }, message);
     } else {
       super({ ...definedException.forbidden, optionalInfo: message });
@@ -56,8 +56,8 @@ export class Forbidden extends MyHttpException {
 }
 
 export class NotFound extends MyHttpException {
-  constructor(message?: string | Record<string, any>, optionalInfo?: Record<string, any>) {
-    if (typeof message === 'string') {
+  constructor(message?: string | Error | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string' || message instanceof Error) {
       super({ ...definedException.notFound, optionalInfo }, message);
     } else {
       super({ ...definedException.notFound, optionalInfo: message });
@@ -66,8 +66,8 @@ export class NotFound extends MyHttpException {
 }
 
 export class ServerError extends MyHttpException {
-  constructor(message?: string | Record<string, any>, optionalInfo?: Record<string, any>) {
-    if (typeof message === 'string') {
+  constructor(message?: string | Error | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string' || message instanceof Error) {
       super({ ...definedException.serverError, optionalInfo }, message);
     } else {
       super({ ...definedException.serverError, optionalInfo: message });
@@ -76,8 +76,8 @@ export class ServerError extends MyHttpException {
 }
 
 export class ExternalServerError extends MyHttpException {
-  constructor(message?: string | Record<string, any>, optionalInfo?: Record<string, any>) {
-    if (typeof message === 'string') {
+  constructor(message?: string | Error | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string' || message instanceof Error) {
       super({ ...definedException.externalServerError, optionalInfo }, message);
     } else {
       super({ ...definedException.externalServerError, optionalInfo: message });
