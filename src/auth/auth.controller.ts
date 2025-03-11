@@ -26,4 +26,12 @@ export class AuthController {
     res.cookie('refr', refreshToken[0], { httpOnly: true, secure: true, sameSite: 'none', maxAge: refreshToken[1] });
     return toInstance(AdminDto, admin);
   }
+
+  @Post('signout')
+  @ApiOperation({ summary: '로그아웃' })
+  signout(@Req() _: Request, @Res({ passthrough: true }) res: Response) {
+    res.clearCookie('acc', { secure: true, sameSite: 'none' });
+    res.clearCookie('refr', { secure: true, sameSite: 'none' });
+    return true;
+  }
 }
