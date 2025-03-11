@@ -5,7 +5,7 @@ import { AdminService } from '@src/admin/admin.service';
 import { Unauthorized } from '@src/common/exception/definition.exception';
 import { HashService } from '@src/common/utils/hash';
 
-enum TokenType {
+export enum TokenType {
   ACCESS = 'access',
   REFRESH = 'refresh',
 }
@@ -14,8 +14,8 @@ enum TokenType {
 export class AuthService {
   private readonly _JWT_SECRET: string;
   private readonly _JWT_REFRESH_SECRET: string;
-  private readonly _ACCESS_TOKEN_EXPIRE_TIME: string = '7d';
-  private readonly _REFRESH_TOKEN_EXPIRE_TIME: string = '30d';
+  private readonly _ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60 * 24 * 7;
+  private readonly _REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60 * 24 * 30;
 
   constructor(
     private readonly jwtService: JwtService,
@@ -34,26 +34,28 @@ export class AuthService {
     return payload;
   }
 
-  async signJwt(payload: any, tokenType: TokenType = TokenType.ACCESS) {
-    return await this.jwtService.signAsync(payload, {
-      expiresIn: tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_EXPIRE_TIME : this._REFRESH_TOKEN_EXPIRE_TIME,
+  async signJwt(payload: any, tokenType: TokenType = TokenType.ACCESS): Promise<[string, number]> {
+    const token = await this.jwtService.signAsync(payload, {
+      expiresIn: tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS : this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS,
       secret: tokenType === TokenType.ACCESS ? this._JWT_SECRET : this._JWT_REFRESH_SECRET,
     });
+    return [token, tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS : this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS];
   }
 
   async signin(email: string, password: string) {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
     const isPasswordCorrect = await this.hashService.compare(password, admin.password);
     if (!isPasswordCorrect) throw new Unauthorized('비밀번호가 일치하지 않습니다.');
+    return admin;
 
-    const payload = {
-      id: admin.id,
-      role: admin.role,
-    };
-    const [accessToken, refreshToken] = await Promise.all([
-      this.signJwt(payload, TokenType.ACCESS), //
-      this.signJwt(payload, TokenType.REFRESH),
-    ]);
-    return { accessToken, refreshToken };
+    // const payload = {
+    //   id: admin.id,
+    //   role: admin.role,
+    // };
+    // const [accessToken, refreshToken] = await Promise.all([
+    //   this.signJwt(payload, TokenType.ACCESS), //
+    //   this.signJwt(payload, TokenType.REFRESH),
+    // ]);
+    // return { accessToken, refreshToken };
   }
 }

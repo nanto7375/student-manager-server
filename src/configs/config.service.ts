@@ -35,6 +35,8 @@ export class EnvironmentVariables {
 
   SM_MYSQL_DB_HOST: string;
 
+  SM_MYSQL_DB_PORT: number;
+
   SM_JWT_SECRET: string;
 
   SM_JWT_REFRESH_SECRET: string;
