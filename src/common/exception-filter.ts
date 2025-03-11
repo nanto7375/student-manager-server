@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { ArgumentsHost, Catch, ExceptionFilter, NotFoundException } from '@nestjs/common';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { definedException } from '@src/common/exception/definition.exception';
+import { definedException, NotFound } from '@src/common/exception/definition.exception';
 import { MyHttpException } from './exception/my-http.exception';
 import { Throttle } from '@nestjs/throttler';
 
@@ -51,7 +51,7 @@ export class NotFoundExceptionFilter extends MyExceptionFilter {
     const http = host.switchToHttp();
     const { hostname, ip, method, url, headers, body } = http.getRequest();
 
-    const exception = new MyHttpException(definedException.notFound, url);
+    const exception = new NotFound(url);
     this.logger.warn({ message: exception.message, hostname, ip, method, url, headers, body });
 
     return this.respond(http.getResponse(), exception);
