@@ -1,11 +1,11 @@
-import { Request } from 'express';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-
-import { MyLogger } from '@src/configs/logger/my-logger';
-import { Forbidden } from '../common/exception/definition.exception';
-
-import { AuthService } from './auth.service';
 import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
+
+import { Forbidden, Unauthorized } from '../common/exception/definition.exception';
+import { MyLogger } from '@src/configs/logger/my-logger';
+import { AuthService } from './auth.service';
+
 import { ADMIN_LEVEL_KEY } from '@src/admin/admin-level.decorator';
 import { getAdminRoleLevel } from '@src/admin/entity.ts/admin.entity';
 
@@ -24,15 +24,15 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<RequestWithAdminId>();
 
-    const accessToken = request.cookies?.access_token || request.headers.authorization?.split('Bearer ')?.[1];
-    if (!accessToken) throw new Forbidden();
+    const accessToken = request.cookies?.access_token;
+    if (!accessToken) throw new Unauthorized();
 
     let payload: Record<string, any>;
     try {
       payload = await this.authService.verifyJwt(accessToken);
     } catch (e) {
       this.logger.warn(e);
-      throw new Forbidden('토큰이 유효하지 않습니다.');
+      throw new Unauthorized();
     }
     request.adminId = payload.id;
 
@@ -40,7 +40,7 @@ export class AuthGuard implements CanActivate {
     if (!approvedAdminLevel) return true;
 
     const myAdminLevel = getAdminRoleLevel(payload.role);
-    if (myAdminLevel < approvedAdminLevel) throw new Forbidden('권한이 부족합니다.');
+    if (myAdminLevel < approvedAdminLevel) throw new Forbidden();
     return true;
   }
 }

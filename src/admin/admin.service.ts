@@ -27,14 +27,17 @@ export class AdminService {
   }
 
   async updateAdmin(id: number, updateAdminDto: AdminUpdateDto) {
-    await this.getAdminOrThrow(id);
-    await this.adminRepository.update(id, updateAdminDto);
-    return this.adminRepository.findOne({ where: { id } });
+    const admin = await this.getAdminOrThrow(id);
+    admin.isActive = updateAdminDto.isActive;
+    admin.role = updateAdminDto.role;
+    admin.phone = updateAdminDto.phone;
+
+    return this.adminRepository.save(admin);
   }
 
-  async deleteAdmin(id: number) {
-    await this.getAdminOrThrow(id);
-    await this.adminRepository.softDelete(id);
+  async removeAdmin(id: number) {
+    const admin = await this.getAdminOrThrow(id);
+    await this.adminRepository.softRemove(admin);
   }
 
   async getAdminOrThrow(id: number) {
@@ -50,10 +53,13 @@ export class AdminService {
   }
 
   async getAdmins(offset: number, limit: number) {
-    return this.adminRepository.findAndCount({
+    const [admins, count] = await this.adminRepository.findAndCount({
       skip: offset,
       take: limit,
       order: { createdAt: 'DESC' },
     });
+
+    const sortedAdmins = admins.sort((a, b) => b.roleLevel - a.roleLevel);
+    return [sortedAdmins, count];
   }
 }

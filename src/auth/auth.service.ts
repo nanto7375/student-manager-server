@@ -14,9 +14,9 @@ export enum TokenType {
 export class AuthService {
   private readonly _JWT_SECRET: string;
   private readonly _JWT_REFRESH_SECRET: string;
-  private readonly _ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60 * 24 * 7;
+  private readonly _ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60 * 24;
   private readonly _REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60 * 24 * 30;
-
+  private readonly _REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS: number = 60 * 60 * 24 * 7;
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -42,20 +42,17 @@ export class AuthService {
     return [token, tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS : this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS];
   }
 
-  async signin(email: string, password: string) {
+  async authenticate(email: string, password: string) {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
     const isPasswordCorrect = await this.hashService.compare(password, admin.password);
     if (!isPasswordCorrect) throw new Unauthorized('비밀번호가 일치하지 않습니다.');
     return admin;
+  }
 
-    // const payload = {
-    //   id: admin.id,
-    //   role: admin.role,
-    // };
-    // const [accessToken, refreshToken] = await Promise.all([
-    //   this.signJwt(payload, TokenType.ACCESS), //
-    //   this.signJwt(payload, TokenType.REFRESH),
-    // ]);
-    // return { accessToken, refreshToken };
+  reachRefreshTokenRenewalPeriod(exp: number) {
+    const now = new Date();
+    const refreshTokenExpiry = new Date(exp * 1000);
+    const timeDiffInSeconds = (refreshTokenExpiry.getTime() - now.getTime()) / 1000;
+    return timeDiffInSeconds <= this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS;
   }
 }

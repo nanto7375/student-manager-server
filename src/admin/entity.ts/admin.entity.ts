@@ -17,6 +17,8 @@ export const getAdminRoleLevel = (role: AdminRoleType) => {
       return 2;
     case AdminRoleType.STAFF:
       return 1;
+    default:
+      return 0;
   }
 };
 
@@ -51,6 +53,10 @@ export class Admin {
 
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date;
+
+  get roleLevel() {
+    return getAdminRoleLevel(this.role as AdminRoleType);
+  }
 
   static of(adminOf: AdminOf) {
     const admin = new Admin();

@@ -42,6 +42,6 @@ export class AdminController {
   @Auth(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 삭제' })
   async deleteAdmin(@Param('id', ParseIntPipe) id: number) {
-    await this.adminService.deleteAdmin(id);
+    await this.adminService.removeAdmin(id);
   }
 }
