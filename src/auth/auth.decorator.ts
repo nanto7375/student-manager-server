@@ -10,7 +10,7 @@ export function Auth(adminType: AdminRoleType | ReturnCanActivateType | null = n
   if (!adminType) {
     return applyDecorators(
       ApiBearerAuth('accessJWT'), //
-      UseGuards(AuthGuard, ...guards),
+      UseGuards(AuthGuard),
     );
   }
 
