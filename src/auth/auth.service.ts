@@ -14,9 +14,10 @@ export enum TokenType {
 export class AuthService {
   private readonly _JWT_SECRET: string;
   private readonly _JWT_REFRESH_SECRET: string;
-  private readonly _ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60 * 24;
-  private readonly _REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60 * 24 * 30;
+  private readonly _ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60;
+  private readonly _REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60 * 24 * 14;
   private readonly _REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS: number = 60 * 60 * 24 * 7;
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -45,7 +46,7 @@ export class AuthService {
   async authenticate(email: string, password: string) {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
     const isPasswordCorrect = await this.hashService.compare(password, admin.password);
-    if (!isPasswordCorrect) throw new Unauthorized('비밀번호가 일치하지 않습니다.');
+    if (!isPasswordCorrect) throw new Unauthorized();
     return admin;
   }
 

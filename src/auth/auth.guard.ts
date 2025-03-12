@@ -1,28 +1,24 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 
-import { Forbidden, Unauthorized } from '../common/exception/definition.exception';
+import { Unauthorized } from '../common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { AuthService } from './auth.service';
+import { AdminRoleType } from '@src/admin/entity.ts/admin.entity';
 
-import { ADMIN_LEVEL_KEY } from '@src/admin/admin-level.decorator';
-import { getAdminRoleLevel } from '@src/admin/entity.ts/admin.entity';
-
-type RequestWithAdminId = Request & { adminId: number };
+export type AuthenticatedRequest = Request & { adminId: number; role: AdminRoleType };
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly authService: AuthService,
     private readonly logger: MyLogger,
-    private readonly reflector: Reflector,
   ) {
     this.logger.setContext('AuthGuard');
   }
 
   async canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest<RequestWithAdminId>();
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
 
     const accessToken = request.cookies?.access_token;
     if (!accessToken) throw new Unauthorized();
@@ -34,13 +30,9 @@ export class AuthGuard implements CanActivate {
       this.logger.warn(e);
       throw new Unauthorized();
     }
+
     request.adminId = payload.id;
-
-    const approvedAdminLevel = this.reflector.get(ADMIN_LEVEL_KEY, context.getHandler());
-    if (!approvedAdminLevel) return true;
-
-    const myAdminLevel = getAdminRoleLevel(payload.role);
-    if (myAdminLevel < approvedAdminLevel) throw new Forbidden();
+    request.role = payload.role;
     return true;
   }
 }
