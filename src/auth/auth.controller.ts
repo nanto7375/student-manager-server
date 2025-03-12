@@ -4,7 +4,7 @@ import { CookieOptions, Request, Response } from 'express';
 
 import { Unauthorized } from '@src/common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { AuthService, TokenType } from './auth.service';
+import { AuthService, JwtPayload, TokenType } from './auth.service';
 
 import { toInstance } from '@src/common/toInstance';
 import { SigninRequestDto } from './dto/auth-request.dto';
@@ -54,7 +54,7 @@ export class AuthController {
     const refreshToken = req.cookies['refr'];
     if (!refreshToken) throw new Unauthorized();
 
-    let payload: Record<string, any>;
+    let payload: JwtPayload;
     try {
       payload = await this.authService.verifyJwt(refreshToken, TokenType.REFRESH);
     } catch (e) {
