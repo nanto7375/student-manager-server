@@ -13,6 +13,9 @@ import { AdminDto } from '@src/admin/dto/admin-response.dto';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
+  private readonly _ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60;
+  private readonly _REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60 * 24 * 14;
+
   constructor(
     private readonly authService: AuthService,
     private readonly logger: MyLogger,
@@ -20,8 +23,13 @@ export class AuthController {
     this.logger.setContext('AuthController');
   }
 
-  private _getCookieOptions(maxAge: number): CookieOptions {
-    return { httpOnly: true, secure: true, sameSite: 'none', maxAge };
+  private _getTokenCookieOptions(tokenType: TokenType): CookieOptions {
+    const maxAgeInSeconds =
+      tokenType === TokenType.ACCESS //
+        ? this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS
+        : this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS;
+
+    return { httpOnly: true, secure: true, sameSite: 'none', maxAge: maxAgeInSeconds * 1000 };
   }
 
   @Post('signin')
@@ -29,13 +37,13 @@ export class AuthController {
   @ApiOkResponse({ type: AdminDto })
   async signin(@Body() body: SigninRequestDto, @Req() _: Request, @Res({ passthrough: true }) res: Response) {
     const admin = await this.authService.authenticate(body.email, body.password);
-    const [accessTokenInfo, refreshTokenInfo] = await Promise.all([
-      this.authService.signJwt({ id: admin.id, role: admin.role }), //
-      this.authService.signJwt({ id: admin.id, role: admin.role }, TokenType.REFRESH),
+    const [accessToken, refreshToken] = await Promise.all([
+      this.authService.signJwt({ id: admin.id, role: admin.role, exp: this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS }), //
+      this.authService.signJwt({ id: admin.id, role: admin.role, exp: this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS }, TokenType.REFRESH),
     ]);
 
-    res.cookie('acc', accessTokenInfo[0], this._getCookieOptions(accessTokenInfo[1]));
-    res.cookie('refr', refreshTokenInfo[0], this._getCookieOptions(refreshTokenInfo[1]));
+    res.cookie('acc', accessToken, this._getTokenCookieOptions(TokenType.ACCESS));
+    res.cookie('refr', refreshToken, this._getTokenCookieOptions(TokenType.REFRESH));
     return toInstance(AdminDto, admin);
   }
 
@@ -62,16 +70,16 @@ export class AuthController {
       throw new Unauthorized();
     }
 
-    const [accessTokenInfo, refreshTokenInfo] = await Promise.all([
-      this.authService.signJwt({ id: payload.id, role: payload.role }), //
-      this.authService.reachRefreshTokenRenewalPeriod(payload.exp) //
-        ? this.authService.signJwt({ id: payload.id, role: payload.role }, TokenType.REFRESH)
+    const [accessToken, renewalRefreshToken] = await Promise.all([
+      this.authService.signJwt({ id: payload.id, role: payload.role, exp: this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS }), //
+      this.authService.reachRefreshTokenRenewalPeriod(new Date(), payload.exp) //
+        ? this.authService.signJwt({ id: payload.id, role: payload.role, exp: this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS }, TokenType.REFRESH)
         : null,
     ]);
 
-    res.cookie('acc', accessTokenInfo[0], this._getCookieOptions(accessTokenInfo[1]));
-    if (refreshTokenInfo) {
-      res.cookie('refr', refreshTokenInfo[0], this._getCookieOptions(refreshTokenInfo[1]));
+    res.cookie('acc', accessToken, this._getTokenCookieOptions(TokenType.ACCESS));
+    if (renewalRefreshToken) {
+      res.cookie('refr', renewalRefreshToken, this._getTokenCookieOptions(TokenType.REFRESH));
     }
     return true;
   }

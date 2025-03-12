@@ -1,13 +1,15 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
-import { AdminService } from './admin.service';
-import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { toInstance } from '@src/common/toInstance';
-import { AdminDto } from './dto/admin-response.dto';
+
 import { Auth } from '@src/auth/auth.decorator';
-import { AdminRoleType } from './entity.ts/admin.entity';
-import { getOffset } from '@src/common/utils/etc';
 import { ApiOkResponsePaginated } from '@src/common/swagger-paginated-response';
+import { AdminService } from './admin.service';
+
+import { toInstance } from '@src/common/toInstance';
+import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
+import { AdminDto } from './dto/admin-response.dto';
+import { AdminRoleType } from './entity.ts/admin.entity';
+import { PaginationRequestDto } from '@src/common/common.dto';
 
 @Controller('admins')
 export class AdminController {
@@ -33,8 +35,8 @@ export class AdminController {
   @Auth(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 조회' })
   @ApiOkResponsePaginated(AdminDto)
-  async getAdmins(@Query('limit') limit: number = 20, @Query('page') page: number = 1) {
-    const [admins, count] = await this.adminService.getAdmins(limit, getOffset(page, limit));
+  async getAdmins(@Query() { limit, offset }: PaginationRequestDto) {
+    const [admins, count] = await this.adminService.getAdminList({ offset, limit });
     return { data: toInstance(AdminDto, admins), count };
   }
 

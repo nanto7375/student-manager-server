@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
 
-    const accessToken = request.cookies?.access_token;
+    const accessToken = request.cookies?.acc;
     if (!accessToken) throw new Unauthorized();
 
     let payload: Record<string, any>;

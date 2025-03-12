@@ -10,14 +10,12 @@ export enum TokenType {
   ACCESS = 'access',
   REFRESH = 'refresh',
 }
-export type JwtPayload = Record<string, any> & { id: number; role: AdminRoleType };
+export type JwtPayload = { id: number; role: AdminRoleType; exp: number } & Record<string, any>;
 
 @Injectable()
 export class AuthService {
   private readonly _JWT_SECRET: string;
   private readonly _JWT_REFRESH_SECRET: string;
-  private readonly _ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60;
-  private readonly _REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS: number = 60 * 60 * 24 * 14;
   private readonly _REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS: number = 60 * 60 * 24 * 7;
 
   constructor(
@@ -37,14 +35,10 @@ export class AuthService {
     return payload;
   }
 
-  async signJwt(payload: Record<string, any>, tokenType: TokenType = TokenType.ACCESS): Promise<[string, number]> {
-    const token = await this.jwtService.signAsync(payload, {
-      expiresIn: tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS : this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS,
+  async signJwt(payload: Record<string, any>, tokenType: TokenType = TokenType.ACCESS): Promise<string> {
+    return this.jwtService.signAsync(payload, {
       secret: tokenType === TokenType.ACCESS ? this._JWT_SECRET : this._JWT_REFRESH_SECRET,
     });
-    const expiresIn = tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS : this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS;
-
-    return [token, expiresIn];
   }
 
   async authenticate(email: string, password: string) {
@@ -55,8 +49,7 @@ export class AuthService {
     return admin;
   }
 
-  reachRefreshTokenRenewalPeriod(exp: number) {
-    const now = new Date();
+  reachRefreshTokenRenewalPeriod(now: Date, exp: number) {
     const refreshTokenExpiry = new Date(exp * 1000);
     const timeDiffInSeconds = (refreshTokenExpiry.getTime() - now.getTime()) / 1000;
 

@@ -6,6 +6,7 @@ import { BadRequest, NotFound } from '@src/common/exception/definition.exception
 import { Admin } from './entity.ts/admin.entity';
 import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
 import { HashService } from '@src/common/utils/hash';
+import { PaginationDto } from '@src/common/common.dto';
 
 @Injectable()
 export class AdminService {
@@ -43,7 +44,7 @@ export class AdminService {
   async getAdminOrThrow(id: number) {
     const admin = await this.adminRepository.findOne({ where: { id } });
     if (!admin) throw new NotFound('존재하지 않는 관리자입니다.');
-    return admin;
+    return admin.withoutPassword;
   }
 
   async getAdminByEmailOrThrow(email: string) {
@@ -52,7 +53,7 @@ export class AdminService {
     return admin;
   }
 
-  async getAdmins(offset: number, limit: number) {
+  async getAdminList({ offset, limit }: PaginationDto) {
     const [admins, count] = await this.adminRepository.findAndCount({
       skip: offset,
       take: limit,

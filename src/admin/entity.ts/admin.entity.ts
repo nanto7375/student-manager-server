@@ -58,6 +58,11 @@ export class Admin {
     return getAdminRoleLevel(this.role as AdminRoleType);
   }
 
+  get withoutPassword() {
+    const { password, ...admin } = this;
+    return admin;
+  }
+
   static of(adminOf: AdminOf) {
     const admin = new Admin();
     admin.password = adminOf.password;
