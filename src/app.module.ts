@@ -1,6 +1,6 @@
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
@@ -14,6 +14,8 @@ import { MySqlConfigService } from './configs/mysql';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { StudentModule } from './student/student.module';
+import { BannedIpGuard } from './auth/banned-ip.guard';
+import { MyCacheModule } from './common/cache/my-cache.module';
 
 @Module({
   imports: [
@@ -24,12 +26,15 @@ import { StudentModule } from './student/student.module';
     ]),
     MyLoggerModule,
     TypeOrmModule.forRootAsync({ useClass: MySqlConfigService }),
+    MyCacheModule,
     AuthModule,
     AdminModule,
     StudentModule,
   ],
   controllers: [AppController],
   providers: [
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: BannedIpGuard },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: APP_FILTER, useClass: NotFoundExceptionFilter },

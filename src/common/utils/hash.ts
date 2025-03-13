@@ -14,7 +14,7 @@ export class HashService {
     return bcrypt.hash(password, this._SALT);
   }
 
-  compare(password: string, hashedPassword: string): Promise<boolean> {
+  compare(password: string, hashedPassword: string) {
     return bcrypt.compare(password, hashedPassword);
   }
 }

@@ -41,6 +41,7 @@ export default tseslint.config(
       '@typescript-eslint/no-empty-object-type': 'off',
       'no-empty': 'off',
       '@typescript-eslint/restrict-plus-operands': 'off',
+      '@typescript-eslint/require-await': 'off',
     },
   },
 );

@@ -41,6 +41,30 @@ export class EnvironmentVariables {
 
   SM_JWT_REFRESH_SECRET: string;
 
+  @Transform(({ value }) => {
+    return value
+      .split(',')
+      .map((v: string) => Number(v))
+      .reduce((acc: number, curr: number) => acc * curr, 1);
+  })
+  SM_JWT_ACCESS_EXPIRE_TIME: number;
+
+  @Transform(({ value }) => {
+    return value
+      .split(',')
+      .map((v: string) => Number(v))
+      .reduce((acc: number, curr: number) => acc * curr, 1);
+  })
+  SM_JWT_REFRESH_EXPIRE_TIME: number;
+
+  @Transform(({ value }) => {
+    return value
+      .split(',')
+      .map((v: string) => Number(v))
+      .reduce((acc: number, curr: number) => acc * curr, 1);
+  })
+  SM_JWT_REFRESH_TOKEN_RENEWAL_PERIOD: number;
+
   // Timezone / Locale -> 서버별로 설정시 변경
   @IsOptional()
   SM_TZ: string = 'Asia/Seoul';
@@ -59,6 +83,16 @@ export class EnvironmentVariables {
   @Type(() => Number)
   @IsNumber({ allowInfinity: false, allowNaN: false })
   SM_BYCRYPT_SALT: number;
+
+  SM_REDIS_HOST: string;
+
+  @Type(() => Number)
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  SM_REDIS_PORT: number;
+
+  @Type(() => Number)
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  SM_REDIS_SIGNIN_FAILED_ATTEMPTS_CACHE_TTL: number;
 
   SM_S3_PUBLIC_ACCESS_KEY_ID = '';
 

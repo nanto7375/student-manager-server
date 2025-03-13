@@ -5,6 +5,7 @@ import { Unauthorized } from '../common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { AuthService } from './auth.service';
 import { AdminRoleType } from '@src/admin/entity.ts/admin.entity';
+import { getFingerprint } from '@src/common/utils/etc';
 
 export type AuthenticatedRequest = Request & { adminId: number; role: AdminRoleType };
 
@@ -26,8 +27,9 @@ export class AuthGuard implements CanActivate {
     let payload: Record<string, any>;
     try {
       payload = await this.authService.verifyJwt(accessToken);
+      if (payload.fingerprint !== getFingerprint(request)) throw Error('fingerprint mismatch');
     } catch (e) {
-      this.logger.warn(e);
+      this.logger.warn({ message: e.message, ip: request.ip });
       throw new Unauthorized();
     }
 
