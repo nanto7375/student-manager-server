@@ -10,7 +10,7 @@ import { Forbidden, Unauthorized } from '@src/common/exception/definition.except
 import { AdminService } from '@src/admin/admin.service';
 import { BannedIp } from './entity/banned-ip.entity';
 import { DiscardedToken } from './entity/discardedToken.entity';
-import { FailedSigninAttemptsCache } from './failed-signin-attempts-cache';
+import { FailedSigninAttemptCache } from './failed-signin-attempt.cache';
 import { HashService } from '@src/common/utils/hash';
 import { Admin, AdminRoleType } from '@src/admin/entity.ts/admin.entity';
 
@@ -36,7 +36,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly adminService: AdminService,
     private readonly hashService: HashService,
-    private readonly failedSigninAttemptsCache: FailedSigninAttemptsCache,
+    private readonly failedSigninAttemptCache: FailedSigninAttemptCache,
     @InjectRepository(DiscardedToken)
     private readonly discardedTokenRepository: Repository<DiscardedToken>,
     @InjectRepository(BannedIp)
@@ -64,22 +64,22 @@ export class AuthService {
   private async _authenticate(email: string, password: string) {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
     const isPasswordCorrect = await this.hashService.compare(password, admin.password);
-    if (!isPasswordCorrect) throw new Unauthorized();
+    if (!isPasswordCorrect) throw new Unauthorized('wrong password');
 
     return admin;
   }
 
   async signin({ email, password, ip, fingerprint }: SigninParams) {
-    const failedAttempts = await this.failedSigninAttemptsCache.get(email);
-    if (failedAttempts >= 5) throw new Forbidden('Too many failed login attempts');
+    const failedSigninCount = await this.failedSigninAttemptCache.get(email);
+    if (failedSigninCount >= 5) throw new Forbidden('Too many failed signin attempts');
 
     let admin: Admin;
     try {
       admin = await this._authenticate(email, password);
     } catch (e) {
-      this.logger.warn({ message: 'authentication failed', ip });
-      await this.failedSigninAttemptsCache.set(email, (failedAttempts || 0) + 1);
-      throw e;
+      this.logger.warn({ message: e.message, ip });
+      await this.failedSigninAttemptCache.set(email, failedSigninCount + 1);
+      throw new Unauthorized();
     }
 
     const [accessToken, refreshToken] = await Promise.all([
@@ -99,7 +99,7 @@ export class AuthService {
         TokenType.REFRESH,
       ),
     ]);
-    if (failedAttempts > 0) await this.failedSigninAttemptsCache.clear(email);
+    if (failedSigninCount > 0) await this.failedSigninAttemptCache.clear(email);
 
     return {
       admin,

@@ -8,7 +8,7 @@ import { DiscardedToken } from './entity/discardedToken.entity';
 import { BannedIp } from './entity/banned-ip.entity';
 import { HashService } from '@src/common/utils/hash';
 import { AdminModule } from '@src/admin/admin.module';
-import { FailedSigninAttemptsCache } from './failed-signin-attempts-cache';
+import { FailedSigninAttemptCache } from './failed-signin-attempt.cache';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { FailedSigninAttemptsCache } from './failed-signin-attempts-cache';
     AdminModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, HashService, FailedSigninAttemptsCache],
+  providers: [AuthService, HashService, FailedSigninAttemptCache],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { CacheService } from '@src/common/cache/cache.service';
 
 @Injectable()
-export class FailedSigninAttemptsCache {
+export class FailedSigninAttemptCache {
   private readonly _FAILED_ATTEMPTS_CACHE_KEY_PREFIX = 'failed_attempts';
   private readonly _FAILED_ATTEMPTS_CACHE_TTL: number;
 
@@ -15,7 +15,7 @@ export class FailedSigninAttemptsCache {
   }
 
   async get(email: string) {
-    return await this.cacheService.get<number>(`${this._FAILED_ATTEMPTS_CACHE_KEY_PREFIX}:${email}`);
+    return (await this.cacheService.get<number>(`${this._FAILED_ATTEMPTS_CACHE_KEY_PREFIX}:${email}`)) || 0;
   }
 
   async set(email: string, attempts: number) {
