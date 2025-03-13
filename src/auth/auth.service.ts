@@ -19,6 +19,8 @@ enum TokenType {
   REFRESH = 'refresh',
 }
 type JwtPayload = { id: number; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
+type SigninParams = { email: string; password: string; ip: string; fingerprint: string };
+type RefreshParams = { refreshToken: string; ip: string; fingerprint: string };
 
 @Injectable()
 export class AuthService {
@@ -47,14 +49,13 @@ export class AuthService {
     this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_TOKEN_RENEWAL_PERIOD');
   }
 
-  async verifyJwt(token: string, tokenType: TokenType = TokenType.ACCESS): Promise<JwtPayload> {
-    const payload = await this.jwtService.verifyAsync(token, {
+  verifyJwt(token: string, tokenType: TokenType = TokenType.ACCESS): Promise<JwtPayload> {
+    return this.jwtService.verifyAsync(token, {
       secret: tokenType === TokenType.ACCESS ? this._JWT_SECRET : this._JWT_REFRESH_SECRET,
     });
-    return payload;
   }
 
-  private async _signJwt(payload: Record<string, any>, tokenType: TokenType = TokenType.ACCESS): Promise<string> {
+  private _signJwt(payload: Record<string, any>, tokenType: TokenType = TokenType.ACCESS): Promise<string> {
     return this.jwtService.signAsync(payload, {
       secret: tokenType === TokenType.ACCESS ? this._JWT_SECRET : this._JWT_REFRESH_SECRET,
     });
@@ -68,7 +69,7 @@ export class AuthService {
     return admin;
   }
 
-  async signin({ email, password, ip, fingerprint }) {
+  async signin({ email, password, ip, fingerprint }: SigninParams) {
     const failedAttempts = await this.failedSigninAttemptsCache.get(email);
     if (failedAttempts >= 5) throw new Forbidden('Too many failed login attempts');
 
@@ -140,7 +141,7 @@ export class AuthService {
     return !!discardedToken;
   }
 
-  async refresh({ refreshToken, ip, fingerprint }) {
+  async refresh({ refreshToken, ip, fingerprint }: RefreshParams) {
     if (await this._isDiscardedToken(refreshToken)) {
       this.logger.warn({ message: 'refresh token is discarded', ip });
       await this._banIp(ip);
