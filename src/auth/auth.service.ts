@@ -99,8 +99,8 @@ export class AuthService {
         TokenType.REFRESH,
       ),
     ]);
-
     if (failedAttempts > 0) await this.failedSigninAttemptsCache.clear(email);
+
     return {
       admin,
       accessTokenInfo: {

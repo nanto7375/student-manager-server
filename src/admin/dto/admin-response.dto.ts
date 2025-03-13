@@ -20,7 +20,7 @@ export class AdminDto {
   phone: string;
 
   @Expose()
-  @ApiProperty({ enum: AdminRoleType })
+  @ApiProperty({ enum: AdminRoleType, description: '관리자 권한' })
   role: string;
 
   @Expose()
