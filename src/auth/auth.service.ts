@@ -114,7 +114,7 @@ export class AuthService {
     };
   }
 
-  private _reachRefreshTokenRenewalPeriod(exp: number, now: Date) {
+  private _isWithinRefreshTokenRenewalPeriod(exp: number, now: Date) {
     const refreshTokenExpiry = new Date(exp * 1000);
     const timeDiffInSeconds = (refreshTokenExpiry.getTime() - now.getTime()) / 1000;
     return timeDiffInSeconds <= this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS;
@@ -164,7 +164,7 @@ export class AuthService {
       fingerprint,
     });
 
-    if (this._reachRefreshTokenRenewalPeriod(payload.exp, now)) {
+    if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, now)) {
       refreshToken = await this._signJwt(
         {
           id: payload.id,
