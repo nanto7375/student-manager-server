@@ -126,7 +126,7 @@ export class AuthService {
     return this.bannedIpRepository.save(bannedIp);
   }
 
-  async isBanned(ip: string) {
+  async isBannedIp(ip: string) {
     const bannedIp = await this.bannedIpRepository.findOne({ where: { ip } });
     return !!bannedIp;
   }

@@ -11,7 +11,7 @@ export class BannedIpGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const ip = request.ip;
 
-    const isBanned = await this.authService.isBanned(ip as string);
+    const isBanned = await this.authService.isBannedIp(ip as string);
     if (isBanned) throw new Forbidden('Banned IP');
 
     return true;
