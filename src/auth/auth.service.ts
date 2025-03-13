@@ -20,7 +20,7 @@ enum TokenType {
 }
 type JwtPayload = { id: number; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
 type SigninParams = { email: string; password: string; ip: string; fingerprint: string };
-type RefreshParams = { refreshToken: string; ip: string; fingerprint: string };
+type RefreshParams = { refreshToken: string; ip: string; fingerprint: string; now: Date };
 
 @Injectable()
 export class AuthService {
@@ -141,7 +141,7 @@ export class AuthService {
     return !!discardedToken;
   }
 
-  async refresh({ refreshToken, ip, fingerprint }: RefreshParams) {
+  async refresh({ refreshToken, ip, fingerprint, now }: RefreshParams) {
     if (await this._isDiscardedToken(refreshToken)) {
       this.logger.warn({ message: 'refresh token is discarded', ip });
       await this._banIp(ip);
@@ -163,7 +163,7 @@ export class AuthService {
       exp: this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS,
     });
 
-    if (this._reachRefreshTokenRenewalPeriod(payload.exp, new Date())) {
+    if (this._reachRefreshTokenRenewalPeriod(payload.exp, now)) {
       refreshToken = await this._signJwt(
         {
           id: payload.id,

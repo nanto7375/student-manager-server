@@ -40,7 +40,12 @@ export class AuthController {
   @ApiOperation({ summary: '로그인' })
   @ApiOkResponse({ type: AdminDto })
   async signin(@Body() body: SigninRequestDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const { admin, accessTokenInfo, refreshTokenInfo } = await this.authService.signin({ email: body.email, password: body.password, ip: req.ip as string, fingerprint: getFingerprint(req) });
+    const { admin, accessTokenInfo, refreshTokenInfo } = await this.authService.signin({
+      email: body.email,
+      password: body.password,
+      ip: req.ip as string,
+      fingerprint: getFingerprint(req),
+    });
 
     // TODO: 쿠키 이름을 __Host- prefix를 사용하여 변경하는 것을 고려하세요 (예: __Host-acc, __Host-refr).
     res.cookie('acc', accessTokenInfo.token, this._getTokenCookieOptions(accessTokenInfo.exp));
@@ -71,7 +76,12 @@ export class AuthController {
       throw new Unauthorized();
     }
 
-    const { accessTokenInfo, refreshTokenInfo } = await this.authService.refresh({ refreshToken, ip: req.ip as string, fingerprint: getFingerprint(req) });
+    const { accessTokenInfo, refreshTokenInfo } = await this.authService.refresh({
+      refreshToken,
+      ip: req.ip as string,
+      fingerprint: getFingerprint(req),
+      now: new Date(),
+    });
 
     res.cookie('acc', accessTokenInfo.token, this._getTokenCookieOptions(accessTokenInfo.exp));
     if (refreshToken !== refreshTokenInfo.token) {
