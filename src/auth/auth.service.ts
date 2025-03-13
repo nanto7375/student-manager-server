@@ -161,6 +161,7 @@ export class AuthService {
       id: payload.id,
       role: payload.role,
       exp: this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS,
+      fingerprint,
     });
 
     if (this._reachRefreshTokenRenewalPeriod(payload.exp, now)) {
