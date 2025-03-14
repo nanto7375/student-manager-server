@@ -64,7 +64,7 @@ export class AuthController {
     const refreshToken = req.cookies['refr'];
     try {
       if (refreshToken) {
-        const payload = await this.authService.verifyJwt({
+        const payload = await this.authService.verifyToken({
           token: refreshToken,
           fingerprint: getFingerprint(req),
           tokenType: TokenType.REFRESH,

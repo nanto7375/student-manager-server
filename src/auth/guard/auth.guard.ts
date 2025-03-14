@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
 
     let payload: Record<string, any>;
     try {
-      payload = await this.authService.verifyJwt({ token: accessToken, fingerprint: getFingerprint(request) });
+      payload = await this.authService.verifyToken({ token: accessToken, fingerprint: getFingerprint(request) });
     } catch (e) {
       this.logger.warn({ message: e.message, ip: request.ip });
       if (e.message === TOKEN_EXPIRED_ERROR) throw new TokenExpired();
