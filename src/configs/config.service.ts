@@ -41,6 +41,7 @@ export class EnvironmentVariables {
 
   SM_JWT_REFRESH_SECRET: string;
 
+  @Type(() => String)
   @Transform(({ value }) => {
     return value
       .split(',')
@@ -49,6 +50,7 @@ export class EnvironmentVariables {
   })
   SM_JWT_ACCESS_EXPIRE_PERIOD: number;
 
+  @Type(() => String)
   @Transform(({ value }) => {
     return value
       .split(',')
@@ -57,6 +59,7 @@ export class EnvironmentVariables {
   })
   SM_JWT_REFRESH_EXPIRE_PERIOD: number;
 
+  @Type(() => String)
   @Transform(({ value }) => {
     return value
       .split(',')
