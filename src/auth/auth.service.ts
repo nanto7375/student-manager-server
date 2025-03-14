@@ -54,6 +54,14 @@ export class AuthService {
     this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_TOKEN_RENEWAL_PERIOD');
   }
 
+  get accessTokenLifetimeInSeconds() {
+    return this._ACCESS_TOKEN_LIFETIME_IN_SECONDS;
+  }
+
+  get refreshTokenLifetimeInSeconds() {
+    return this._REFRESH_TOKEN_LIFETIME_IN_SECONDS;
+  }
+
   private _signJwt({ payload, signDate, tokenType = TokenType.ACCESS }: SignJwtParams): Promise<string> {
     payload.exp = signDate.getTime() / 1000 + (tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS);
 
@@ -97,17 +105,7 @@ export class AuthService {
     ]);
     if (failedSigninCount > 0) await this.failedSigninAttemptCache.clear(email);
 
-    return {
-      admin,
-      accessTokenInfo: {
-        token: accessToken,
-        lifetime: this._ACCESS_TOKEN_LIFETIME_IN_SECONDS,
-      },
-      refreshTokenInfo: {
-        token: refreshToken,
-        lifetime: this._REFRESH_TOKEN_LIFETIME_IN_SECONDS,
-      },
-    };
+    return { admin, accessToken, refreshToken };
   }
 
   private _isWithinRefreshTokenRenewalPeriod(exp: number, now: Date) {
@@ -153,8 +151,8 @@ export class AuthService {
       await this.banIp(ip);
       throw new Unauthorized();
     }
-
     const updatedPayload = { email: payload.email, role: payload.role, fingerprint };
+
     if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, refreshDate)) {
       const result = await Promise.all([
         this.discardToken({ token: refreshToken, exp: payload.exp, currentDate: refreshDate }), //
@@ -164,14 +162,8 @@ export class AuthService {
     }
 
     return {
-      accessTokenInfo: {
-        token: await this._signJwt({ payload: updatedPayload, signDate: refreshDate }),
-        lifetime: this._ACCESS_TOKEN_LIFETIME_IN_SECONDS,
-      },
-      refreshTokenInfo: {
-        token: refreshToken,
-        lifetime: this._REFRESH_TOKEN_LIFETIME_IN_SECONDS,
-      },
+      accessToken: await this._signJwt({ payload: updatedPayload, signDate: refreshDate }),
+      refreshToken,
     };
   }
 }

@@ -25,14 +25,17 @@ export class AuthController {
     this.logger.setContext('AuthController');
   }
 
-  private _getTokenCookieOptions(tokenLifetime: number): CookieOptions {
+  private _getTokenCookieOptions(tokenType: TokenType): CookieOptions {
     return {
       httpOnly: true,
       secure: true,
-      sameSite: 'none', // domain 설정되면 'strict'로 변경
-      maxAge: tokenLifetime * 1000,
       path: '/',
+      sameSite: 'none', // domain 설정되면 'strict'로 변경
       // TODO: domain 설정
+      maxAge:
+        (tokenType === TokenType.ACCESS //
+          ? this.authService.accessTokenLifetimeInSeconds
+          : this.authService.refreshTokenLifetimeInSeconds) * 1000,
     };
   }
 
@@ -41,7 +44,7 @@ export class AuthController {
   @ApiOperation({ summary: '로그인' })
   @ApiOkResponse({ type: AdminDto })
   async signin(@Body() body: SigninRequestDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const { admin, accessTokenInfo, refreshTokenInfo } = await this.authService.signin({
+    const { admin, accessToken, refreshToken } = await this.authService.signin({
       email: body.email,
       password: body.password,
       ip: req.ip as string,
@@ -49,8 +52,8 @@ export class AuthController {
     });
 
     // TODO: 쿠키명에 __Host- prefix 사용 고려
-    res.cookie('acc', accessTokenInfo.token, this._getTokenCookieOptions(accessTokenInfo.lifetime));
-    res.cookie('refr', refreshTokenInfo.token, this._getTokenCookieOptions(refreshTokenInfo.lifetime));
+    res.cookie('acc', accessToken, this._getTokenCookieOptions(TokenType.ACCESS));
+    res.cookie('refr', refreshToken, this._getTokenCookieOptions(TokenType.REFRESH));
     return toInstance(AdminDto, admin);
   }
 
@@ -92,15 +95,15 @@ export class AuthController {
       throw new Unauthorized();
     }
 
-    const { accessTokenInfo, refreshTokenInfo } = await this.authService.refresh({
+    const { accessToken, refreshToken: newRefreshToken } = await this.authService.refresh({
       refreshToken,
       ip: req.ip as string,
       fingerprint: getFingerprint(req),
     });
 
-    res.cookie('acc', accessTokenInfo.token, this._getTokenCookieOptions(accessTokenInfo.lifetime));
-    if (refreshToken !== refreshTokenInfo.token) {
-      res.cookie('refr', refreshTokenInfo.token, this._getTokenCookieOptions(refreshTokenInfo.lifetime));
+    res.cookie('acc', accessToken, this._getTokenCookieOptions(TokenType.ACCESS));
+    if (refreshToken !== newRefreshToken) {
+      res.cookie('refr', newRefreshToken, this._getTokenCookieOptions(TokenType.REFRESH));
     }
     return true;
   }
