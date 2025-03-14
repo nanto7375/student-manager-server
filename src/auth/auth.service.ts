@@ -30,8 +30,8 @@ type RefreshParams = { refreshToken: string; ip: string; fingerprint: string; no
 export class AuthService {
   private readonly _JWT_SECRET: string;
   private readonly _JWT_REFRESH_SECRET: string;
-  private readonly _ACCESS_TOKEN_EXPIRE_PERIOD_IN_SECONDS: number;
-  private readonly _REFRESH_TOKEN_EXPIRE_PERIOD_IN_SECONDS: number;
+  private readonly _ACCESS_TOKEN_LIFETIME_IN_SECONDS: number;
+  private readonly _REFRESH_TOKEN_LIFETIME_IN_SECONDS: number;
   private readonly _REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS: number;
 
   constructor(
@@ -47,13 +47,13 @@ export class AuthService {
   ) {
     this._JWT_SECRET = this.configService.get('SM_JWT_SECRET');
     this._JWT_REFRESH_SECRET = this.configService.get('SM_JWT_REFRESH_SECRET');
-    this._ACCESS_TOKEN_EXPIRE_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_ACCESS_EXPIRE_PERIOD');
-    this._REFRESH_TOKEN_EXPIRE_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_EXPIRE_PERIOD');
+    this._ACCESS_TOKEN_LIFETIME_IN_SECONDS = this.configService.get('SM_JWT_ACCESS_LIFETIME');
+    this._REFRESH_TOKEN_LIFETIME_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_LIFETIME');
     this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_TOKEN_RENEWAL_PERIOD');
   }
 
   private _signJwt(payload: Record<string, any>, now: Date, tokenType: TokenType = TokenType.ACCESS): Promise<string> {
-    payload.exp = now.getTime() / 1000 + (tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_EXPIRE_PERIOD_IN_SECONDS : this._REFRESH_TOKEN_EXPIRE_PERIOD_IN_SECONDS);
+    payload.exp = now.getTime() / 1000 + (tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS);
 
     return this.jwtService.signAsync(payload, {
       secret: tokenType === TokenType.ACCESS ? this._JWT_SECRET : this._JWT_REFRESH_SECRET,
@@ -99,11 +99,11 @@ export class AuthService {
       admin,
       accessTokenInfo: {
         token: accessToken,
-        exp: this._ACCESS_TOKEN_EXPIRE_PERIOD_IN_SECONDS,
+        exp: this._ACCESS_TOKEN_LIFETIME_IN_SECONDS,
       },
       refreshTokenInfo: {
         token: refreshToken,
-        exp: this._REFRESH_TOKEN_EXPIRE_PERIOD_IN_SECONDS,
+        exp: this._REFRESH_TOKEN_LIFETIME_IN_SECONDS,
       },
     };
   }
@@ -165,11 +165,11 @@ export class AuthService {
     return {
       accessTokenInfo: {
         token: accessToken,
-        exp: this._ACCESS_TOKEN_EXPIRE_PERIOD_IN_SECONDS,
+        exp: this._ACCESS_TOKEN_LIFETIME_IN_SECONDS,
       },
       refreshTokenInfo: {
         token: refreshToken,
-        exp: this._REFRESH_TOKEN_EXPIRE_PERIOD_IN_SECONDS,
+        exp: this._REFRESH_TOKEN_LIFETIME_IN_SECONDS,
       },
     };
   }

@@ -48,7 +48,7 @@ export class EnvironmentVariables {
       .map((v: string) => Number(v))
       .reduce((acc: number, curr: number) => acc * curr, 1);
   })
-  SM_JWT_ACCESS_EXPIRE_PERIOD: number;
+  SM_JWT_ACCESS_LIFETIME: number;
 
   @Type(() => String)
   @Transform(({ value }) => {
@@ -57,7 +57,7 @@ export class EnvironmentVariables {
       .map((v: string) => Number(v))
       .reduce((acc: number, curr: number) => acc * curr, 1);
   })
-  SM_JWT_REFRESH_EXPIRE_PERIOD: number;
+  SM_JWT_REFRESH_LIFETIME: number;
 
   @Type(() => String)
   @Transform(({ value }) => {
