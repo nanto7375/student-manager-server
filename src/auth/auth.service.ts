@@ -155,11 +155,10 @@ export class AuthService {
     const claims = { email: payload.email, role: payload.role, fingerprint };
     const accessToken = await this._signToken({ claims, signDate: refreshDate, tokenType: TokenType.ACCESS });
     if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, refreshDate)) {
-      const result = await Promise.all([
-        this.discardToken({ token: refreshToken, exp: payload.exp, currentDate: refreshDate }), //
+      [refreshToken] = await Promise.all([
         this._signToken({ claims, signDate: refreshDate, tokenType: TokenType.REFRESH }),
+        this.discardToken({ token: refreshToken, exp: payload.exp, currentDate: refreshDate }), //
       ]);
-      refreshToken = result[1];
     }
 
     return { accessToken, refreshToken };
