@@ -5,7 +5,7 @@ import { AdminService } from './admin.service';
 export class AdminParsePipe implements PipeTransform {
   constructor(private readonly adminService: AdminService) {}
 
-  async transform(value: number) {
-    return this.adminService.getAdminOrThrow(value);
+  async transform(value: string) {
+    return this.adminService.getAdminByEmailOrThrow(value);
   }
 }
