@@ -23,6 +23,7 @@ export enum TokenType {
 type JwtPayload = { email: string; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
 type SignJwtParams = { payload: Record<string, any>; signDate: Date; tokenType?: TokenType };
 type VerifyJwtParams = { token: string; fingerprint: string; tokenType?: TokenType };
+type AuthenticateParams = { email: string; password: string };
 type SigninParams = { email: string; password: string; ip: string; fingerprint: string; signinDate?: Date };
 type DiscardTokenParams = { token: string; exp: number; currentDate?: Date };
 type RefreshParams = { refreshToken: string; ip: string; fingerprint: string; refreshDate?: Date };
@@ -69,7 +70,7 @@ export class AuthService {
     return payload;
   }
 
-  private async _authenticate(email: string, password: string) {
+  private async _authenticate({ email, password }: AuthenticateParams) {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
     const isPasswordCorrect = await this.hashService.compare(password, admin.password);
     if (!isPasswordCorrect) throw new AuthenticationFailed();
@@ -83,7 +84,7 @@ export class AuthService {
 
     let admin: Admin;
     try {
-      admin = await this._authenticate(email, password);
+      admin = await this._authenticate({ email, password });
     } catch (e) {
       this.logger.warn({ message: e.message, ip });
       await this.failedSigninAttemptCache.set(email, failedSigninCount + 1);
