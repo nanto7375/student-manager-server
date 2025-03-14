@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
 import { Forbidden } from '@src/common/exception/definition.exception';
 
 @Injectable()

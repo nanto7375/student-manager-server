@@ -1,13 +1,13 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 
-import { Unauthorized } from '../common/exception/definition.exception';
+import { Unauthorized } from '../../common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
 import { AdminRoleType } from '@src/admin/entity.ts/admin.entity';
 import { getFingerprint } from '@src/common/utils/etc';
 
-export type AuthenticatedRequest = Request & { adminId: number; role: AdminRoleType };
+export type AuthenticatedRequest = Request & { email: string; role: AdminRoleType };
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -32,7 +32,7 @@ export class AuthGuard implements CanActivate {
       throw new Unauthorized();
     }
 
-    request.adminId = payload.id;
+    request.email = payload.email;
     request.role = payload.role;
     return true;
   }

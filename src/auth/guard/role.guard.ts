@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { Forbidden, Unauthorized } from '../common/exception/definition.exception';
+import { Forbidden, Unauthorized } from '@src/common/exception/definition.exception';
 import { AuthenticatedRequest } from './auth.guard';
 import { ADMIN_LEVEL_KEY } from '@src/admin/admin-level.decorator';
 import { getAdminRoleLevel } from '@src/admin/entity.ts/admin.entity';

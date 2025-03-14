@@ -13,7 +13,7 @@ import { MyLoggerModule } from './configs/logger/my-logger.module';
 import { MySqlConfigService } from './configs/mysql';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
-import { BannedIpGuard } from './auth/banned-ip.guard';
+import { BannedIpGuard } from './auth/guard/banned-ip.guard';
 import { MyCacheModule } from './common/cache/my-cache.module';
 
 @Module({
