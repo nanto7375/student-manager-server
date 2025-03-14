@@ -96,7 +96,6 @@ export class AuthController {
       refreshToken,
       ip: req.ip as string,
       fingerprint: getFingerprint(req),
-      now: new Date(),
     });
 
     res.cookie('acc', accessTokenInfo.token, this._getTokenCookieOptions(accessTokenInfo.lifetime));

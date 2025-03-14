@@ -21,10 +21,11 @@ export enum TokenType {
   REFRESH = 'refresh',
 }
 type JwtPayload = { email: string; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
+type SignJwtParams = { payload: Record<string, any>; signDate: Date; tokenType?: TokenType };
 type VerifyJwtParams = { token: string; fingerprint: string; tokenType?: TokenType };
-type SigninParams = { email: string; password: string; ip: string; fingerprint: string; now?: Date };
-type DiscardTokenParams = { token: string; exp: number; now?: Date };
-type RefreshParams = { refreshToken: string; ip: string; fingerprint: string; now: Date };
+type SigninParams = { email: string; password: string; ip: string; fingerprint: string; signinDate?: Date };
+type DiscardTokenParams = { token: string; exp: number; currentDate?: Date };
+type RefreshParams = { refreshToken: string; ip: string; fingerprint: string; refreshDate?: Date };
 
 @Injectable()
 export class AuthService {
@@ -52,8 +53,8 @@ export class AuthService {
     this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_TOKEN_RENEWAL_PERIOD');
   }
 
-  private _signJwt(payload: Record<string, any>, now: Date, tokenType: TokenType = TokenType.ACCESS): Promise<string> {
-    payload.exp = now.getTime() / 1000 + (tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS);
+  private _signJwt({ payload, signDate, tokenType = TokenType.ACCESS }: SignJwtParams): Promise<string> {
+    payload.exp = signDate.getTime() / 1000 + (tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS);
 
     return this.jwtService.signAsync(payload, {
       secret: tokenType === TokenType.ACCESS ? this._JWT_SECRET : this._JWT_REFRESH_SECRET,
@@ -76,7 +77,7 @@ export class AuthService {
     return admin;
   }
 
-  async signin({ email, password, ip, fingerprint, now = new Date() }: SigninParams) {
+  async signin({ email, password, ip, fingerprint, signinDate = new Date() }: SigninParams) {
     const failedSigninCount = await this.failedSigninAttemptCache.get(email);
     if (failedSigninCount >= 5) throw new Forbidden('too many failed');
 
@@ -90,8 +91,8 @@ export class AuthService {
     }
 
     const [accessToken, refreshToken] = await Promise.all([
-      this._signJwt({ email: admin.email, role: admin.role, fingerprint }, now, TokenType.ACCESS), //
-      this._signJwt({ email: admin.email, role: admin.role, fingerprint }, now, TokenType.REFRESH),
+      this._signJwt({ payload: { email: admin.email, role: admin.role, fingerprint }, signDate: signinDate }), //
+      this._signJwt({ payload: { email: admin.email, role: admin.role, fingerprint }, signDate: signinDate, tokenType: TokenType.REFRESH }),
     ]);
     if (failedSigninCount > 0) await this.failedSigninAttemptCache.clear(email);
 
@@ -125,8 +126,8 @@ export class AuthService {
     return !!bannedIp;
   }
 
-  async discardToken({ token, exp, now = new Date() }: DiscardTokenParams) {
-    const remainingTime = Math.max(exp * 1000 - now.getTime(), 0);
+  async discardToken({ token, exp, currentDate = new Date() }: DiscardTokenParams) {
+    const remainingTime = Math.max(exp * 1000 - currentDate.getTime(), 0);
     if (remainingTime <= 0) return;
     await this.discardedTokenCache.set(token, remainingTime);
   }
@@ -135,7 +136,7 @@ export class AuthService {
     return !!(await this.discardedTokenCache.get(token));
   }
 
-  async refresh({ refreshToken, ip, fingerprint, now }: RefreshParams) {
+  async refresh({ refreshToken, ip, fingerprint, refreshDate = new Date() }: RefreshParams) {
     if (await this._isDiscardedToken(refreshToken)) {
       this.logger.warn({ message: 'refresh token is discarded', ip });
       await this.banIp(ip);
@@ -153,17 +154,17 @@ export class AuthService {
     }
 
     const updatedPayload = { email: payload.email, role: payload.role, fingerprint };
-    if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, now)) {
+    if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, refreshDate)) {
       const result = await Promise.all([
-        this.discardToken({ token: refreshToken, exp: payload.exp, now }), //
-        this._signJwt(updatedPayload, now, TokenType.REFRESH),
+        this.discardToken({ token: refreshToken, exp: payload.exp, currentDate: refreshDate }), //
+        this._signJwt({ payload: updatedPayload, signDate: refreshDate, tokenType: TokenType.REFRESH }),
       ]);
       refreshToken = result[1];
     }
 
     return {
       accessTokenInfo: {
-        token: await this._signJwt(updatedPayload, now, TokenType.ACCESS),
+        token: await this._signJwt({ payload: updatedPayload, signDate: refreshDate }),
         lifetime: this._ACCESS_TOKEN_LIFETIME_IN_SECONDS,
       },
       refreshTokenInfo: {
