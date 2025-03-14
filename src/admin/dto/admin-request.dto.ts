@@ -1,6 +1,6 @@
 import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { AdminRoleType } from '../entity.ts/admin.entity';
+import { AdminRoleType } from '../entity/admin.entity';
 
 export class AdminCreateDto {
   @IsString()

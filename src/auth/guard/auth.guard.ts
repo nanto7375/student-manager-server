@@ -4,7 +4,7 @@ import { Request } from 'express';
 import { TokenExpired, Unauthorized } from '../../common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { AuthService, TOKEN_EXPIRED_ERROR } from '../auth.service';
-import { AdminRoleType } from '@src/admin/entity.ts/admin.entity';
+import { AdminRoleType } from '@src/admin/entity/admin.entity';
 import { getFingerprint } from '@src/common/utils/etc';
 
 export type AuthenticatedRequest = Request & { email: string; role: AdminRoleType };

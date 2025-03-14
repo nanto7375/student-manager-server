@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { BadRequest, NotFound } from '@src/common/exception/definition.exception';
-import { Admin } from './entity.ts/admin.entity';
+import { Admin } from './entity/admin.entity';
 import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
 import { HashService } from '@src/common/utils/hash';
 import { PaginationDto } from '@src/common/common.dto';

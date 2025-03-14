@@ -8,7 +8,7 @@ import { AdminService } from './admin.service';
 import { toInstance } from '@src/common/toInstance';
 import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
 import { AdminDto } from './dto/admin-response.dto';
-import { AdminRoleType } from './entity.ts/admin.entity';
+import { AdminRoleType } from './entity/admin.entity';
 import { PaginationRequestDto } from '@src/common/common.dto';
 
 @Controller('admins')

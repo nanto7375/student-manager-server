@@ -1,7 +1,7 @@
 import { applyDecorators, CanActivate, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from './guard/auth.guard';
-import { AdminRoleType } from '@src/admin/entity.ts/admin.entity';
+import { AdminRoleType } from '@src/admin/entity/admin.entity';
 import { AdminLevel } from '@src/admin/admin-level.decorator';
 import { RoleGuard } from './guard/role.guard';
 

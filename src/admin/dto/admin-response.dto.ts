@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { AdminRoleType } from '../entity.ts/admin.entity';
+import { AdminRoleType } from '../entity/admin.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AdminDto {

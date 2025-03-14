@@ -11,8 +11,8 @@ import { AdminService } from '@src/admin/admin.service';
 import { BannedIp } from './entity/banned-ip.entity';
 import { FailedSigninAttemptCache } from './cache/failed-signin-attempt.cache';
 import { HashService } from '@src/common/utils/hash';
-import { Admin, AdminRoleType } from '@src/admin/entity.ts/admin.entity';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
+import { Admin, AdminRoleType } from '@src/admin/entity/admin.entity';
 
 export const TOKEN_EXPIRED_ERROR = 'jwt expired';
 
