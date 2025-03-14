@@ -25,12 +25,12 @@ export class AuthController {
     this.logger.setContext('AuthController');
   }
 
-  private _getTokenCookieOptions(exp: number): CookieOptions {
+  private _getTokenCookieOptions(tokenLifetime: number): CookieOptions {
     return {
       httpOnly: true,
       secure: true,
       sameSite: 'none', // domain 설정되면 'strict'로 변경
-      maxAge: exp * 1000,
+      maxAge: tokenLifetime * 1000,
       path: '/',
       // TODO: domain 설정
     };
@@ -49,8 +49,8 @@ export class AuthController {
     });
 
     // TODO: 쿠키명에 __Host- prefix 사용 고려
-    res.cookie('acc', accessTokenInfo.token, this._getTokenCookieOptions(accessTokenInfo.exp));
-    res.cookie('refr', refreshTokenInfo.token, this._getTokenCookieOptions(refreshTokenInfo.exp));
+    res.cookie('acc', accessTokenInfo.token, this._getTokenCookieOptions(accessTokenInfo.lifetime));
+    res.cookie('refr', refreshTokenInfo.token, this._getTokenCookieOptions(refreshTokenInfo.lifetime));
     return toInstance(AdminDto, admin);
   }
 
@@ -99,9 +99,9 @@ export class AuthController {
       now: new Date(),
     });
 
-    res.cookie('acc', accessTokenInfo.token, this._getTokenCookieOptions(accessTokenInfo.exp));
+    res.cookie('acc', accessTokenInfo.token, this._getTokenCookieOptions(accessTokenInfo.lifetime));
     if (refreshToken !== refreshTokenInfo.token) {
-      res.cookie('refr', refreshTokenInfo.token, this._getTokenCookieOptions(refreshTokenInfo.exp));
+      res.cookie('refr', refreshTokenInfo.token, this._getTokenCookieOptions(refreshTokenInfo.lifetime));
     }
     return true;
   }

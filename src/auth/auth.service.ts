@@ -99,11 +99,11 @@ export class AuthService {
       admin,
       accessTokenInfo: {
         token: accessToken,
-        exp: this._ACCESS_TOKEN_LIFETIME_IN_SECONDS,
+        lifetime: this._ACCESS_TOKEN_LIFETIME_IN_SECONDS,
       },
       refreshTokenInfo: {
         token: refreshToken,
-        exp: this._REFRESH_TOKEN_LIFETIME_IN_SECONDS,
+        lifetime: this._REFRESH_TOKEN_LIFETIME_IN_SECONDS,
       },
     };
   }
@@ -152,24 +152,23 @@ export class AuthService {
       throw new Unauthorized();
     }
 
-    const accessToken = await this._signJwt({ email: payload.email, role: payload.role, fingerprint }, now, TokenType.ACCESS);
-
+    const updatedPayload = { email: payload.email, role: payload.role, fingerprint };
     if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, now)) {
       const result = await Promise.all([
         this.discardToken({ token: refreshToken, exp: payload.exp, now }), //
-        this._signJwt({ email: payload.email, role: payload.role, fingerprint }, now, TokenType.REFRESH),
+        this._signJwt(updatedPayload, now, TokenType.REFRESH),
       ]);
       refreshToken = result[1];
     }
 
     return {
       accessTokenInfo: {
-        token: accessToken,
-        exp: this._ACCESS_TOKEN_LIFETIME_IN_SECONDS,
+        token: await this._signJwt(updatedPayload, now, TokenType.ACCESS),
+        lifetime: this._ACCESS_TOKEN_LIFETIME_IN_SECONDS,
       },
       refreshTokenInfo: {
         token: refreshToken,
-        exp: this._REFRESH_TOKEN_LIFETIME_IN_SECONDS,
+        lifetime: this._REFRESH_TOKEN_LIFETIME_IN_SECONDS,
       },
     };
   }
