@@ -21,7 +21,7 @@ export enum TokenType {
   REFRESH = 'refresh',
 }
 type JwtPayload = { email: string; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
-type SignJwtParams = { payload: Record<string, any>; signDate: Date; tokenType?: TokenType };
+type SignJwtParams = { claims: Record<string, any>; signDate: Date; tokenType?: TokenType };
 type VerifyJwtParams = { token: string; fingerprint: string; tokenType?: TokenType };
 type AuthenticateParams = { email: string; password: string };
 type SigninParams = { email: string; password: string; ip: string; fingerprint: string; signinDate?: Date };
@@ -62,10 +62,10 @@ export class AuthService {
     return this._REFRESH_TOKEN_LIFETIME_IN_SECONDS;
   }
 
-  private _signJwt({ payload, signDate, tokenType = TokenType.ACCESS }: SignJwtParams): Promise<string> {
-    payload.exp = signDate.getTime() / 1000 + (tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS);
+  private _signJwt({ claims, signDate, tokenType = TokenType.ACCESS }: SignJwtParams): Promise<string> {
+    claims.exp = signDate.getTime() / 1000 + (tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS);
 
-    return this.jwtService.signAsync(payload, {
+    return this.jwtService.signAsync(claims, {
       secret: tokenType === TokenType.ACCESS ? this._JWT_SECRET : this._JWT_REFRESH_SECRET,
     });
   }
@@ -100,8 +100,8 @@ export class AuthService {
     }
 
     const [accessToken, refreshToken] = await Promise.all([
-      this._signJwt({ payload: { email: admin.email, role: admin.role, fingerprint }, signDate: signinDate }), //
-      this._signJwt({ payload: { email: admin.email, role: admin.role, fingerprint }, signDate: signinDate, tokenType: TokenType.REFRESH }),
+      this._signJwt({ claims: { email: admin.email, role: admin.role, fingerprint }, signDate: signinDate }), //
+      this._signJwt({ claims: { email: admin.email, role: admin.role, fingerprint }, signDate: signinDate, tokenType: TokenType.REFRESH }),
     ]);
     if (failedSigninCount > 0) await this.failedSigninAttemptCache.clear(email);
 
@@ -151,18 +151,18 @@ export class AuthService {
       await this.banIp(ip);
       throw new Unauthorized();
     }
-    const updatedPayload = { email: payload.email, role: payload.role, fingerprint };
+    const claims = { email: payload.email, role: payload.role, fingerprint };
 
     if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, refreshDate)) {
       const result = await Promise.all([
         this.discardToken({ token: refreshToken, exp: payload.exp, currentDate: refreshDate }), //
-        this._signJwt({ payload: updatedPayload, signDate: refreshDate, tokenType: TokenType.REFRESH }),
+        this._signJwt({ claims, signDate: refreshDate, tokenType: TokenType.REFRESH }),
       ]);
       refreshToken = result[1];
     }
 
     return {
-      accessToken: await this._signJwt({ payload: updatedPayload, signDate: refreshDate }),
+      accessToken: await this._signJwt({ claims, signDate: refreshDate }),
       refreshToken,
     };
   }
