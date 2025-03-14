@@ -14,7 +14,7 @@ import { HashService } from '@src/common/utils/hash';
 import { Admin, AdminRoleType } from '@src/admin/entity.ts/admin.entity';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
 
-export const JWT_EXPIRED_ERROR = 'jwt expired';
+export const TOKEN_EXPIRED_ERROR = 'jwt expired';
 
 export enum TokenType {
   ACCESS = 'access',
@@ -149,7 +149,7 @@ export class AuthService {
       payload = await this.verifyJwt({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
     } catch (e) {
       this.logger.warn({ message: e.message, ip });
-      if (e.message === JWT_EXPIRED_ERROR) throw new TokenExpired();
+      if (e.message === TOKEN_EXPIRED_ERROR) throw new TokenExpired();
       await this.banIp(ip);
       throw new Unauthorized();
     }

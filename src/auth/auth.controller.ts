@@ -5,7 +5,7 @@ import { CookieOptions, Request, Response } from 'express';
 
 import { Unauthorized } from '@src/common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { AuthService, JWT_EXPIRED_ERROR, TokenType } from './auth.service';
+import { AuthService, TOKEN_EXPIRED_ERROR, TokenType } from './auth.service';
 
 import { toInstance } from '@src/common/toInstance';
 import { SigninRequestDto } from './dto/auth-request.dto';
@@ -70,7 +70,7 @@ export class AuthController {
       }
     } catch (e) {
       this.logger.warn({ message: e.message, ip: req.ip });
-      if (e.message !== JWT_EXPIRED_ERROR) {
+      if (e.message !== TOKEN_EXPIRED_ERROR) {
         await this.authService.banIp(req.ip as string);
         throw new Unauthorized();
       }

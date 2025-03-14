@@ -3,7 +3,7 @@ import { Request } from 'express';
 
 import { TokenExpired, Unauthorized } from '../../common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { AuthService, JWT_EXPIRED_ERROR } from '../auth.service';
+import { AuthService, TOKEN_EXPIRED_ERROR } from '../auth.service';
 import { AdminRoleType } from '@src/admin/entity.ts/admin.entity';
 import { getFingerprint } from '@src/common/utils/etc';
 
@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate {
       payload = await this.authService.verifyJwt({ token: accessToken, fingerprint: getFingerprint(request) });
     } catch (e) {
       this.logger.warn({ message: e.message, ip: request.ip });
-      if (e.message === JWT_EXPIRED_ERROR) throw new TokenExpired();
+      if (e.message === TOKEN_EXPIRED_ERROR) throw new TokenExpired();
       throw new Unauthorized();
     }
 
