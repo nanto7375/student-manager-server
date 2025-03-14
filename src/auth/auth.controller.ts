@@ -13,6 +13,7 @@ import { AdminDto } from '@src/admin/dto/admin-response.dto';
 import { getFingerprint } from '@src/common/utils/etc';
 
 // TODO: auth용 throttler 따로 설정하기
+// TODO: ip ban 처리 미들웨어로 따로 뺄까?
 @ApiTags('auth')
 @Controller('auth')
 @UseGuards(ThrottlerGuard)
@@ -47,7 +48,7 @@ export class AuthController {
       fingerprint: getFingerprint(req),
     });
 
-    // TODO: 쿠키 이름을 __Host- prefix를 사용하여 변경하는 것을 고려하세요 (예: __Host-acc, __Host-refr).
+    // TODO: 쿠키명에 __Host- prefix 사용 고려
     res.cookie('acc', accessTokenInfo.token, this._getTokenCookieOptions(accessTokenInfo.exp));
     res.cookie('refr', refreshTokenInfo.token, this._getTokenCookieOptions(refreshTokenInfo.exp));
     return toInstance(AdminDto, admin);
