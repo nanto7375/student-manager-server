@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { Forbidden, Unauthorized } from '@src/common/exception/definition.exception';
+import { AuthenticationFailed, Forbidden, TokenExpired, Unauthorized } from '@src/common/exception/definition.exception';
 
 import { AdminService } from '@src/admin/admin.service';
 import { BannedIp } from './entity/banned-ip.entity';
@@ -71,7 +71,7 @@ export class AuthService {
   private async _authenticate(email: string, password: string) {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
     const isPasswordCorrect = await this.hashService.compare(password, admin.password);
-    if (!isPasswordCorrect) throw new Unauthorized('이메일 또는 비밀번호가 잘못되었습니다');
+    if (!isPasswordCorrect) throw new AuthenticationFailed();
 
     return admin;
   }
@@ -147,7 +147,8 @@ export class AuthService {
       payload = await this.verifyJwt({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
     } catch (e) {
       this.logger.warn({ message: e.message, ip });
-      if (e.message !== JWT_EXPIRED_ERROR) await this.banIp(ip);
+      if (e.message === JWT_EXPIRED_ERROR) throw new TokenExpired();
+      await this.banIp(ip);
       throw new Unauthorized();
     }
 

@@ -19,6 +19,8 @@ export const definedException = {
   tooMany: defineException(400, 104001, 'too many requests'),
   oldVersion: defineException(400, 104002, 'old version'),
   unauthorized: defineException(401, 104010, 'unauthorized'),
+  tokenExpired: defineException(401, 104011, 'token expired'),
+  authenticationFailed: defineException(401, 104012, 'authentication failed'),
   forbidden: defineException(403, 104030, 'forbidden'),
   notFound: defineException(404, 104040, 'not found'),
   serverError: defineException(500, 105000, 'server error'),
@@ -51,6 +53,26 @@ export class Forbidden extends MyHttpException {
       super({ ...definedException.forbidden, optionalInfo }, message);
     } else {
       super({ ...definedException.forbidden, optionalInfo: message });
+    }
+  }
+}
+
+export class TokenExpired extends MyHttpException {
+  constructor(message?: string | Error | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string' || message instanceof Error) {
+      super({ ...definedException.tokenExpired, optionalInfo }, message);
+    } else {
+      super({ ...definedException.tokenExpired, optionalInfo: message });
+    }
+  }
+}
+
+export class AuthenticationFailed extends MyHttpException {
+  constructor(message?: string | Error | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string' || message instanceof Error) {
+      super({ ...definedException.authenticationFailed, optionalInfo }, message);
+    } else {
+      super({ ...definedException.authenticationFailed, optionalInfo: message });
     }
   }
 }
