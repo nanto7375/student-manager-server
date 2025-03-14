@@ -1,9 +1,9 @@
 import { applyDecorators, CanActivate, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './guard/auth.guard';
 import { AdminRoleType } from '@src/admin/entity.ts/admin.entity';
 import { AdminLevel } from '@src/admin/admin-level.decorator';
-import { RoleGuard } from './role.guard';
+import { RoleGuard } from './guard/role.guard';
 
 type ReturnCanActivateType = new (...args: any[]) => CanActivate;
 export function Auth(adminType: AdminRoleType | ReturnCanActivateType | null = null, ...guards: ReturnCanActivateType[]) {

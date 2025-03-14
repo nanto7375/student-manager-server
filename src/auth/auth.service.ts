@@ -14,22 +14,24 @@ import { HashService } from '@src/common/utils/hash';
 import { Admin, AdminRoleType } from '@src/admin/entity.ts/admin.entity';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
 
+export const JWT_EXPIRED_ERROR = 'jwt expired';
+
 export enum TokenType {
   ACCESS = 'access',
   REFRESH = 'refresh',
 }
-type JwtPayload = { id: number; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
-type SigninParams = { email: string; password: string; ip: string; fingerprint: string };
+type JwtPayload = { email: string; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
+type VerifyJwtParams = { token: string; fingerprint: string; tokenType?: TokenType };
+type SigninParams = { email: string; password: string; ip: string; fingerprint: string; now?: Date };
+type DiscardTokenParams = { token: string; exp: number; now?: Date };
 type RefreshParams = { refreshToken: string; ip: string; fingerprint: string; now: Date };
-
-export const JWT_EXPIRED_ERROR = 'jwt expired';
 
 @Injectable()
 export class AuthService {
   private readonly _JWT_SECRET: string;
   private readonly _JWT_REFRESH_SECRET: string;
-  private readonly _ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS: number;
-  private readonly _REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS: number;
+  private readonly _ACCESS_TOKEN_EXPIRE_PERIOD_IN_SECONDS: number;
+  private readonly _REFRESH_TOKEN_EXPIRE_PERIOD_IN_SECONDS: number;
   private readonly _REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS: number;
 
   constructor(
@@ -45,12 +47,14 @@ export class AuthService {
   ) {
     this._JWT_SECRET = this.configService.get('SM_JWT_SECRET');
     this._JWT_REFRESH_SECRET = this.configService.get('SM_JWT_REFRESH_SECRET');
-    this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS = this.configService.get('SM_JWT_ACCESS_EXPIRE_TIME');
-    this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_EXPIRE_TIME');
+    this._ACCESS_TOKEN_EXPIRE_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_ACCESS_EXPIRE_PERIOD');
+    this._REFRESH_TOKEN_EXPIRE_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_EXPIRE_PERIOD');
     this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_TOKEN_RENEWAL_PERIOD');
   }
 
-  private _signJwt(payload: Record<string, any>, tokenType: TokenType = TokenType.ACCESS): Promise<string> {
+  private _signJwt(payload: Record<string, any>, now: Date, tokenType: TokenType = TokenType.ACCESS): Promise<string> {
+    payload.exp = now.getTime() / 1000 + (tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_EXPIRE_PERIOD_IN_SECONDS : this._REFRESH_TOKEN_EXPIRE_PERIOD_IN_SECONDS);
+
     return this.jwtService.signAsync(payload, {
       secret: tokenType === TokenType.ACCESS ? this._JWT_SECRET : this._JWT_REFRESH_SECRET,
     });
@@ -67,12 +71,12 @@ export class AuthService {
   private async _authenticate(email: string, password: string) {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
     const isPasswordCorrect = await this.hashService.compare(password, admin.password);
-    if (!isPasswordCorrect) throw new Unauthorized('wrong password');
+    if (!isPasswordCorrect) throw new Unauthorized('이메일 또는 비밀번호가 잘못되었습니다');
 
     return admin;
   }
 
-  async signin({ email, password, ip, fingerprint }: SigninParams) {
+  async signin({ email, password, ip, fingerprint, now = new Date() }: SigninParams) {
     const failedSigninCount = await this.failedSigninAttemptCache.get(email);
     if (failedSigninCount >= 5) throw new Forbidden('too many failed');
 
@@ -86,21 +90,8 @@ export class AuthService {
     }
 
     const [accessToken, refreshToken] = await Promise.all([
-      this._signJwt({
-        id: admin.id,
-        role: admin.role,
-        exp: this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS,
-        fingerprint,
-      }),
-      this._signJwt(
-        {
-          id: admin.id,
-          role: admin.role,
-          exp: this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS,
-          fingerprint,
-        },
-        TokenType.REFRESH,
-      ),
+      this._signJwt({ email: admin.email, role: admin.role, fingerprint }, now, TokenType.ACCESS), //
+      this._signJwt({ email: admin.email, role: admin.role, fingerprint }, now, TokenType.REFRESH),
     ]);
     if (failedSigninCount > 0) await this.failedSigninAttemptCache.clear(email);
 
@@ -108,11 +99,11 @@ export class AuthService {
       admin,
       accessTokenInfo: {
         token: accessToken,
-        exp: this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS,
+        exp: this._ACCESS_TOKEN_EXPIRE_PERIOD_IN_SECONDS,
       },
       refreshTokenInfo: {
         token: refreshToken,
-        exp: this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS,
+        exp: this._REFRESH_TOKEN_EXPIRE_PERIOD_IN_SECONDS,
       },
     };
   }
@@ -135,9 +126,9 @@ export class AuthService {
   }
 
   async discardToken({ token, exp, now = new Date() }: DiscardTokenParams) {
-    const remainingTime = exp * 1000 - now.getTime();
+    const remainingTime = Math.max(exp * 1000 - now.getTime(), 0);
+    if (remainingTime <= 0) return;
     await this.discardedTokenCache.set(token, remainingTime);
-    return true;
   }
 
   private async _isDiscardedToken(token: string) {
@@ -156,29 +147,16 @@ export class AuthService {
       payload = await this.verifyJwt({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
     } catch (e) {
       this.logger.warn({ message: e.message, ip });
-      await this.banIp(ip);
+      if (e.message !== JWT_EXPIRED_ERROR) await this.banIp(ip);
       throw new Unauthorized();
     }
 
-    const accessToken = await this._signJwt({
-      id: payload.id,
-      role: payload.role,
-      exp: this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS,
-      fingerprint,
-    });
+    const accessToken = await this._signJwt({ email: payload.email, role: payload.role, fingerprint }, now, TokenType.ACCESS);
 
     if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, now)) {
       const result = await Promise.all([
-        this.discardToken({ token: refreshToken, exp: payload.exp, now }),
-        this._signJwt(
-          {
-            id: payload.id,
-            role: payload.role,
-            exp: this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS,
-            fingerprint,
-          },
-          TokenType.REFRESH,
-        ),
+        this.discardToken({ token: refreshToken, exp: payload.exp, now }), //
+        this._signJwt({ email: payload.email, role: payload.role, fingerprint }, now, TokenType.REFRESH),
       ]);
       refreshToken = result[1];
     }
@@ -186,15 +164,12 @@ export class AuthService {
     return {
       accessTokenInfo: {
         token: accessToken,
-        exp: this._ACCESS_TOKEN_EXPIRE_TIME_IN_SECONDS,
+        exp: this._ACCESS_TOKEN_EXPIRE_PERIOD_IN_SECONDS,
       },
       refreshTokenInfo: {
         token: refreshToken,
-        exp: this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS,
+        exp: this._REFRESH_TOKEN_EXPIRE_PERIOD_IN_SECONDS,
       },
     };
   }
 }
-
-type VerifyJwtParams = { token: string; fingerprint: string; tokenType?: TokenType };
-type DiscardTokenParams = { token: string; exp: number; now?: Date };

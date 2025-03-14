@@ -5,24 +5,26 @@ import { CacheService } from '@src/common/cache/cache.service';
 @Injectable()
 export class FailedSigninAttemptCache {
   private readonly _FAILED_ATTEMPTS_CACHE_KEY_PREFIX = 'failed_attempts';
-  private readonly _FAILED_ATTEMPTS_CACHE_TTL: number;
+  private readonly _SIGNIN_FAILED_ATTEMPTS_CLEAR_TTL: number;
 
   constructor(
     private readonly cacheService: CacheService<number>,
     private readonly configService: ConfigService,
   ) {
-    this._FAILED_ATTEMPTS_CACHE_TTL = this.configService.get('SM_SIGNIN_FAILED_ATTEMPTS_CACHE_TTL');
+    this._SIGNIN_FAILED_ATTEMPTS_CLEAR_TTL = this.configService.get('SM_SIGNIN_FAILED_ATTEMPTS_CLEAR_TTL');
   }
 
-  async get(email: string) {
+  async get(email: string): Promise<number> {
     return (await this.cacheService.get(`${this._FAILED_ATTEMPTS_CACHE_KEY_PREFIX}:${email}`)) || 0;
   }
 
-  async set(email: string, attempts: number) {
-    await this.cacheService.set(`${this._FAILED_ATTEMPTS_CACHE_KEY_PREFIX}:${email}`, attempts, this._FAILED_ATTEMPTS_CACHE_TTL);
+  async set(email: string, attempts: number, ttl: number = this._SIGNIN_FAILED_ATTEMPTS_CLEAR_TTL) {
+    await this.cacheService.set(`${this._FAILED_ATTEMPTS_CACHE_KEY_PREFIX}:${email}`, attempts, ttl);
+    return true;
   }
 
   async clear(email: string) {
     await this.cacheService.del(`${this._FAILED_ATTEMPTS_CACHE_KEY_PREFIX}:${email}`);
+    return true;
   }
 }

@@ -47,7 +47,7 @@ export class EnvironmentVariables {
       .map((v: string) => Number(v))
       .reduce((acc: number, curr: number) => acc * curr, 1);
   })
-  SM_JWT_ACCESS_EXPIRE_TIME: number;
+  SM_JWT_ACCESS_EXPIRE_PERIOD: number;
 
   @Transform(({ value }) => {
     return value
@@ -55,7 +55,7 @@ export class EnvironmentVariables {
       .map((v: string) => Number(v))
       .reduce((acc: number, curr: number) => acc * curr, 1);
   })
-  SM_JWT_REFRESH_EXPIRE_TIME: number;
+  SM_JWT_REFRESH_EXPIRE_PERIOD: number;
 
   @Transform(({ value }) => {
     return value
@@ -92,7 +92,7 @@ export class EnvironmentVariables {
 
   @Type(() => Number)
   @IsNumber({ allowInfinity: false, allowNaN: false })
-  SM_REDIS_SIGNIN_FAILED_ATTEMPTS_CACHE_TTL: number;
+  SM_SIGNIN_FAILED_ATTEMPTS_CLEAR_TTL: number;
 
   SM_S3_PUBLIC_ACCESS_KEY_ID = '';
 

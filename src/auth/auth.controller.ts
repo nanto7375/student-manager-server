@@ -3,7 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { CookieOptions, Request, Response } from 'express';
 
-import { Forbidden, Unauthorized } from '@src/common/exception/definition.exception';
+import { Unauthorized } from '@src/common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { AuthService, JWT_EXPIRED_ERROR, TokenType } from './auth.service';
 
@@ -71,7 +71,7 @@ export class AuthController {
       this.logger.warn({ message: e.message, ip: req.ip });
       if (e.message !== JWT_EXPIRED_ERROR) {
         await this.authService.banIp(req.ip as string);
-        throw new Forbidden();
+        throw new Unauthorized();
       }
     }
 
