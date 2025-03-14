@@ -26,8 +26,7 @@ export class AuthGuard implements CanActivate {
 
     let payload: Record<string, any>;
     try {
-      payload = await this.authService.verifyJwt(accessToken);
-      if (payload.fingerprint !== getFingerprint(request)) throw Error('fingerprint mismatch');
+      payload = await this.authService.verifyJwt({ token: accessToken, fingerprint: getFingerprint(request) });
     } catch (e) {
       this.logger.warn({ message: e.message, ip: request.ip });
       throw new Unauthorized();

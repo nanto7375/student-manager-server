@@ -6,7 +6,7 @@ import { MyLogger } from '@src/configs/logger/my-logger';
 import { ExternalServerError } from '../exception/definition.exception';
 
 @Injectable()
-export class CacheService {
+export class CacheService<T> {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly logger: MyLogger,
@@ -14,7 +14,7 @@ export class CacheService {
     this.logger.setContext('CacheService');
   }
 
-  async get<T>(key: string): Promise<T> {
+  async get(key: string): Promise<T> {
     try {
       return (await this.cacheManager.get(key)) as T;
     } catch (e) {
@@ -23,7 +23,7 @@ export class CacheService {
     }
   }
 
-  async set(key: string, value: any, ttl?: number) {
+  async set(key: string, value: T, ttl?: number) {
     try {
       return await this.cacheManager.set(key, value, ttl ?? 0);
     } catch (e) {

@@ -3,9 +3,9 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { CookieOptions, Request, Response } from 'express';
 
-import { Unauthorized } from '@src/common/exception/definition.exception';
+import { Forbidden, Unauthorized } from '@src/common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { AuthService } from './auth.service';
+import { AuthService, JWT_EXPIRED_ERROR, TokenType } from './auth.service';
 
 import { toInstance } from '@src/common/toInstance';
 import { SigninRequestDto } from './dto/auth-request.dto';
@@ -58,7 +58,22 @@ export class AuthController {
   @ApiOperation({ summary: '로그아웃' })
   async signout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies['refr'];
-    if (refreshToken) await this.authService.discardToken(refreshToken);
+    try {
+      if (refreshToken) {
+        const payload = await this.authService.verifyJwt({
+          token: refreshToken,
+          fingerprint: getFingerprint(req),
+          tokenType: TokenType.REFRESH,
+        });
+        await this.authService.discardToken({ token: refreshToken, exp: payload.exp });
+      }
+    } catch (e) {
+      this.logger.warn({ message: e.message, ip: req.ip });
+      if (e.message !== JWT_EXPIRED_ERROR) {
+        await this.authService.banIp(req.ip as string);
+        throw new Forbidden();
+      }
+    }
 
     res.clearCookie('acc', { secure: true, sameSite: 'none' });
     res.clearCookie('refr', { secure: true, sameSite: 'none' });

@@ -4,20 +4,20 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { DiscardedToken } from './entity/discardedToken.entity';
 import { BannedIp } from './entity/banned-ip.entity';
 import { HashService } from '@src/common/utils/hash';
 import { AdminModule } from '@src/admin/admin.module';
-import { FailedSigninAttemptCache } from './failed-signin-attempt.cache';
+import { FailedSigninAttemptCache } from './cache/failed-signin-attempt.cache';
+import { DiscardedTokenCache } from './cache/discarded-token.cache';
 
 @Module({
   imports: [
     JwtModule.register({}), //
-    TypeOrmModule.forFeature([DiscardedToken, BannedIp]),
+    TypeOrmModule.forFeature([BannedIp]),
     AdminModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, HashService, FailedSigninAttemptCache],
+  providers: [AuthService, HashService, FailedSigninAttemptCache, DiscardedTokenCache],
   exports: [AuthService],
 })
 export class AuthModule {}

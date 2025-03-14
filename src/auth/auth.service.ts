@@ -9,18 +9,20 @@ import { Forbidden, Unauthorized } from '@src/common/exception/definition.except
 
 import { AdminService } from '@src/admin/admin.service';
 import { BannedIp } from './entity/banned-ip.entity';
-import { DiscardedToken } from './entity/discardedToken.entity';
-import { FailedSigninAttemptCache } from './failed-signin-attempt.cache';
+import { FailedSigninAttemptCache } from './cache/failed-signin-attempt.cache';
 import { HashService } from '@src/common/utils/hash';
 import { Admin, AdminRoleType } from '@src/admin/entity.ts/admin.entity';
+import { DiscardedTokenCache } from './cache/discarded-token.cache';
 
-enum TokenType {
+export enum TokenType {
   ACCESS = 'access',
   REFRESH = 'refresh',
 }
 type JwtPayload = { id: number; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
 type SigninParams = { email: string; password: string; ip: string; fingerprint: string };
 type RefreshParams = { refreshToken: string; ip: string; fingerprint: string; now: Date };
+
+export const JWT_EXPIRED_ERROR = 'jwt expired';
 
 @Injectable()
 export class AuthService {
@@ -37,8 +39,7 @@ export class AuthService {
     private readonly adminService: AdminService,
     private readonly hashService: HashService,
     private readonly failedSigninAttemptCache: FailedSigninAttemptCache,
-    @InjectRepository(DiscardedToken)
-    private readonly discardedTokenRepository: Repository<DiscardedToken>,
+    private readonly discardedTokenCache: DiscardedTokenCache,
     @InjectRepository(BannedIp)
     private readonly bannedIpRepository: Repository<BannedIp>,
   ) {
@@ -55,10 +56,12 @@ export class AuthService {
     });
   }
 
-  verifyJwt(token: string, tokenType: TokenType = TokenType.ACCESS): Promise<JwtPayload> {
-    return this.jwtService.verifyAsync(token, {
+  async verifyJwt({ token, fingerprint, tokenType = TokenType.ACCESS }: VerifyJwtParams): Promise<JwtPayload> {
+    const payload = await this.jwtService.verifyAsync(token, {
       secret: tokenType === TokenType.ACCESS ? this._JWT_SECRET : this._JWT_REFRESH_SECRET,
     });
+    if (payload.fingerprint !== fingerprint) throw Error('fingerprint mismatch');
+    return payload;
   }
 
   private async _authenticate(email: string, password: string) {
@@ -71,7 +74,7 @@ export class AuthService {
 
   async signin({ email, password, ip, fingerprint }: SigninParams) {
     const failedSigninCount = await this.failedSigninAttemptCache.get(email);
-    if (failedSigninCount >= 5) throw new Forbidden('Too many failed signin attempts');
+    if (failedSigninCount >= 5) throw new Forbidden('too many failed');
 
     let admin: Admin;
     try {
@@ -79,7 +82,7 @@ export class AuthService {
     } catch (e) {
       this.logger.warn({ message: e.message, ip });
       await this.failedSigninAttemptCache.set(email, failedSigninCount + 1);
-      throw new Unauthorized();
+      throw e;
     }
 
     const [accessToken, refreshToken] = await Promise.all([
@@ -120,7 +123,7 @@ export class AuthService {
     return timeDiffInSeconds <= this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS;
   }
 
-  private async _banIp(ip: string) {
+  async banIp(ip: string) {
     const bannedIp = new BannedIp();
     bannedIp.ip = ip;
     return this.bannedIpRepository.save(bannedIp);
@@ -131,29 +134,29 @@ export class AuthService {
     return !!bannedIp;
   }
 
-  async discardToken(token: string) {
-    const discardedToken = DiscardedToken.of({ token, createdAt: new Date() });
-    return this.discardedTokenRepository.save(discardedToken);
+  async discardToken({ token, exp, now = new Date() }: DiscardTokenParams) {
+    const remainingTime = exp * 1000 - now.getTime();
+    await this.discardedTokenCache.set(token, remainingTime);
+    return true;
   }
 
   private async _isDiscardedToken(token: string) {
-    const discardedToken = await this.discardedTokenRepository.findOne({ where: { token } });
-    return !!discardedToken;
+    return !!(await this.discardedTokenCache.get(token));
   }
 
   async refresh({ refreshToken, ip, fingerprint, now }: RefreshParams) {
     if (await this._isDiscardedToken(refreshToken)) {
       this.logger.warn({ message: 'refresh token is discarded', ip });
-      await this._banIp(ip);
+      await this.banIp(ip);
       throw new Forbidden();
     }
 
     let payload: JwtPayload;
     try {
-      payload = await this.verifyJwt(refreshToken, TokenType.REFRESH);
-      if (payload.fingerprint !== fingerprint) throw Error('fingerprint mismatch');
+      payload = await this.verifyJwt({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
     } catch (e) {
       this.logger.warn({ message: e.message, ip });
+      await this.banIp(ip);
       throw new Unauthorized();
     }
 
@@ -165,16 +168,19 @@ export class AuthService {
     });
 
     if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, now)) {
-      refreshToken = await this._signJwt(
-        {
-          id: payload.id,
-          role: payload.role,
-          exp: this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS,
-          fingerprint,
-        },
-        TokenType.REFRESH,
-      );
-      await this.discardToken(refreshToken);
+      const result = await Promise.all([
+        this.discardToken({ token: refreshToken, exp: payload.exp, now }),
+        this._signJwt(
+          {
+            id: payload.id,
+            role: payload.role,
+            exp: this._REFRESH_TOKEN_EXPIRE_TIME_IN_SECONDS,
+            fingerprint,
+          },
+          TokenType.REFRESH,
+        ),
+      ]);
+      refreshToken = result[1];
     }
 
     return {
@@ -189,3 +195,6 @@ export class AuthService {
     };
   }
 }
+
+type VerifyJwtParams = { token: string; fingerprint: string; tokenType?: TokenType };
+type DiscardTokenParams = { token: string; exp: number; now?: Date };
