@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { AuthenticationFailed, Forbidden, TokenExpired, Unauthorized } from '@src/common/exception/definition.exception';
+import { AuthenticationFailed, Forbidden, Unauthorized } from '@src/common/exception/definition.exception';
 
 import { AdminService } from '@src/admin/admin.service';
 import { BannedIp } from './entity/banned-ip.entity';
@@ -143,9 +143,10 @@ export class AuthService {
     try {
       payload = await this.verifyToken({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
     } catch (e) {
-      this.logger.warn({ message: e.message, ip });
-      if (e.message === TOKEN_EXPIRED_ERROR) throw new TokenExpired();
-      await this.banIp(ip);
+      if (e.message !== TOKEN_EXPIRED_ERROR) {
+        this.logger.warn({ message: e.message, ip });
+        await this.banIp(ip);
+      }
       throw new Unauthorized();
     }
 

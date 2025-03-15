@@ -28,8 +28,8 @@ export class AuthGuard implements CanActivate {
     try {
       payload = await this.authService.verifyToken({ token: accessToken, fingerprint: getFingerprint(request) });
     } catch (e) {
-      this.logger.warn({ message: e.message, ip: request.ip });
       if (e.message === TOKEN_EXPIRED_ERROR) throw new TokenExpired();
+      this.logger.warn({ message: e.message, ip: request.ip });
       throw new Unauthorized();
     }
 
