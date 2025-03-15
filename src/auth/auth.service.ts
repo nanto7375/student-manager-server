@@ -108,8 +108,8 @@ export class AuthService {
     return { admin, accessToken, refreshToken };
   }
 
-  private _isWithinRefreshTokenRenewalPeriod(exp: number, now: Date) {
-    const refreshTokenExpiry = new Date(exp * 1000);
+  private _isWithinRefreshTokenRenewalPeriod(tokenExp: number, now: Date) {
+    const refreshTokenExpiry = new Date(tokenExp * 1000);
     const timeDiffInSeconds = (refreshTokenExpiry.getTime() - now.getTime()) / 1000;
     return timeDiffInSeconds <= this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS;
   }

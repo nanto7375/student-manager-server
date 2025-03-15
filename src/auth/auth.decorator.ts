@@ -3,10 +3,11 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from './guard/auth.guard';
 import { AdminRoleType } from '@src/admin/entity/admin.entity';
 import { AdminLevel } from '@src/admin/admin-level.decorator';
-import { RoleGuard } from './guard/role.guard';
+import { RoleGuard } from '../admin/admin-role.guard';
 
 type ReturnCanActivateType = new (...args: any[]) => CanActivate;
-export function Auth(adminType: AdminRoleType | ReturnCanActivateType | null = null, ...guards: ReturnCanActivateType[]) {
+
+export function Auth(adminType: AdminRoleType | ReturnCanActivateType | null, ...guards: ReturnCanActivateType[]) {
   if (!adminType) {
     return applyDecorators(
       ApiBearerAuth('accessJWT'), //
