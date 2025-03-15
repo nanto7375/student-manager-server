@@ -7,7 +7,7 @@ import { Unauthorized } from '@src/common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { AuthService, TOKEN_EXPIRED_ERROR, TokenType } from './auth.service';
 
-import { toInstance } from '@src/common/toInstance';
+import { toInstance } from '@src/common/utils/toInstance';
 import { SigninRequestDto } from './dto/auth-request.dto';
 import { AdminDto } from '@src/admin/dto/admin-response.dto';
 import { getFingerprint } from '@src/common/utils/etc';

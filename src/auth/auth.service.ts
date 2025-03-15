@@ -131,13 +131,10 @@ export class AuthService {
     await this.discardedTokenCache.set(token, remainingTime);
   }
 
-  private async _isDiscardedToken(token: string) {
-    return !!(await this.discardedTokenCache.get(token));
-  }
-
   async refresh({ refreshToken, ip, fingerprint, refreshDate = new Date() }: RefreshParams) {
-    if (await this._isDiscardedToken(refreshToken)) {
-      this.logger.warn({ message: 'refresh token is discarded', ip });
+    const discardedToken = await this.discardedTokenCache.get(refreshToken);
+    if (discardedToken) {
+      this.logger.warn({ message: 'refreshtoken has been discarded', ip });
       await this.banIp(ip);
       throw new Forbidden();
     }

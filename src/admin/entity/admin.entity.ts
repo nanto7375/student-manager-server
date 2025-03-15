@@ -36,7 +36,7 @@ export class Admin {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   phone: string;
 
   @Column({ default: AdminRoleType.STAFF, comment: 'super_admin, admin, manager, staff' })
