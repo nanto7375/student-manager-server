@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Student } from '@src/student/entity/student.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum DayOfWeek {
   MONDAY = 1,
@@ -23,6 +24,9 @@ export class ClassSchedule {
 
   @Column()
   endTime: Date;
+
+  @OneToMany(() => Student, (student) => student.classSchedule)
+  students: Student[];
 
   static of(classScheduleDto: ClassScheduleOf) {
     const classSchedule = new ClassSchedule();
