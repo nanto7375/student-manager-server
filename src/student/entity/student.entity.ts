@@ -28,8 +28,11 @@ export class Student {
   @Column({ type: 'varchar', length: 12, nullable: true, comment: '01012345678' })
   parentPhone: string;
 
-  @Column({ type: 'varchar', length: 30, nullable: true, comment: 'XX초, OO중, **고' })
+  @Column({ type: 'varchar', length: 30, nullable: true })
   schoolName: string;
+
+  @Column({ type: 'char', length: 1, nullable: true, comment: '초,중,고' })
+  schoolLevel: string;
 
   @Column({ nullable: true })
   classScheduleId: number;
