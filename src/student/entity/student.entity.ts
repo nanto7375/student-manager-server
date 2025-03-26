@@ -1,5 +1,6 @@
 import { ClassSchedule } from '@src/schedule/entity/class-schedule.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { TuitionPayment } from '@src/tuition-payment/entity/tuition-payment.entity';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Student {
@@ -36,12 +37,11 @@ export class Student {
   @ManyToOne(() => ClassSchedule, (classSchedule) => classSchedule.id)
   classSchedule: ClassSchedule;
 
-  // TODO: 필요 없을 수도
-  @Column()
-  registeredAt: Date;
+  @OneToMany(() => TuitionPayment, (tuitionPayment) => tuitionPayment.student)
+  tuitionPayments: TuitionPayment[];
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
-  createdAt: Date;
+  registeredAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   updatedAt: Date;
