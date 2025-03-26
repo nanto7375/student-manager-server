@@ -108,12 +108,6 @@ export class AuthService {
     return { admin, accessToken, refreshToken };
   }
 
-  private _isWithinRefreshTokenRenewalPeriod(tokenExp: number, now: Date) {
-    const refreshTokenExpiry = new Date(tokenExp * 1000);
-    const timeDiffInSeconds = (refreshTokenExpiry.getTime() - now.getTime()) / 1000;
-    return timeDiffInSeconds <= this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS;
-  }
-
   async banIp(ip: string) {
     const bannedIp = new BannedIp();
     bannedIp.ip = ip;
@@ -129,6 +123,12 @@ export class AuthService {
     const remainingTime = Math.max(exp * 1000 - currentDate.getTime(), 0);
     if (remainingTime <= 0) return;
     await this.discardedTokenCache.set(token, remainingTime);
+  }
+
+  private _isWithinRefreshTokenRenewalPeriod(tokenExp: number, now: Date) {
+    const refreshTokenExpiry = new Date(tokenExp * 1000);
+    const timeDiffInSeconds = (refreshTokenExpiry.getTime() - now.getTime()) / 1000;
+    return timeDiffInSeconds <= this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS;
   }
 
   async refresh({ refreshToken, ip, fingerprint, refreshDate = new Date() }: RefreshParams) {

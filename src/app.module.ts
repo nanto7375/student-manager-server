@@ -15,6 +15,9 @@ import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { BannedIpGuard } from './auth/guard/banned-ip.guard';
 import { MyCacheModule } from './common/cache/my-cache.module';
+import { ScheduleModule } from './schedule/schedule.module';
+import { StudentModule } from './student/student.module';
+import { TuitionPaymentModule } from './tuition-payment/tuition-payment.module';
 
 @Module({
   imports: [
@@ -28,6 +31,9 @@ import { MyCacheModule } from './common/cache/my-cache.module';
     MyCacheModule,
     AuthModule,
     AdminModule,
+    ScheduleModule,
+    StudentModule,
+    TuitionPaymentModule,
   ],
   controllers: [AppController],
   providers: [
