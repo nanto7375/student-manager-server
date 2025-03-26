@@ -1,11 +1,11 @@
 export enum DayOfWeek {
-  MON = 1,
-  TUE = 2,
-  WED = 3,
-  THU = 4,
-  FRI = 5,
-  SAT = 6,
-  SUN = 7,
+  MON = '월',
+  TUE = '화',
+  WED = '수',
+  THU = '목',
+  FRI = '금',
+  SAT = '토',
+  SUN = '일',
 }
 
 export enum Month {

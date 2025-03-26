@@ -7,14 +7,14 @@ export class ClassSchedule {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: '1~7, 1=월요일' })
-  dayOfWeek: number;
+  @Column({ comment: '월,화,수,목,금,토,일' })
+  dayOfWeek: string;
 
   @Column({ comment: 'HHMM' })
-  startTime: Date;
+  startTime: string;
 
   @Column({ comment: 'HHMM' })
-  endTime: Date;
+  endTime: string;
 
   @OneToMany(() => Student, (student) => student.classSchedule)
   students: Student[];
@@ -30,6 +30,6 @@ export class ClassSchedule {
 
 type ClassScheduleOf = {
   dayOfWeek: DayOfWeek;
-  startTime: Date;
-  endTime: Date;
+  startTime: string;
+  endTime: string;
 };
