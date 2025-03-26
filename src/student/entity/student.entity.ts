@@ -43,6 +43,9 @@ export class Student {
   @OneToMany(() => TuitionPayment, (tuitionPayment) => tuitionPayment.student)
   tuitionPayments: TuitionPayment[];
 
+  @Column({ type: 'timestamp', nullable: true })
+  registeredAt: Date;
+
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   createdAt: Date;
 
