@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Student } from '@src/student/entity/student.entity';
 import { DayOfWeek } from '@src/common/constant/date.const';
 
@@ -18,6 +18,15 @@ export class ClassSchedule {
 
   @OneToMany(() => Student, (student) => student.classSchedule)
   students: Student[];
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
+  deletedAt: Date;
 
   static of(classScheduleDto: ClassScheduleOf) {
     const classSchedule = new ClassSchedule();
