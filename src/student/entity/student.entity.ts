@@ -10,25 +10,25 @@ export class Student {
   @Column()
   name: string;
 
-  @Column()
-  birthYear: number;
+  @Column({ type: 'char', length: 4, comment: 'YYYY' })
+  birthYear: string;
 
-  @Column({ nullable: true, comment: 'MMDD' })
-  birthDate: Date;
+  @Column({ type: 'char', length: 4, comment: 'MMDD' })
+  birthDate: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'char', length: 1, comment: 'M,F', nullable: true })
   gender: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', unsigned: true, nullable: true })
   tuition: number;
 
-  @Column({ nullable: true, comment: '01012345678' })
+  @Column({ type: 'varchar', length: 12, nullable: true, comment: '01012345678' })
   phone: string;
 
-  @Column({ nullable: true, comment: '01012345678' })
+  @Column({ type: 'varchar', length: 12, nullable: true, comment: '01012345678' })
   parentPhone: string;
 
-  @Column({ nullable: true, comment: 'XX초, OO중, **고' })
+  @Column({ type: 'varchar', length: 30, nullable: true, comment: 'XX초, OO중, **고' })
   schoolName: string;
 
   @Column({ nullable: true })

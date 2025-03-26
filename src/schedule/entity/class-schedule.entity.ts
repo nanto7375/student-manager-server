@@ -7,13 +7,13 @@ export class ClassSchedule {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: '월,화,수,목,금,토,일' })
+  @Column({ type: 'char', length: 1, comment: '월,화,수,목,금,토,일' })
   dayOfWeek: string;
 
-  @Column({ comment: 'HHMM' })
+  @Column({ type: 'char', length: 4, comment: 'HHMM' })
   startTime: string;
 
-  @Column({ comment: 'HHMM' })
+  @Column({ type: 'char', length: 4, comment: 'HHMM' })
   endTime: string;
 
   @OneToMany(() => Student, (student) => student.classSchedule)
