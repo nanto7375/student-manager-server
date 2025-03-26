@@ -23,7 +23,7 @@ export class TuitionPayment {
   amount: number;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
-  payedAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   updatedAt: Date;

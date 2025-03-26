@@ -44,7 +44,7 @@ export class Student {
   tuitionPayments: TuitionPayment[];
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
-  registeredAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   updatedAt: Date;
