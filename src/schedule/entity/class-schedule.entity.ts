@@ -1,19 +1,19 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Student } from '@src/student/entity/student.entity';
-import { DayOfWeek } from '@src/common/common.const';
+import { DayOfWeek } from '@src/common/constant/date.const';
 
 @Entity()
 export class ClassSchedule {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ comment: '1~7, 1=월요일' })
   dayOfWeek: number;
 
-  @Column()
+  @Column({ comment: 'HHMM' })
   startTime: Date;
 
-  @Column()
+  @Column({ comment: 'HHMM' })
   endTime: Date;
 
   @OneToMany(() => Student, (student) => student.classSchedule)
