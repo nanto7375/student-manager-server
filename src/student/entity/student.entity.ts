@@ -1,6 +1,6 @@
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { ClassSchedule } from '@src/schedule/entity/class-schedule.entity';
 import { TuitionPayment } from '@src/tuition-payment/entity/tuition-payment.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Student {
@@ -11,30 +11,30 @@ export class Student {
   name: string;
 
   @Column()
-  tuition: number;
+  birthYear: number;
+
+  @Column({ nullable: true, comment: 'MMDD' })
+  birthDate: Date;
 
   @Column({ nullable: true })
   gender: string;
 
-  @Column()
-  birthYear: number;
-
   @Column({ nullable: true })
-  birthDate: Date;
+  tuition: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, comment: '01012345678' })
   phone: string;
 
-  @Column()
+  @Column({ nullable: true, comment: '01012345678' })
   parentPhone: string;
 
-  @Column()
+  @Column({ nullable: true, comment: 'XX초, OO중, **고' })
   schoolName: string;
 
-  @Column()
+  @Column({ nullable: true })
   classScheduleId: number;
 
-  @ManyToOne(() => ClassSchedule, (classSchedule) => classSchedule.id)
+  @ManyToOne(() => ClassSchedule, (classSchedule) => classSchedule.id, { nullable: true })
   classSchedule: ClassSchedule;
 
   @OneToMany(() => TuitionPayment, (tuitionPayment) => tuitionPayment.student)

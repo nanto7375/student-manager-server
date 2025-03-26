@@ -1,5 +1,5 @@
-import { Student } from '@src/student/entity/student.entity';
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Student } from '@src/student/entity/student.entity';
 
 @Entity()
 export class TuitionPayment {
