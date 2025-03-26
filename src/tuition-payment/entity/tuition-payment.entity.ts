@@ -20,7 +20,7 @@ export class TuitionPayment {
   month: string;
 
   @Column({ type: 'int', unsigned: true })
-  amount: number;
+  feeAmount: number;
 
   @Column({ type: 'timestamp', nullable: true })
   payedAt: Date;
@@ -36,7 +36,7 @@ export class TuitionPayment {
     tuitionPayment.student = tuitionPaymentDto.student;
     tuitionPayment.year = tuitionPaymentDto.year;
     tuitionPayment.month = tuitionPaymentDto.month;
-    tuitionPayment.amount = tuitionPaymentDto.amount;
+    tuitionPayment.feeAmount = tuitionPaymentDto.feeAmount;
     return tuitionPayment;
   }
 }
@@ -45,5 +45,5 @@ type TuitionPaymentOf = {
   student: Student;
   year: string;
   month: Month;
-  amount: number;
+  feeAmount: number;
 };
