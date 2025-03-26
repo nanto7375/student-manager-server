@@ -22,6 +22,9 @@ export class TuitionPayment {
   @Column({ type: 'int', unsigned: true })
   amount: number;
 
+  @Column({ type: 'timestamp', nullable: true })
+  payedAt: Date;
+
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   createdAt: Date;
 
