@@ -23,12 +23,26 @@ export class StudentService {
   async registerStudent({ studentDto, classSchedule }: RegisterStudentParams) {
     const student = this.studentBuilder
       .creator(studentDto.name)
-      .setBirth({ birthYear: studentDto.birthYear, birthDate: studentDto.birthDate, gender: studentDto.gender })
-      .setPhone({ phone: studentDto.phone, parentPhone: studentDto.parentPhone })
-      .setSchool({ schoolName: studentDto.schoolName, schoolLevel: studentDto.schoolLevel })
-      .setClass({ classSchedule, tuition: studentDto.tuition })
+      .setBirth({
+        birthYear: studentDto.birthYear,
+        birthDate: studentDto.birthDate,
+        gender: studentDto.gender,
+      })
+      .setPhone({
+        phone: studentDto.phone,
+        parentPhone: studentDto.parentPhone,
+      })
+      .setSchool({
+        schoolName: studentDto.schoolName,
+        schoolLevel: studentDto.schoolLevel,
+      })
+      .setClass({
+        classSchedule,
+        tuition: studentDto.tuition,
+        registeredAt: studentDto.registeredAt,
+      })
       .create();
 
-    return this.studentRepository.save(student);
+    return await this.studentRepository.save(student);
   }
 }

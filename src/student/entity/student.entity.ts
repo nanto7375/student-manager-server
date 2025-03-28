@@ -31,7 +31,7 @@ export class Student {
   @Column({ type: 'varchar', length: 30, nullable: true })
   schoolName: string;
 
-  @Column({ type: 'varchar', length: 30, nullable: true, comment: '초등학교,중학교,고등학교' })
+  @Column({ type: 'varchar', length: 10, nullable: true, comment: '초등학교,중학교,고등학교' })
   schoolLevel: string;
 
   @Column({ type: 'int', unsigned: true, nullable: true })

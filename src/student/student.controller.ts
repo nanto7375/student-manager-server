@@ -10,6 +10,7 @@ import { ScheduleService } from '@src/schedule/schedule.service';
 import { RegisterStudentRequestDto } from './dto/student-request.dto';
 import { StudentDto } from './dto/student-response.dto';
 import { toInstance } from '@src/common/utils/toInstance';
+import { now } from '@src/common/utils/etc';
 
 @Controller('students')
 @ApiTags('student')
@@ -22,6 +23,8 @@ export class StudentController {
   @Post()
   @Auth(AdminRoleType.ADMIN)
   async registerStudent(@Body() studentDto: RegisterStudentRequestDto, @AdminEmail() adminEmail: string) {
+    if (!studentDto.registeredAt) studentDto.registeredAt = now();
+
     const student = await this.studentService.registerStudent({
       studentDto,
       classSchedule: await this.scheduleService.getClassScheduleOrThrow(studentDto.classScheduleId),
