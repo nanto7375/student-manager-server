@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CacheService } from '@src/common/cache/cache.service';
+import { MyCacheService } from '@src/common/cache/my-cache.service';
 
 @Injectable()
 export class FailedSigninAttemptCache {
@@ -8,7 +8,7 @@ export class FailedSigninAttemptCache {
   private readonly _SIGNIN_FAILED_ATTEMPTS_CLEAR_TTL: number;
 
   constructor(
-    private readonly cacheService: CacheService<number>,
+    private readonly cacheService: MyCacheService<number>,
     private readonly configService: ConfigService,
   ) {
     this._SIGNIN_FAILED_ATTEMPTS_CLEAR_TTL = this.configService.get('SM_SIGNIN_FAILED_ATTEMPTS_CLEAR_TTL');

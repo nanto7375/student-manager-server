@@ -6,7 +6,7 @@ import { MyLogger } from '@src/configs/logger/my-logger';
 import { ExternalServerError } from '../exception/definition.exception';
 
 @Injectable()
-export class CacheService<T> {
+export class MyCacheService<T> {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly logger: MyLogger,
