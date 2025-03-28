@@ -2,6 +2,7 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import { AppController } from './app.controller';
 import { GlobalExceptionFilter, NotFoundExceptionFilter } from './common/exception-filter';
@@ -27,6 +28,7 @@ import { TuitionPaymentModule } from './tuition-payment/tuition-payment.module';
       { name: 'medium', ttl: 10000, limit: 60 },
     ]),
     TypeOrmModule.forRootAsync({ useClass: MySqlConfigService }),
+    EventEmitterModule.forRoot(),
     MyLoggerModule,
     MyCacheModule,
     AuthModule,
