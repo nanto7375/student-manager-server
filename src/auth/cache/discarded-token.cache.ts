@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MyCacheService } from '@src/common/cache/my-cache.service';
+import { MyCacheService } from '@src/configs/cache/my-cache.service';
 
 @Injectable()
 export class DiscardedTokenCache {

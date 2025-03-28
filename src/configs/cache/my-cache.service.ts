@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { ExternalServerError } from '../exception/definition.exception';
+import { ExternalServerError } from '@src/common/exception/definition.exception';
 
 @Injectable()
 export class MyCacheService<T> {
