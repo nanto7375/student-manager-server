@@ -11,3 +11,5 @@ export const getFingerprint = (req: Request) => {
   ];
   return createHash('sha256').update(components.join(':')).digest('hex');
 };
+
+export const now = () => new Date();
