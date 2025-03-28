@@ -27,7 +27,7 @@ export class Admin {
   @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
   id: number;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column()
   password: string;
 
   @Column({ type: 'varchar', length: 30 })
@@ -36,7 +36,7 @@ export class Admin {
   @Column({ unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 14, nullable: true, comment: '010-1234-5678' })
+  @Column({ type: 'varchar', length: 20, nullable: true, comment: '010-1234-5678' })
   phone: string;
 
   @Column({ type: 'varchar', length: 20, default: AdminRoleType.STAFF, comment: 'super_admin, admin, manager, staff' })
