@@ -7,7 +7,7 @@ export enum DayOfWeek {
   SAT = '토',
   SUN = '일',
 }
-export type DayOfWeekKeyType = keyof typeof DayOfWeek;
+export type DayOfWeekKey = keyof typeof DayOfWeek;
 
 export enum Month {
   '_1' = '01',
