@@ -8,4 +8,3 @@ export enum SchoolLevel {
   MIDDLE = '중학교',
   HIGH = '고등학교',
 }
-export type SchoolLevelKey = keyof typeof SchoolLevel;

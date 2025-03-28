@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Student } from './entity/student.entity';
-import { Gender, SchoolLevel, SchoolLevelKey } from '@src/common/constant/common.const';
+import { Gender, SchoolLevel } from '@src/common/constant/common.const';
 import { ClassSchedule } from '@src/schedule/entity/class-schedule.entity';
 
 type CreatorSetBirth = {
@@ -14,11 +14,12 @@ type CreatorSetPhone = {
 };
 type CreatorSetSchool = {
   schoolName: string;
-  schoolLevel: SchoolLevelKey;
+  schoolLevel: SchoolLevel;
 };
 type CreatorSetClass = {
   classSchedule: ClassSchedule;
   tuition: number;
+  registeredAt: Date;
 };
 
 type EditorSetPhone = {
@@ -27,7 +28,7 @@ type EditorSetPhone = {
 };
 type EditorSetSchool = {
   schoolName: string;
-  schoolLevel: SchoolLevelKey;
+  schoolLevel: SchoolLevel;
 };
 type EditorSetClass = {
   classSchedule: ClassSchedule;
@@ -55,12 +56,13 @@ class StudentCreator {
   }
   setSchool({ schoolName, schoolLevel }: CreatorSetSchool) {
     this._student.schoolName = schoolName;
-    this._student.schoolLevel = SchoolLevel[schoolLevel];
+    this._student.schoolLevel = schoolLevel;
     return this;
   }
-  setClass({ classSchedule, tuition }: CreatorSetClass) {
+  setClass({ classSchedule, tuition, registeredAt }: CreatorSetClass) {
     this._student.classSchedule = classSchedule;
     this._student.tuition = tuition;
+    this._student.registeredAt = registeredAt;
     return this;
   }
   create() {
@@ -78,7 +80,7 @@ class StudentEditor {
   }
   setSchool({ schoolName, schoolLevel }: EditorSetSchool) {
     if (schoolName) this._student.schoolName = schoolName;
-    if (schoolLevel) this._student.schoolLevel = SchoolLevel[schoolLevel];
+    if (schoolLevel) this._student.schoolLevel = schoolLevel;
     return this;
   }
   setClass({ classSchedule, tuition }: EditorSetClass) {
