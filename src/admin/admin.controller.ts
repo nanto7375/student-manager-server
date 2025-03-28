@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { Auth } from '@src/auth/auth.decorator';
 import { ApiOkResponsePaginated } from '@src/common/swagger-paginated-response';
@@ -12,6 +12,7 @@ import { AdminRoleType } from './entity/admin.entity';
 import { PaginationRequestDto } from '@src/common/common.dto';
 
 @Controller('admins')
+@ApiTags('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 

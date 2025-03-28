@@ -14,9 +14,9 @@ import { getFingerprint } from '@src/common/utils/etc';
 
 // TODO: auth용 throttler 따로 설정하기
 // TODO: ip ban 처리 미들웨어로 따로 뺄까?
-@ApiTags('auth')
 @Controller('auth')
 @UseGuards(ThrottlerGuard)
+@ApiTags('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
