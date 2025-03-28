@@ -6,8 +6,11 @@ import { AdminLevel } from '@src/admin/admin-level.decorator';
 import { RoleGuard } from '../admin/admin-role.guard';
 
 type ReturnCanActivateType = new (...args: any[]) => CanActivate;
-
-export function Auth(adminType: AdminRoleType | ReturnCanActivateType | null, ...guards: ReturnCanActivateType[]) {
+type AuthDecorator = {
+  (...guards: ReturnCanActivateType[]): any;
+  (adminType: AdminRoleType | ReturnCanActivateType | null, ...guards: ReturnCanActivateType[]): any;
+};
+export const Auth: AuthDecorator = (adminType: AdminRoleType | ReturnCanActivateType | null, ...guards: ReturnCanActivateType[]) => {
   if (!adminType) {
     return applyDecorators(
       ApiBearerAuth('accessJWT'), //
@@ -29,4 +32,4 @@ export function Auth(adminType: AdminRoleType | ReturnCanActivateType | null, ..
     AdminLevel(adminType),
     UseGuards(AuthGuard, RoleGuard, ...guards),
   );
-}
+};

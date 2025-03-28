@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Student } from './entity/student.entity';
-import { Gender, GenderKey, SchoolLevel, SchoolLevelKey } from '@src/common/constant/common.const';
+import { Gender, SchoolLevel, SchoolLevelKey } from '@src/common/constant/common.const';
 import { ClassSchedule } from '@src/schedule/entity/class-schedule.entity';
 
 type CreatorSetBirth = {
   birthYear: string;
   birthDate: string;
-  gender: GenderKey;
+  gender: Gender;
 };
 type CreatorSetPhone = {
   phone: string;
@@ -45,7 +45,7 @@ class StudentCreator {
   setBirth({ birthYear, birthDate, gender }: CreatorSetBirth) {
     this._student.birthYear = birthYear;
     this._student.birthDate = birthDate;
-    this._student.gender = Gender[gender];
+    this._student.gender = gender;
     return this;
   }
   setPhone({ phone, parentPhone }: CreatorSetPhone) {

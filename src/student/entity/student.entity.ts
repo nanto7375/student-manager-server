@@ -16,7 +16,7 @@ export class Student {
   @Column({ type: 'char', length: 4, nullable: true, comment: 'MMDD' })
   birthDate: string;
 
-  @Column({ type: 'char', length: 1, nullable: true, comment: 'M,F' })
+  @Column({ type: 'varchar', length: 20, nullable: true, comment: 'MALE,FEMALE' })
   gender: string;
 
   @Column({ type: 'int', unsigned: true, nullable: true })
@@ -31,7 +31,7 @@ export class Student {
   @Column({ type: 'varchar', length: 30, nullable: true })
   schoolName: string;
 
-  @Column({ type: 'char', length: 1, nullable: true, comment: '초,중,고' })
+  @Column({ type: 'varchar', length: 30, nullable: true, comment: '초등학교,중학교,고등학교' })
   schoolLevel: string;
 
   @Column({ type: 'int', unsigned: true, nullable: true })

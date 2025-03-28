@@ -1,12 +1,11 @@
 export enum Gender {
-  MALE = 'M',
-  FEMALE = 'F',
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
 }
-export type GenderKey = keyof typeof Gender;
 
 export enum SchoolLevel {
-  ELEMENTARY = '초',
-  MIDDLE = '중',
-  HIGH = '고',
+  ELEMENTARY = '초등학교',
+  MIDDLE = '중학교',
+  HIGH = '고등학교',
 }
 export type SchoolLevelKey = keyof typeof SchoolLevel;
