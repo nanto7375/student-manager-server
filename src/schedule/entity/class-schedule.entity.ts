@@ -4,7 +4,7 @@ import { DayOfWeek } from '@src/common/constant/date.const';
 
 @Entity()
 export class ClassSchedule {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
   id: number;
 
   @Column({ type: 'char', length: 1, comment: '월,화,수,목,금,토,일' })

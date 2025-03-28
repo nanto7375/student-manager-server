@@ -4,10 +4,10 @@ import { Month } from '@src/common/constant/date.const';
 
 @Entity()
 export class TuitionPayment {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
   id: number;
 
-  @Column()
+  @Column({ type: 'int', unsigned: true })
   studentId: number;
 
   @ManyToOne(() => Student, (student) => student.id)
@@ -22,7 +22,7 @@ export class TuitionPayment {
   @Column({ type: 'int', unsigned: true })
   feeAmount: number;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp', precision: 6, nullable: true, comment: '결제일' })
   payedAt: Date;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })

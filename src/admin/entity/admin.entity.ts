@@ -24,22 +24,22 @@ export const getAdminRoleLevel = (role: AdminRoleType) => {
 
 @Entity()
 export class Admin {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 50 })
   password: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 30 })
   name: string;
 
   @Column({ unique: true })
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 14, nullable: true, comment: '010-1234-5678' })
   phone: string;
 
-  @Column({ default: AdminRoleType.STAFF, comment: 'super_admin, admin, manager, staff' })
+  @Column({ type: 'varchar', length: 20, default: AdminRoleType.STAFF, comment: 'super_admin, admin, manager, staff' })
   role: string;
 
   @Column({ default: true })

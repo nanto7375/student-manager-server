@@ -4,28 +4,28 @@ import { TuitionPayment } from '@src/tuition-payment/entity/tuition-payment.enti
 
 @Entity()
 export class Student {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 30 })
   name: string;
 
   @Column({ type: 'char', length: 4, comment: 'YYYY' })
   birthYear: string;
 
-  @Column({ type: 'char', length: 4, comment: 'MMDD' })
+  @Column({ type: 'char', length: 4, nullable: true, comment: 'MMDD' })
   birthDate: string;
 
-  @Column({ type: 'char', length: 1, comment: 'M,F', nullable: true })
+  @Column({ type: 'char', length: 1, nullable: true, comment: 'M,F' })
   gender: string;
 
   @Column({ type: 'int', unsigned: true, nullable: true })
   tuition: number;
 
-  @Column({ type: 'varchar', length: 12, nullable: true, comment: '01012345678' })
+  @Column({ type: 'varchar', length: 14, nullable: true, comment: '010-1234-5678' })
   phone: string;
 
-  @Column({ type: 'varchar', length: 12, nullable: true, comment: '01012345678' })
+  @Column({ type: 'varchar', length: 14, nullable: true, comment: '010-1234-5678' })
   parentPhone: string;
 
   @Column({ type: 'varchar', length: 30, nullable: true })
@@ -34,7 +34,7 @@ export class Student {
   @Column({ type: 'char', length: 1, nullable: true, comment: '초,중,고' })
   schoolLevel: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', unsigned: true, nullable: true })
   classScheduleId: number;
 
   @ManyToOne(() => ClassSchedule, (classSchedule) => classSchedule.id, { nullable: true })
@@ -43,7 +43,7 @@ export class Student {
   @OneToMany(() => TuitionPayment, (tuitionPayment) => tuitionPayment.student)
   tuitionPayments: TuitionPayment[];
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp', precision: 6, nullable: true, comment: '등록일' })
   registeredAt: Date;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
