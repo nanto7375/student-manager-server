@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Auth } from '@src/auth/auth.decorator';
@@ -9,7 +9,7 @@ import { ScheduleService } from '@src/schedule/schedule.service';
 
 import { toInstance } from '@src/common/utils/toInstance';
 import { now } from '@src/common/utils/etc';
-import { RegisterStudentRequestDto } from './dto/student-request.dto';
+import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
 import { StudentDto } from './dto/student-response.dto';
 
 @Controller('students')
@@ -28,6 +28,18 @@ export class StudentController {
     const student = await this.studentService.registerStudent({
       studentDto,
       classSchedule: await this.scheduleService.getClassScheduleOrThrow(studentDto.classScheduleId),
+    });
+
+    return toInstance(StudentDto, student);
+  }
+
+  @Patch(':id')
+  @Auth(AdminRoleType.ADMIN)
+  async patchStudent(@Param('id', ParseIntPipe) id: number, @Body() studentDto: PatchStudentRequestDto, @AdminEmail() adminEmail: string) {
+    const student = await this.studentService.patchStudent({
+      student: await this.studentService.getStudentOrThrow(id),
+      studentDto,
+      classSchedule: studentDto.classScheduleId ? await this.scheduleService.getClassScheduleOrThrow(studentDto.classScheduleId) : undefined,
     });
 
     return toInstance(StudentDto, student);

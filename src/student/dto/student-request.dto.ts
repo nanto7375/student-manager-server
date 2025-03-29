@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, SchoolLevel } from '@src/common/constant/common.const';
-import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, MaxLength, Min, MinLength } from 'class-validator';
-import { Nullable } from 'class-validator-extended';
+import { IsDate, IsEnum, IsNumber, IsString, MaxLength, Min, MinLength } from 'class-validator';
+import { Nullable, Optional } from 'class-validator-extended';
 
 export class RegisterStudentRequestDto {
   @ApiProperty({ description: '이름' })
@@ -12,7 +12,6 @@ export class RegisterStudentRequestDto {
 
   @ApiProperty({ description: '수업 시간' })
   @IsNumber()
-  @IsNotEmpty()
   classScheduleId: number;
 
   @ApiProperty({ description: '수업료' })
@@ -68,4 +67,43 @@ export class RegisterStudentRequestDto {
   @Nullable()
   @IsDate()
   registeredAt: Date;
+}
+
+export class PatchStudentRequestDto {
+  @ApiProperty({ description: '수업 시간' })
+  @Optional()
+  @IsNumber()
+  classScheduleId: number;
+
+  @ApiProperty({ description: '수업료' })
+  @Optional()
+  @IsNumber()
+  @Min(100_000)
+  tuition: number;
+
+  @ApiProperty({ description: '전화번호', nullable: true })
+  @Optional()
+  @IsString()
+  @MinLength(12)
+  @MaxLength(13)
+  phone: string;
+
+  @ApiProperty({ description: '부모 전화번호', nullable: true })
+  @Optional()
+  @IsString()
+  @MinLength(12)
+  @MaxLength(13)
+  parentPhone: string;
+
+  @ApiProperty({ description: '학교명', nullable: true })
+  @Optional()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(30)
+  schoolName: string;
+
+  @ApiProperty({ description: '학교 레벨', nullable: true })
+  @Optional()
+  @IsEnum(SchoolLevel)
+  schoolLevel: SchoolLevel;
 }
