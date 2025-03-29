@@ -1,51 +1,49 @@
 import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AdminRoleType } from '../entity/admin.entity';
+import { Nullable } from 'class-validator-extended';
 
 export class AdminCreateDto {
+  @ApiProperty({ description: '비밀번호' })
   @IsString()
-  @IsNotEmpty()
   @MinLength(4)
   @MaxLength(20)
-  @ApiProperty({ description: '비밀번호' })
   password: string;
 
+  @ApiProperty({ description: '이름' })
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ description: '이름' })
+  @MaxLength(30)
   name: string;
 
+  @ApiProperty({ description: '이메일' })
   @IsEmail()
   @IsNotEmpty()
-  @ApiProperty({ description: '이메일' })
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @IsPhoneNumber('KR')
   @ApiProperty({ description: '전화번호' })
+  @Nullable()
+  @IsString()
+  @IsPhoneNumber('KR')
   phone: string;
 
-  @IsEnum(AdminRoleType)
-  @IsNotEmpty()
   @ApiProperty({ description: 'role', enum: AdminRoleType })
+  @IsEnum(AdminRoleType)
   role: AdminRoleType;
 }
 
 export class AdminUpdateDto {
-  @IsString()
-  @IsNotEmpty()
-  @IsPhoneNumber('KR')
   @ApiProperty({ description: '전화번호' })
+  @Nullable()
+  @IsString()
+  @IsPhoneNumber('KR')
   phone: string;
 
-  @IsEnum(AdminRoleType)
-  @IsNotEmpty()
   @ApiProperty({ description: 'role', enum: AdminRoleType })
+  @IsEnum(AdminRoleType)
   role: AdminRoleType;
 
-  @IsBoolean()
-  @IsNotEmpty()
   @ApiProperty({ description: '활성화 여부' })
+  @IsBoolean()
   isActive: boolean;
 }
