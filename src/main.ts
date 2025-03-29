@@ -29,17 +29,14 @@ const setSwagger = (app: NestExpressApplication) => {
   SwaggerModule.setup(`api`, app, swaggerDocument, { swaggerOptions: { defaultModelExpandDepth: 5, defaultModelsExpandDepth: 5 } });
 };
 
-const _exceptionFactory = (errors: ValidationError[]) => {
-  console.log('--------------------------------');
-  errors.forEach((error) => {
-    console.log({
-      tartget: error.target.constructor.name,
-      property: error.property,
-      constraints: error.constraints,
-    });
+const _throwBadRequestWithExplicitMessage = (errors: ValidationError[]) => {
+  const messages = errors.map((error) => {
+    const target = error.target.constructor.name;
+    const property = error.property;
+    const stringifiedConstraints = Object.values(error.constraints).join(', ');
+    return `[${target}]${property}: ${stringifiedConstraints}`;
   });
-  console.log('--------------------------------');
-  return new BadRequest();
+  return new BadRequest(messages.join('\n'));
 };
 
 async function bootstrap() {
@@ -62,7 +59,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      exceptionFactory: (errors) => (env === Environment.Production ? new BadRequest() : _exceptionFactory(errors)),
+      exceptionFactory: (errors) => (env === Environment.Production ? new BadRequest() : _throwBadRequestWithExplicitMessage(errors)),
     }),
   );
 
