@@ -28,7 +28,7 @@ export class MyLogger extends Logger {
   debug(message: any, ...optionalParams: any[]) {
     super.debug(this._transformLogMessage(message, optionalParams), this._context);
   }
-  error(messageOrError: any, ...optionalParams) {
+  error(messageOrError: any, ...optionalParams: any[]) {
     if (messageOrError instanceof Error) {
       return super.error(this._makeStringifiedMessage(messageOrError.message), messageOrError.stack, this._context);
     }
