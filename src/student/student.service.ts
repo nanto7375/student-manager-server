@@ -21,7 +21,7 @@ export class StudentService {
   ) {}
 
   async registerStudent({ studentDto, classSchedule }: RegisterStudentParams) {
-    const student = this.studentBuilder
+    const newStudent = this.studentBuilder
       .creator(studentDto.name)
       .setBirth({
         birthYear: studentDto.birthYear,
@@ -43,6 +43,6 @@ export class StudentService {
       })
       .create();
 
-    return await this.studentRepository.save(student);
+    return await this.studentRepository.save(newStudent);
   }
 }
