@@ -7,10 +7,10 @@ import { AdminEmail } from '@src/admin/admin.decorator';
 import { StudentService } from './student.service';
 import { ScheduleService } from '@src/schedule/schedule.service';
 
-import { RegisterStudentRequestDto } from './dto/student-request.dto';
-import { StudentDto } from './dto/student-response.dto';
 import { toInstance } from '@src/common/utils/toInstance';
 import { now } from '@src/common/utils/etc';
+import { RegisterStudentRequestDto } from './dto/student-request.dto';
+import { StudentDto } from './dto/student-response.dto';
 
 @Controller('students')
 @ApiTags('student')
@@ -29,6 +29,7 @@ export class StudentController {
       studentDto,
       classSchedule: await this.scheduleService.getClassScheduleOrThrow(studentDto.classScheduleId),
     });
+
     return toInstance(StudentDto, student);
   }
 }

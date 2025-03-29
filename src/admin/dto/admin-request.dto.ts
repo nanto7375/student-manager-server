@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AdminRoleType } from '../entity/admin.entity';
 import { Nullable } from 'class-validator-extended';
@@ -6,8 +6,7 @@ import { Nullable } from 'class-validator-extended';
 export class AdminCreateDto {
   @ApiProperty({ description: '비밀번호' })
   @IsString()
-  @MinLength(4)
-  @MaxLength(20)
+  @IsNotEmpty()
   password: string;
 
   @ApiProperty({ description: '이름' })
