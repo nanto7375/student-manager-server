@@ -1,5 +1,5 @@
 import { Body, Controller, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { Auth } from '@src/auth/auth.decorator';
 import { AdminRoleType } from '@src/admin/entity/admin.entity';
@@ -22,6 +22,8 @@ export class StudentController {
 
   @Post()
   @Auth(AdminRoleType.ADMIN)
+  @ApiOperation({ summary: '학생 등록' })
+  @ApiOkResponse({ type: StudentDto })
   async registerStudent(@Body() studentDto: RegisterStudentRequestDto, @AdminEmail() adminEmail: string) {
     if (!studentDto.registeredAt) studentDto.registeredAt = now();
 
@@ -35,6 +37,8 @@ export class StudentController {
 
   @Patch(':id')
   @Auth(AdminRoleType.ADMIN)
+  @ApiOperation({ summary: '학생 정보 수정' })
+  @ApiOkResponse({ type: StudentDto })
   async patchStudent(@Param('id', ParseIntPipe) id: number, @Body() studentDto: PatchStudentRequestDto, @AdminEmail() adminEmail: string) {
     const student = await this.studentService.patchStudent({
       student: await this.studentService.getStudentOrThrow(id),

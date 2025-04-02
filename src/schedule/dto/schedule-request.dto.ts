@@ -1,21 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DayOfWeek } from '@src/common/constant/date.const';
-import { Expose } from 'class-transformer';
+import { IsEnum, IsString } from 'class-validator';
 
-export class ScheduleDto {
-  @ApiProperty({ description: 'id' })
-  @Expose()
-  id: number;
-
+export class RegisterScheduleRequestDto {
   @ApiProperty({ description: '요일' })
-  @Expose()
+  @IsEnum(DayOfWeek)
   dayOfWeek: DayOfWeek;
 
   @ApiProperty({ description: '시작 시간: HHMM' })
-  @Expose()
+  @IsString()
   startTime: string;
 
   @ApiProperty({ description: '종료 시간: HHMM' })
-  @Expose()
+  @IsString()
   endTime: string;
 }
