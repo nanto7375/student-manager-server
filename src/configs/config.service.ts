@@ -23,6 +23,8 @@ export class EnvironmentVariables {
   @IsNumber({ allowInfinity: false, allowNaN: false })
   SM_PORT: number = 3000;
 
+  SM_SERVER_VERSION: string;
+
   @IsOptional()
   SM_LOG_LEVEL: 'error' | 'warn' | 'info' | 'verbose' | 'debug' = 'info';
 

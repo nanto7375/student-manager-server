@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { Auth } from '@src/auth/auth.decorator';
@@ -13,6 +13,13 @@ import { ScheduleDto } from './dto/schedule-response.dto';
 @ApiTags('schedule')
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
+
+  @Get()
+  @ApiOperation({ summary: '스케쥴 조회' })
+  @ApiOkResponse({ type: [ScheduleDto] })
+  async getSchedules() {
+    return toInstance(ScheduleDto, await this.scheduleService.getSchedules());
+  }
 
   @Post()
   @Auth(AdminRoleType.SUPER_ADMIN)

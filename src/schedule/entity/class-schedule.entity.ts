@@ -8,7 +8,7 @@ export class ClassSchedule {
   id: number;
 
   @Column({ type: 'char', length: 1, comment: '월,화,수,목,금,토,일' })
-  dayOfWeek: string;
+  dayOfWeek: DayOfWeek;
 
   @Column({ type: 'char', length: 4, comment: 'HHMM' })
   startTime: string;

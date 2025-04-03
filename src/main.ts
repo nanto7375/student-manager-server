@@ -18,11 +18,11 @@ import { ValidationError } from 'class-validator';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const setSwagger = (app: NestExpressApplication) => {
+const setSwagger = (app: NestExpressApplication, version: string) => {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Student Manager Server') //
     .setDescription('Student Manager API description')
-    .setVersion('0.1.0')
+    .setVersion(version)
     .addBearerAuth({ name: 'Authorization', type: 'http', scheme: 'Bearer', in: 'header' }, 'accessJWT')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
@@ -48,13 +48,13 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const env = configService.get('SM_ENV');
-  if (env !== Environment.Production) setSwagger(app);
 
   const serverVersion = configService.get('SM_SERVER_VERSION');
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: serverVersion,
   });
+  if (env !== Environment.Production) setSwagger(app, serverVersion);
   app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
