@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { Auth } from '@src/auth/auth.decorator';
 import { ApiOkResponsePaginated } from '@src/common/swagger-paginated-response';
 import { AdminService } from './admin.service';
 
@@ -10,6 +9,7 @@ import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
 import { AdminDto } from './dto/admin-response.dto';
 import { AdminRoleType } from './entity/admin.entity';
 import { PaginationRequestDto } from '@src/common/common.dto';
+import { AdminLevel } from './decorator/admin-level.decorator';
 
 @Controller('admins')
 @ApiTags('admin')
@@ -17,7 +17,7 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Post()
-  @Auth(AdminRoleType.ADMIN)
+  @AdminLevel(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 생성' })
   @ApiOkResponse({ type: AdminDto })
   async createAdmin(@Body() createAdminDto: AdminCreateDto) {
@@ -25,7 +25,7 @@ export class AdminController {
   }
 
   @Put(':id')
-  @Auth(AdminRoleType.ADMIN)
+  @AdminLevel(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 수정' })
   @ApiOkResponse({ type: AdminDto })
   async updateAdmin(@Param('id', ParseIntPipe) id: number, @Body() updateAdminDto: AdminUpdateDto) {
@@ -33,7 +33,7 @@ export class AdminController {
   }
 
   @Get()
-  @Auth(AdminRoleType.ADMIN)
+  @AdminLevel(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 조회' })
   @ApiOkResponsePaginated(AdminDto)
   async getAdmins(@Query() { limit, offset }: PaginationRequestDto) {
@@ -42,7 +42,7 @@ export class AdminController {
   }
 
   @Delete(':id')
-  @Auth(AdminRoleType.ADMIN)
+  @AdminLevel(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 삭제' })
   async deleteAdmin(@Param('id', ParseIntPipe) id: number) {
     await this.adminService.removeAdmin(id);

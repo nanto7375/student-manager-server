@@ -9,7 +9,7 @@ export class BannedIpGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
-    const isBanned = await this.authService.isBannedIp(request.ip as string);
+    const isBanned = await this.authService.isBannedIp(request.ip);
     if (isBanned) throw new Forbidden();
     return true;
   }

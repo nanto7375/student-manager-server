@@ -11,6 +11,7 @@ import { toInstance } from '@src/common/utils/toInstance';
 import { SigninRequestDto } from './dto/auth-request.dto';
 import { AdminDto } from '@src/admin/dto/admin-response.dto';
 import { getFingerprint } from '@src/common/utils/etc';
+import { AuthSkip } from './decorator/auth-skip.decorator';
 
 // TODO: auth용 throttler 따로 설정하기
 // TODO: ip ban 처리 미들웨어로 따로 뺄까?
@@ -41,13 +42,14 @@ export class AuthController {
 
   @Post('signin')
   @Throttle({ default: { limit: 5, ttl: 60 } })
+  @AuthSkip()
   @ApiOperation({ summary: '로그인' })
   @ApiOkResponse({ type: AdminDto })
   async signin(@Body() body: SigninRequestDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const { admin, accessToken, refreshToken } = await this.authService.signin({
       email: body.email,
       password: body.password,
-      ip: req.ip as string,
+      ip: req.ip,
       fingerprint: getFingerprint(req),
     });
 
@@ -74,7 +76,7 @@ export class AuthController {
     } catch (e) {
       this.logger.warn({ message: e.message, ip: req.ip });
       if (e.message !== TOKEN_EXPIRED_ERROR) {
-        await this.authService.banIp(req.ip as string);
+        await this.authService.banIp(req.ip);
         throw new Unauthorized();
       }
     }
@@ -86,6 +88,7 @@ export class AuthController {
 
   @Post('refresh')
   @Throttle({ default: { limit: 10, ttl: 60 } })
+  @AuthSkip()
   @ApiOperation({ summary: '토큰 갱신' })
   @ApiOkResponse({ type: Boolean })
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -97,7 +100,7 @@ export class AuthController {
 
     const { accessToken, refreshToken: newRefreshToken } = await this.authService.refresh({
       refreshToken,
-      ip: req.ip as string,
+      ip: req.ip,
       fingerprint: getFingerprint(req),
     });
 

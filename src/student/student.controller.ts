@@ -1,9 +1,8 @@
 import { Body, Controller, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { Auth } from '@src/auth/auth.decorator';
 import { AdminRoleType } from '@src/admin/entity/admin.entity';
-import { AdminEmail } from '@src/admin/admin.decorator';
+import { AdminEmail } from '@src/admin/decorator/admin.decorator';
 import { StudentService } from './student.service';
 import { ScheduleService } from '@src/schedule/schedule.service';
 
@@ -11,6 +10,7 @@ import { toInstance } from '@src/common/utils/toInstance';
 import { now } from '@src/common/utils/etc';
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
 import { StudentDto } from './dto/student-response.dto';
+import { AdminLevel } from '@src/admin/decorator/admin-level.decorator';
 
 @Controller('students')
 @ApiTags('student')
@@ -21,7 +21,7 @@ export class StudentController {
   ) {}
 
   @Post()
-  @Auth(AdminRoleType.ADMIN)
+  @AdminLevel(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '학생 등록' })
   @ApiOkResponse({ type: StudentDto })
   async registerStudent(@Body() studentDto: RegisterStudentRequestDto, @AdminEmail() adminEmail: string) {
@@ -36,7 +36,7 @@ export class StudentController {
   }
 
   @Patch(':id')
-  @Auth(AdminRoleType.ADMIN)
+  @AdminLevel(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '학생 정보 수정' })
   @ApiOkResponse({ type: StudentDto })
   async patchStudent(@Param('id', ParseIntPipe) id: number, @Body() studentDto: PatchStudentRequestDto, @AdminEmail() adminEmail: string) {

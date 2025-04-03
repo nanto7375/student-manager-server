@@ -19,6 +19,8 @@ import { MyCacheModule } from './configs/cache/my-cache.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { StudentModule } from './student/student.module';
 import { TuitionPaymentModule } from './tuition-payment/tuition-payment.module';
+import { AuthGuard } from './auth/guard/auth.guard';
+import { RoleGuard } from './admin/admin-role.guard';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { TuitionPaymentModule } from './tuition-payment/tuition-payment.module';
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: BannedIpGuard },
+    { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: RoleGuard },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: APP_FILTER, useClass: NotFoundExceptionFilter },
