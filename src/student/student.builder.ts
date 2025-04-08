@@ -37,46 +37,46 @@ type EditorSetClass = {
 };
 
 class StudentValidator {
-  protected _validateStudentName(name: string) {
+  validateStudentName(name: string) {
     if (name.length < 1 || name.length > 30) throw new BadRequest('wrong name');
   }
-  protected _validateBirthYear(birthYear: string) {
+  validateBirthYear(birthYear: string) {
     if (birthYear.length !== 4) throw new BadRequest('wrong birthYear');
   }
-  protected _validateBirthDate(birthDate: string) {
+  validateBirthDate(birthDate: string) {
     if (birthDate.length !== 4) throw new BadRequest('wrong birthDate');
   }
-  protected _validateGender(gender: Gender) {
+  validateGender(gender: Gender) {
     if (!Object.values(Gender).includes(gender)) throw new BadRequest('wrong gender');
   }
-  protected _validatePhone(phone: string) {
+  validatePhone(phone: string) {
     if (phone.length < 9 || phone.length > 13) throw new BadRequest('wrong phone');
   }
-  protected _validateTuition(tuition: number) {
+  validateTuition(tuition: number) {
     if (tuition < 100_000) throw new BadRequest('wrong tuition');
   }
-  protected _validateSchoolName(schoolName: string) {
+  validateSchoolName(schoolName: string) {
     if (schoolName.length < 1 || schoolName.length > 30) throw new BadRequest('wrong schoolName');
   }
-  protected _validateSchoolLevel(schoolLevel: SchoolLevel) {
+  validateSchoolLevel(schoolLevel: SchoolLevel) {
     if (!Object.values(SchoolLevel).includes(schoolLevel)) throw new BadRequest('wrong schoolLevel');
   }
 }
 
-class StudentCreator extends StudentValidator {
+class StudentCreator {
+  private validator: StudentValidator;
   private _student: Student;
 
   constructor(name: string) {
-    super();
-    this._validateStudentName(name);
+    this.validator = new StudentValidator();
     this._student = new Student();
     this._student.name = name;
   }
 
   setBirth({ birthYear, birthDate, gender }: CreatorSetBirth) {
-    this._validateBirthYear(birthYear);
-    this._validateBirthDate(birthDate);
-    this._validateGender(gender);
+    this.validator.validateBirthYear(birthYear);
+    this.validator.validateBirthDate(birthDate);
+    this.validator.validateGender(gender);
 
     this._student.birthYear = birthYear;
     this._student.birthDate = birthDate;
@@ -84,23 +84,23 @@ class StudentCreator extends StudentValidator {
     return this;
   }
   setContacts({ phone, parentPhone }: CreatorSetPhone) {
-    this._validatePhone(phone);
-    this._validatePhone(parentPhone);
+    this.validator.validatePhone(phone);
+    this.validator.validatePhone(parentPhone);
 
     this._student.phone = phone;
     this._student.parentPhone = parentPhone;
     return this;
   }
   setSchool({ schoolName, schoolLevel }: CreatorSetSchool) {
-    this._validateSchoolName(schoolName);
-    this._validateSchoolLevel(schoolLevel);
+    this.validator.validateSchoolName(schoolName);
+    this.validator.validateSchoolLevel(schoolLevel);
 
     this._student.schoolName = schoolName;
     this._student.schoolLevel = schoolLevel;
     return this;
   }
   setClass({ classSchedule, tuition, registeredAt }: CreatorSetClass) {
-    this._validateTuition(tuition);
+    this.validator.validateTuition(tuition);
 
     this._student.classSchedule = classSchedule;
     this._student.tuition = tuition;
@@ -112,29 +112,33 @@ class StudentCreator extends StudentValidator {
   }
 }
 
-class StudentEditor extends StudentValidator {
-  constructor(private _student: Student) {
-    super();
+class StudentEditor {
+  private validator: StudentValidator;
+  private _student: Student;
+
+  constructor(student: Student) {
+    this.validator = new StudentValidator();
+    this._student = student;
   }
 
   setContacts({ phone, parentPhone }: EditorSetPhone) {
-    this._validatePhone(phone);
-    this._validatePhone(parentPhone);
+    this.validator.validatePhone(phone);
+    this.validator.validatePhone(parentPhone);
 
     if (phone) this._student.phone = phone;
     if (parentPhone) this._student.parentPhone = parentPhone;
     return this;
   }
   setSchool({ schoolName, schoolLevel }: EditorSetSchool) {
-    this._validateSchoolName(schoolName);
-    this._validateSchoolLevel(schoolLevel);
+    this.validator.validateSchoolName(schoolName);
+    this.validator.validateSchoolLevel(schoolLevel);
 
     if (schoolName) this._student.schoolName = schoolName;
     if (schoolLevel) this._student.schoolLevel = schoolLevel;
     return this;
   }
   setClass({ classSchedule, tuition }: EditorSetClass) {
-    this._validateTuition(tuition);
+    this.validator.validateTuition(tuition);
 
     if (classSchedule) this._student.classSchedule = classSchedule;
     if (tuition) this._student.tuition = tuition;
