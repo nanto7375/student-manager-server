@@ -150,7 +150,6 @@ class StudentEditor {
   }
 }
 
-@Injectable()
 export class StudentBuilder {
   creator(name: string) {
     return new StudentCreator(name);
