@@ -69,6 +69,7 @@ class StudentCreator {
 
   constructor(name: string) {
     this.validator = new StudentValidator();
+    this.validator.validateStudentName(name);
     this._student = new Student();
     this._student.name = name;
   }
