@@ -34,7 +34,7 @@ export class StudentService {
         birthDate: studentDto.birthDate,
         gender: studentDto.gender,
       })
-      .setPhone({
+      .setContacts({
         phone: studentDto.phone,
         parentPhone: studentDto.parentPhone,
       })
@@ -55,7 +55,7 @@ export class StudentService {
   async patchStudent({ student, studentDto, classSchedule }: PatchStudentParams) {
     const updatedStudent = this.studentBuilder
       .editor(student)
-      .setPhone({
+      .setContacts({
         phone: studentDto.phone,
         parentPhone: studentDto.parentPhone,
       })

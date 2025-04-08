@@ -56,7 +56,7 @@ class StudentCreator {
     this._student.gender = gender;
     return this;
   }
-  setPhone({ phone, parentPhone }: CreatorSetPhone) {
+  setContacts({ phone, parentPhone }: CreatorSetPhone) {
     if (phone.length < 9 || phone.length > 13) throw new BadRequest('wrong phone');
     if (parentPhone.length < 9 || parentPhone.length > 13) throw new BadRequest('wrong parentPhone');
 
@@ -88,7 +88,7 @@ class StudentCreator {
 class StudentEditor {
   constructor(private readonly _student: Student) {}
 
-  setPhone({ phone, parentPhone }: EditorSetPhone) {
+  setContacts({ phone, parentPhone }: EditorSetPhone) {
     if (phone && (phone.length < 9 || phone.length > 13)) throw new BadRequest('wrong phone');
     if (parentPhone && (parentPhone.length < 9 || parentPhone.length > 13)) throw new BadRequest('wrong parentPhone');
 
