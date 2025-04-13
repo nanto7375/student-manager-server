@@ -37,16 +37,22 @@ type EditorSetClass = {
 };
 
 class StudentValidator {
+  constructor(private readonly currentYear: number = new Date().getFullYear()) {}
+
   validateStudentName(name: string) {
     if (name.length < 1 || name.length > 30) throw new BadRequest('wrong name');
   }
   validateBirthYear(birthYear: string) {
-    if (birthYear.length !== 4) throw new BadRequest('wrong birthYear');
-    if (!Number(birthYear)) throw new BadRequest('wrong birthYear');
+    if (birthYear.length !== 4 || !Number(birthYear)) throw new BadRequest('wrong birthYear');
+    if (Number(birthYear) < this.currentYear) throw new BadRequest('wrong birthYear');
   }
   validateBirthDate(birthDate: string) {
-    if (birthDate.length !== 4) throw new BadRequest('wrong birthDate');
-    if (!Number(birthDate)) throw new BadRequest('wrong birthDate');
+    if (birthDate.length !== 4 || !Number(birthDate)) throw new BadRequest('wrong birthDate');
+
+    const month = Number(birthDate.substring(0, 2));
+    const day = Number(birthDate.substring(2, 4));
+    if (month < 1 || month > 12) throw new BadRequest('wrong birthDate');
+    if (day < 1 || day > 31) throw new BadRequest('wrong birthDate');
   }
   validateGender(gender: Gender) {
     if (!Object.values(Gender).includes(gender)) throw new BadRequest('wrong gender');
