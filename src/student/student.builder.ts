@@ -131,23 +131,23 @@ class StudentEditor {
   }
 
   setContacts({ phone, parentPhone }: EditorSetPhone) {
-    phone && this.validator.validatePhone(phone);
-    parentPhone && this.validator.validatePhone(parentPhone);
+    phone !== undefined && this.validator.validatePhone(phone);
+    parentPhone !== undefined && this.validator.validatePhone(parentPhone);
 
     if (phone) this._student.phone = phone;
     if (parentPhone) this._student.parentPhone = parentPhone;
     return this;
   }
   setSchool({ schoolName, schoolLevel }: EditorSetSchool) {
-    schoolName && this.validator.validateSchoolName(schoolName);
-    schoolLevel && this.validator.validateSchoolLevel(schoolLevel);
+    schoolName !== undefined && this.validator.validateSchoolName(schoolName);
+    schoolLevel !== undefined && this.validator.validateSchoolLevel(schoolLevel);
 
     if (schoolName) this._student.schoolName = schoolName;
     if (schoolLevel) this._student.schoolLevel = schoolLevel;
     return this;
   }
   setClass({ classSchedule, tuition }: EditorSetClass) {
-    tuition && this.validator.validateTuition(tuition);
+    tuition !== undefined && this.validator.validateTuition(tuition);
 
     if (classSchedule) this._student.classSchedule = classSchedule;
     if (tuition) this._student.tuition = tuition;
