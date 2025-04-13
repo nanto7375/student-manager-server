@@ -7,7 +7,7 @@ export class ScheduleDto {
   @Expose()
   id: number;
 
-  @ApiProperty({ description: '요일' })
+  @ApiProperty({ description: '요일', enum: DayOfWeek })
   @Expose()
   dayOfWeek: DayOfWeek;
 

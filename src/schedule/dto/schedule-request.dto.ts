@@ -3,7 +3,7 @@ import { DayOfWeek } from '@src/common/constant/date.const';
 import { IsEnum, IsString } from 'class-validator';
 
 export class RegisterScheduleRequestDto {
-  @ApiProperty({ description: '요일' })
+  @ApiProperty({ description: '요일', enum: DayOfWeek })
   @IsEnum(DayOfWeek)
   dayOfWeek: DayOfWeek;
 

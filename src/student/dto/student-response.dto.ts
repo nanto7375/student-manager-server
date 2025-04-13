@@ -16,7 +16,7 @@ export class StudentDto {
   @Expose()
   birthDate: string;
 
-  @ApiProperty({ description: '성별' })
+  @ApiProperty({ description: '성별', enum: Gender })
   @Expose()
   gender: Gender;
 
@@ -32,7 +32,7 @@ export class StudentDto {
   @Expose()
   schoolName: string;
 
-  @ApiProperty({ description: '학교 레벨' })
+  @ApiProperty({ description: '학교 레벨', enum: SchoolLevel })
   @Expose()
   schoolLevel: SchoolLevel;
 

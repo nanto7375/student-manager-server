@@ -25,7 +25,7 @@ export class RegisterStudentRequestDto {
   @IsString()
   birthDate: string;
 
-  @ApiProperty({ description: '성별', nullable: true })
+  @ApiProperty({ description: '성별', nullable: true, enum: Gender })
   @Nullable()
   @IsEnum(Gender)
   gender: Gender;
@@ -45,7 +45,7 @@ export class RegisterStudentRequestDto {
   @IsString()
   schoolName: string;
 
-  @ApiProperty({ description: '학교 레벨', nullable: true })
+  @ApiProperty({ description: '학교 레벨', nullable: true, enum: SchoolLevel })
   @Nullable()
   @IsEnum(SchoolLevel)
   schoolLevel: SchoolLevel;

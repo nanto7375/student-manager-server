@@ -21,7 +21,7 @@ export class AdminDto {
 
   @Expose()
   @ApiProperty({ enum: AdminRoleType, description: '관리자 권한' })
-  role: string;
+  role: AdminRoleType;
 
   @Expose()
   @ApiProperty({ description: '활성화 여부' })

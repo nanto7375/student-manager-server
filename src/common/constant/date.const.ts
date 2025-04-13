@@ -7,7 +7,6 @@ export enum DayOfWeek {
   SAT = '토',
   SUN = '일',
 }
-export type DayOfWeekKey = keyof typeof DayOfWeek;
 export const mapDayOfWeekToNumber = {
   [DayOfWeek.MON]: 1,
   [DayOfWeek.TUE]: 2,

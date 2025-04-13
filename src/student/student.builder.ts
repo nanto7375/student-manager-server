@@ -42,9 +42,11 @@ class StudentValidator {
   }
   validateBirthYear(birthYear: string) {
     if (birthYear.length !== 4) throw new BadRequest('wrong birthYear');
+    if (!Number(birthYear)) throw new BadRequest('wrong birthYear');
   }
   validateBirthDate(birthDate: string) {
     if (birthDate.length !== 4) throw new BadRequest('wrong birthDate');
+    if (!Number(birthDate)) throw new BadRequest('wrong birthDate');
   }
   validateGender(gender: Gender) {
     if (!Object.values(Gender).includes(gender)) throw new BadRequest('wrong gender');
