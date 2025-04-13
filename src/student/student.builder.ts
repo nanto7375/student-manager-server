@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
 import { Student } from './entity/student.entity';
 import { Gender, SchoolLevel } from '@src/common/constant/common.const';
 import { ClassSchedule } from '@src/schedule/entity/class-schedule.entity';
 import { BadRequest } from '@src/common/exception/definition.exception';
+import { isNullish, now } from '@src/common/utils/etc';
 
 type CreatorSetBirth = {
   birthYear: string;
@@ -37,7 +37,7 @@ type EditorSetClass = {
 };
 
 class StudentValidator {
-  constructor(private readonly currentYear: number = new Date().getFullYear()) {}
+  constructor(private readonly currentYear: number = now().getFullYear()) {}
 
   validateStudentName(name: string) {
     if (name.length < 1 || name.length > 30) throw new BadRequest('wrong name');
@@ -131,23 +131,23 @@ class StudentEditor {
   }
 
   setContacts({ phone, parentPhone }: EditorSetPhone) {
-    phone !== undefined && this.validator.validatePhone(phone);
-    parentPhone !== undefined && this.validator.validatePhone(parentPhone);
+    !isNullish(phone) && this.validator.validatePhone(phone);
+    !isNullish(parentPhone) && this.validator.validatePhone(parentPhone);
 
     if (phone) this._student.phone = phone;
     if (parentPhone) this._student.parentPhone = parentPhone;
     return this;
   }
   setSchool({ schoolName, schoolLevel }: EditorSetSchool) {
-    schoolName !== undefined && this.validator.validateSchoolName(schoolName);
-    schoolLevel !== undefined && this.validator.validateSchoolLevel(schoolLevel);
+    !isNullish(schoolName) && this.validator.validateSchoolName(schoolName);
+    !isNullish(schoolLevel) && this.validator.validateSchoolLevel(schoolLevel);
 
     if (schoolName) this._student.schoolName = schoolName;
     if (schoolLevel) this._student.schoolLevel = schoolLevel;
     return this;
   }
   setClass({ classSchedule, tuition }: EditorSetClass) {
-    tuition !== undefined && this.validator.validateTuition(tuition);
+    !isNullish(tuition) && this.validator.validateTuition(tuition);
 
     if (classSchedule) this._student.classSchedule = classSchedule;
     if (tuition) this._student.tuition = tuition;

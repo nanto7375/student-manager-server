@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, SchoolLevel } from '@src/common/constant/common.const';
-import { IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Nullable, Optional } from 'class-validator-extended';
 
 export class RegisterStudentRequestDto {
@@ -59,31 +59,37 @@ export class RegisterStudentRequestDto {
 export class PatchStudentRequestDto {
   @ApiProperty({ description: '수업 시간' })
   @Optional()
+  @IsNotEmpty()
   @IsNumber()
   classScheduleId: number;
 
   @ApiProperty({ description: '수업료' })
   @Optional()
+  @IsNotEmpty()
   @IsNumber()
   tuition: number;
 
-  @ApiProperty({ description: '전화번호', nullable: true })
+  @ApiProperty({ description: '전화번호' })
   @Optional()
+  @IsNotEmpty()
   @IsString()
   phone: string;
 
-  @ApiProperty({ description: '부모 전화번호', nullable: true })
+  @ApiProperty({ description: '부모 전화번호' })
   @Optional()
+  @IsNotEmpty()
   @IsString()
   parentPhone: string;
 
-  @ApiProperty({ description: '학교명', nullable: true })
+  @ApiProperty({ description: '학교명' })
   @Optional()
+  @IsNotEmpty()
   @IsString()
   schoolName: string;
 
-  @ApiProperty({ description: '학교 레벨', nullable: true })
+  @ApiProperty({ description: '학교 레벨' })
   @Optional()
+  @IsNotEmpty()
   @IsEnum(SchoolLevel)
   schoolLevel: SchoolLevel;
 }
