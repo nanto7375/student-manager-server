@@ -7,7 +7,6 @@ import { MyLogger } from '@src/configs/logger/my-logger';
 import { AuthService, TOKEN_EXPIRED_ERROR } from '../auth.service';
 import { AUTH_SKIP_KEY } from '../decorator/auth-skip.decorator';
 
-import { getFingerprint } from '@src/common/utils/etc';
 import { AdminRoleType } from '@src/admin/entity/admin.entity';
 
 export type AuthenticatedRequest = Request & { email: string; role: AdminRoleType };
@@ -32,7 +31,7 @@ export class AuthGuard implements CanActivate {
 
     let payload: Record<string, any>;
     try {
-      payload = await this.authService.verifyToken({ token: accessToken, fingerprint: getFingerprint(request) });
+      payload = await this.authService.verifyToken({ token: accessToken, fingerprint: this.authService.getFingerprint(request) });
     } catch (e) {
       if (e.message === TOKEN_EXPIRED_ERROR) throw new TokenExpired();
       this.logger.warn({ message: e.message, ip: request.ip });

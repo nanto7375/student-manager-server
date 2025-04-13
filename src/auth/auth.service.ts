@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { type Request } from 'express';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { AuthenticationFailed, Forbidden, Unauthorized } from '@src/common/exception/definition.exception';
@@ -13,6 +14,7 @@ import { FailedSigninAttemptCache } from './cache/failed-signin-attempt.cache';
 import { HashService } from '@src/common/utils/hash';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
 import { Admin, AdminRoleType } from '@src/admin/entity/admin.entity';
+import { createHash } from 'crypto';
 
 export const TOKEN_EXPIRED_ERROR = 'jwt expired';
 
@@ -60,6 +62,17 @@ export class AuthService {
 
   get refreshTokenLifetimeInSeconds() {
     return this._REFRESH_TOKEN_LIFETIME_IN_SECONDS;
+  }
+
+  getFingerprint(req: Request) {
+    const components = [
+      req.ip,
+      req.headers['user-agent'] || '', //
+      req.headers['sec-ch-ua'] || '',
+      req.headers['sec-ch-ua-mobile'] || '',
+      req.headers['sec-ch-ua-platform'] || '',
+    ];
+    return createHash('sha256').update(components.join(':')).digest('hex');
   }
 
   private _signToken({ claims, signDate, tokenType = TokenType.ACCESS }: SignTokenParams): Promise<string> {

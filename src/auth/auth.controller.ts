@@ -10,7 +10,6 @@ import { AuthService, TOKEN_EXPIRED_ERROR, TokenType } from './auth.service';
 import { toInstance } from '@src/common/utils/toInstance';
 import { SigninRequestDto } from './dto/auth-request.dto';
 import { AdminDto } from '@src/admin/dto/admin-response.dto';
-import { getFingerprint } from '@src/common/utils/etc';
 import { AuthSkip } from './decorator/auth-skip.decorator';
 
 // TODO: auth용 throttler 따로 설정하기
@@ -50,7 +49,7 @@ export class AuthController {
       email: body.email,
       password: body.password,
       ip: req.ip,
-      fingerprint: getFingerprint(req),
+      fingerprint: this.authService.getFingerprint(req),
     });
 
     // TODO: 쿠키명에 __Host- prefix 사용 고려
@@ -68,7 +67,7 @@ export class AuthController {
       if (refreshToken) {
         const payload = await this.authService.verifyToken({
           token: refreshToken,
-          fingerprint: getFingerprint(req),
+          fingerprint: this.authService.getFingerprint(req),
           tokenType: TokenType.REFRESH,
         });
         await this.authService.discardToken({ token: refreshToken, exp: payload.exp });
@@ -101,7 +100,7 @@ export class AuthController {
     const { accessToken, refreshToken: newRefreshToken } = await this.authService.refresh({
       refreshToken,
       ip: req.ip,
-      fingerprint: getFingerprint(req),
+      fingerprint: this.authService.getFingerprint(req),
     });
 
     res.cookie('acc', accessToken, this._getTokenCookieOptions(TokenType.ACCESS));
