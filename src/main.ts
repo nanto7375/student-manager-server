@@ -42,7 +42,12 @@ const _throwBadRequestWithExplicitMessage = (errors: ValidationError[]) => {
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bodyParser: true,
-    cors: true,
+    cors: {
+      origin: true,
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      preflightContinue: false,
+    },
     logger: logger,
   });
 

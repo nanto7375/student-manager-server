@@ -11,6 +11,7 @@ import { toInstance } from '@src/common/utils/toInstance';
 import { SigninRequestDto } from './dto/auth-request.dto';
 import { AdminDto } from '@src/admin/dto/admin-response.dto';
 import { AuthSkip } from './decorator/auth-skip.decorator';
+import { ConfigService } from '@nestjs/config';
 
 // TODO: auth용 throttler 따로 설정하기
 // TODO: ip ban 처리 미들웨어로 따로 뺄까?
@@ -18,20 +19,24 @@ import { AuthSkip } from './decorator/auth-skip.decorator';
 @UseGuards(ThrottlerGuard)
 @ApiTags('auth')
 export class AuthController {
+  private readonly isDevelopment: boolean;
+
   constructor(
     private readonly authService: AuthService,
     private readonly logger: MyLogger,
+    private readonly configService: ConfigService,
   ) {
+    this.isDevelopment = this.configService.get('NODE_ENV') !== 'production';
     this.logger.setContext('AuthController');
   }
 
   private _getTokenCookieOptions(tokenType: TokenType): CookieOptions {
     return {
+      ...(this.isDevelopment ? {} : { domain: 'localhost' }),
       httpOnly: true,
-      secure: true,
+      secure: !this.isDevelopment,
+      sameSite: this.isDevelopment ? 'lax' : 'none', //
       path: '/',
-      sameSite: 'none', // domain 설정되면 'strict'로 변경
-      // TODO: domain 설정
       maxAge:
         (tokenType === TokenType.ACCESS //
           ? this.authService.accessTokenLifetimeInSeconds
