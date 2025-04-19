@@ -32,7 +32,7 @@ export class AuthController {
 
   private _getTokenCookieOptions(tokenType: TokenType): CookieOptions {
     return {
-      ...(this.isDevelopment ? {} : { domain: 'localhost' }),
+      ...(this.isDevelopment ? {} : { domain: '' }),
       httpOnly: true,
       secure: !this.isDevelopment,
       sameSite: this.isDevelopment ? 'lax' : 'none', //

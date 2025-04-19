@@ -40,6 +40,7 @@ const _throwBadRequestWithExplicitMessage = (errors: ValidationError[]) => {
 };
 
 async function bootstrap() {
+  // TODO: 이후에 origin 특정 도메인으로 변경
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bodyParser: true,
     cors: {
