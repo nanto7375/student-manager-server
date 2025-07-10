@@ -15,7 +15,7 @@ export class MyHttpException extends Error {
     super(message);
     this.code = code;
     this.status = status;
-    this.previousError = previousError as Error;
-    this.optionalInfo = optionalInfo as Record<string, any>;
+    this.previousError = previousError;
+    this.optionalInfo = optionalInfo;
   }
 }

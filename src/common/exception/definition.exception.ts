@@ -15,16 +15,16 @@ const defineException = (status: number, code: number, message: string, optional
 });
 
 export const definedException = {
-  badRequest: defineException(400, 104000, 'bad request'),
-  tooMany: defineException(400, 104001, 'too many requests'),
-  oldVersion: defineException(400, 104002, 'old version'),
-  unauthorized: defineException(401, 104010, 'unauthorized'),
-  tokenExpired: defineException(401, 104011, 'token expired'),
-  authenticationFailed: defineException(401, 104012, 'authentication failed'),
-  forbidden: defineException(403, 104030, 'forbidden'),
-  notFound: defineException(404, 104040, 'not found'),
-  serverError: defineException(500, 105000, 'server error'),
-  externalServerError: defineException(500, 105001, 'external server error'),
+  badRequest: defineException(400, 4000, 'bad request'),
+  tooMany: defineException(400, 4001, 'too many requests'),
+  oldVersion: defineException(400, 4002, 'old version'),
+  unauthorized: defineException(401, 4010, 'unauthorized'),
+  tokenExpired: defineException(401, 4011, 'token expired'),
+  authenticationFailed: defineException(401, 4012, 'authentication failed'),
+  forbidden: defineException(403, 4030, 'forbidden'),
+  notFound: defineException(404, 4040, 'not found'),
+  serverError: defineException(500, 5000, 'server error'),
+  externalServerError: defineException(500, 5001, 'external server error'),
 };
 
 export class BadRequest extends MyHttpException {
