@@ -2,7 +2,7 @@ import { Reflector } from '@nestjs/core';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 
-import { TokenExpired, Unauthorized } from '../../common/exception/definition.exception';
+import { TokenExpired, TokenNotProvided, Unauthorized } from '../../common/exception/definition.exception';
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { AuthService, TOKEN_EXPIRED_ERROR } from '../auth.service';
 import { AUTH_SKIP_KEY } from '../decorator/auth-skip.decorator';
@@ -27,12 +27,13 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const accessToken = request.headers.authorization?.split(' ')[1];
-    if (!accessToken) throw new Unauthorized();
+    if (!accessToken) throw new TokenNotProvided();
 
     let payload: Record<string, any>;
     try {
       payload = await this.authService.verifyToken({ token: accessToken, fingerprint: this.authService.getFingerprint(request) });
     } catch (e) {
+      console.log(e);
       if (e.message === TOKEN_EXPIRED_ERROR) throw new TokenExpired();
       this.logger.warn({ message: e.message, ip: request.ip });
       throw new Unauthorized();

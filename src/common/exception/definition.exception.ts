@@ -21,6 +21,7 @@ export const definedException = {
   unauthorized: defineException(401, 4010, 'unauthorized'),
   tokenExpired: defineException(401, 4011, 'token expired'),
   authenticationFailed: defineException(401, 4012, 'authentication failed'),
+  tokenNotProvided: defineException(401, 4013, 'token not provided'),
   forbidden: defineException(403, 4030, 'forbidden'),
   notFound: defineException(404, 4040, 'not found'),
   serverError: defineException(500, 5000, 'server error'),
@@ -103,6 +104,16 @@ export class ExternalServerError extends MyHttpException {
       super({ ...definedException.externalServerError, optionalInfo }, message);
     } else {
       super({ ...definedException.externalServerError, optionalInfo: message });
+    }
+  }
+}
+
+export class TokenNotProvided extends MyHttpException {
+  constructor(message?: string | Error | Record<string, any>, optionalInfo?: Record<string, any>) {
+    if (typeof message === 'string' || message instanceof Error) {
+      super({ ...definedException.tokenNotProvided, optionalInfo }, message);
+    } else {
+      super({ ...definedException.tokenNotProvided, optionalInfo: message });
     }
   }
 }
