@@ -31,6 +31,7 @@ export class AuthController {
     this.logger.setContext('AuthController');
   }
 
+  // TODO: 배포할 때 업데이트 필요
   private _getTokenCookieOptions(): CookieOptions {
     return {
       ...(this.isDevelopment ? {} : { domain: '' }),

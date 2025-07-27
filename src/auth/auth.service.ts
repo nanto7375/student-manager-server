@@ -22,7 +22,7 @@ export enum TokenType {
   ACCESS = 'access',
   REFRESH = 'refresh',
 }
-type TokenPayload = { email: string; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
+type TokenPayload = { adminId: number; email: string; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
 type SignTokenParams = { claims: Record<string, any>; signDate: Date; tokenType?: TokenType };
 type VerifyTokenParams = { token: string; fingerprint: string; tokenType?: TokenType };
 type AuthenticateParams = { email: string; password: string };
@@ -112,9 +112,10 @@ export class AuthService {
       throw e;
     }
 
+    const claims = { adminId: admin.id, email: admin.email, role: admin.role, fingerprint };
     const [accessToken, refreshToken] = await Promise.all([
-      this._signToken({ claims: { email: admin.email, role: admin.role, fingerprint }, signDate: signinDate }), //
-      this._signToken({ claims: { email: admin.email, role: admin.role, fingerprint }, signDate: signinDate, tokenType: TokenType.REFRESH }),
+      this._signToken({ claims, signDate: signinDate }), //
+      this._signToken({ claims, signDate: signinDate, tokenType: TokenType.REFRESH }),
     ]);
     if (failedSigninCount > 0) await this.failedSigninAttemptCache.clear(email);
 
@@ -163,7 +164,7 @@ export class AuthService {
       throw new Unauthorized();
     }
 
-    const claims = { email: payload.email, role: payload.role, fingerprint };
+    const claims = { adminId: payload.adminId, email: payload.email, role: payload.role, fingerprint };
     const accessToken = await this._signToken({ claims, signDate: refreshDate, tokenType: TokenType.ACCESS });
     if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, refreshDate)) {
       [refreshToken] = await Promise.all([

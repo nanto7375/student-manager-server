@@ -9,7 +9,7 @@ import { AUTH_SKIP_KEY } from '../decorator/auth-skip.decorator';
 
 import { AdminRoleType } from '@src/admin/entity/admin.entity';
 
-export type AuthenticatedRequest = Request & { email: string; role: AdminRoleType };
+export type AuthenticatedRequest = Request & { email: string; role: AdminRoleType; adminId: number };
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const accessToken = request.headers.authorization?.split(' ')[1];
-    if (!accessToken) throw new TokenNotProvided();
+    if (!accessToken || accessToken === 'null') throw new TokenNotProvided();
 
     let payload: Record<string, any>;
     try {
@@ -39,6 +39,7 @@ export class AuthGuard implements CanActivate {
       throw new Unauthorized();
     }
 
+    request.adminId = payload.adminId;
     request.email = payload.email;
     request.role = payload.role;
     return true;

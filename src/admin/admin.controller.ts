@@ -10,6 +10,7 @@ import { AdminDto } from './dto/admin-response.dto';
 import { AdminRoleType } from './entity/admin.entity';
 import { PaginationRequestDto } from '@src/common/common.dto';
 import { AdminLevel } from './decorator/admin-level.decorator';
+import { AdminId } from './decorator/admin.decorator';
 
 @Controller('admins')
 @ApiTags('admin')
@@ -39,6 +40,13 @@ export class AdminController {
   async getAdmins(@Query() { limit, offset }: PaginationRequestDto) {
     const [admins, count] = await this.adminService.getAdminList({ offset, limit });
     return { data: toInstance(AdminDto, admins), count };
+  }
+
+  @Get('me')
+  @ApiOperation({ summary: '내 정보 조회' })
+  @ApiOkResponse({ type: AdminDto })
+  async getMe(@AdminId() id: number) {
+    return toInstance(AdminDto, await this.adminService.getAdminOrThrow(id));
   }
 
   @Delete(':id')
