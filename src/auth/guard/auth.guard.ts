@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
     if (authSkip) return true;
 
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
-    const accessToken = request.cookies?.acc;
+    const accessToken = request.headers.authorization?.split(' ')[1];
     if (!accessToken) throw new Unauthorized();
 
     let payload: Record<string, any>;
