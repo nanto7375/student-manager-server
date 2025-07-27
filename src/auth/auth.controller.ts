@@ -93,14 +93,14 @@ export class AuthController {
   @ApiOperation({ summary: '토큰 갱신' })
   @ApiOkResponse({ type: Boolean })
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const refreshToken = req.cookies['refr'];
+    const refreshToken = req.headers['refr'];
     if (!refreshToken) {
       this.logger.warn({ message: 'refresh token not found', ip: req.ip });
       throw new Unauthorized();
     }
 
     const { accessToken, refreshToken: newRefreshToken } = await this.authService.refresh({
-      refreshToken,
+      refreshToken: refreshToken as string,
       ip: req.ip,
       fingerprint: this.authService.getFingerprint(req),
     });
