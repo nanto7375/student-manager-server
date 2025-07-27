@@ -12,6 +12,7 @@ import { SigninRequestDto } from './dto/auth-request.dto';
 import { AdminDto } from '@src/admin/dto/admin-response.dto';
 import { AuthSkip } from './decorator/auth-skip.decorator';
 import { ConfigService } from '@nestjs/config';
+import { SigninResponseDto } from './dto/auth-response.dto';
 
 // TODO: auth용 throttler 따로 설정하기
 // TODO: ip ban 처리 미들웨어로 따로 뺄까?
@@ -30,17 +31,14 @@ export class AuthController {
     this.logger.setContext('AuthController');
   }
 
-  private _getTokenCookieOptions(tokenType: TokenType): CookieOptions {
+  private _getTokenCookieOptions(): CookieOptions {
     return {
       ...(this.isDevelopment ? {} : { domain: '' }),
       httpOnly: true,
       secure: !this.isDevelopment,
       sameSite: this.isDevelopment ? 'lax' : 'none', //
       path: '/',
-      maxAge:
-        (tokenType === TokenType.ACCESS //
-          ? this.authService.accessTokenLifetimeInSeconds
-          : this.authService.refreshTokenLifetimeInSeconds) * 1000,
+      maxAge: this.authService.accessTokenLifetimeInSeconds * 1000,
     };
   }
 
@@ -58,9 +56,8 @@ export class AuthController {
     });
 
     // TODO: 쿠키명에 __Host- prefix 사용 고려
-    res.cookie('acc', accessToken, this._getTokenCookieOptions(TokenType.ACCESS));
-    res.cookie('refr', refreshToken, this._getTokenCookieOptions(TokenType.REFRESH));
-    return toInstance(AdminDto, admin);
+    res.cookie('acc', accessToken, this._getTokenCookieOptions());
+    return toInstance(SigninResponseDto, { admin, refreshToken });
   }
 
   @Post('signout')
@@ -108,10 +105,7 @@ export class AuthController {
       fingerprint: this.authService.getFingerprint(req),
     });
 
-    res.cookie('acc', accessToken, this._getTokenCookieOptions(TokenType.ACCESS));
-    if (refreshToken !== newRefreshToken) {
-      res.cookie('refr', newRefreshToken, this._getTokenCookieOptions(TokenType.REFRESH));
-    }
-    return true;
+    res.cookie('acc', accessToken, this._getTokenCookieOptions());
+    return newRefreshToken;
   }
 }
