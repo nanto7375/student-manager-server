@@ -38,7 +38,7 @@ export class AuthController {
       secure: !this.isDevelopment,
       sameSite: this.isDevelopment ? 'lax' : 'none', //
       path: '/',
-      maxAge: this.authService.accessTokenLifetimeInSeconds * 1000,
+      maxAge: this.authService.refreshTokenLifetimeInSeconds * 1000,
     };
   }
 
@@ -56,8 +56,8 @@ export class AuthController {
     });
 
     // TODO: 쿠키명에 __Host- prefix 사용 고려
-    res.cookie('acc', accessToken, this._getTokenCookieOptions());
-    return toInstance(SigninResponseDto, { admin, refreshToken });
+    res.cookie('refr', refreshToken, this._getTokenCookieOptions());
+    return toInstance(SigninResponseDto, { admin, accessToken });
   }
 
   @Post('signout')
@@ -82,7 +82,6 @@ export class AuthController {
       }
     }
 
-    res.clearCookie('acc', { secure: true, sameSite: 'none' });
     res.clearCookie('refr', { secure: true, sameSite: 'none' });
     return true;
   }
@@ -93,19 +92,19 @@ export class AuthController {
   @ApiOperation({ summary: '토큰 갱신' })
   @ApiOkResponse({ type: Boolean })
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const refreshToken = req.headers['refr'];
+    const refreshToken = req.cookies['refr'];
     if (!refreshToken) {
       this.logger.warn({ message: 'refresh token not found', ip: req.ip });
       throw new Unauthorized();
     }
 
     const { accessToken, refreshToken: newRefreshToken } = await this.authService.refresh({
-      refreshToken: refreshToken as string,
+      refreshToken,
       ip: req.ip,
       fingerprint: this.authService.getFingerprint(req),
     });
 
-    res.cookie('acc', accessToken, this._getTokenCookieOptions());
-    return newRefreshToken;
+    if (refreshToken !== newRefreshToken) res.cookie('refr', newRefreshToken, this._getTokenCookieOptions());
+    return accessToken;
   }
 }
