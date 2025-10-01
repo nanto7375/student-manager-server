@@ -1,6 +1,6 @@
 import { Student } from './entity/student.entity';
 import { Gender, SchoolLevel } from '@src/common/constant/common.const';
-import { ClassSchedule } from '@src/schedule/entity/class-schedule.entity';
+import { ClassSchedule } from '@src/class/entity/class-schedule.entity';
 import { BadRequest } from '@src/common/exception/definition.exception';
 import { isNullish, now } from '@src/common/utils/etc';
 

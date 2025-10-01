@@ -4,7 +4,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminRoleType } from '@src/admin/entity/admin.entity';
 import { AdminEmail } from '@src/admin/decorator/admin.decorator';
 import { StudentService } from './student.service';
-import { ScheduleService } from '@src/schedule/schedule.service';
+import { ScheduleService } from '@src/class/class.service';
 
 import { toInstance } from '@src/common/utils/toInstance';
 import { now } from '@src/common/utils/etc';

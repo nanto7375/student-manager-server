@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { DayOfWeek } from '@src/common/constant/date.const';
 import { Expose } from 'class-transformer';
 
-export class ScheduleDto {
+export class ClassScheduleDto {
   @ApiProperty({ description: 'id' })
   @Expose()
   id: number;

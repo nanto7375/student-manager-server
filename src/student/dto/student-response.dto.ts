@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, SchoolLevel } from '@src/common/constant/common.const';
-import { ScheduleDto } from '@src/schedule/dto/schedule-response.dto';
+import { ScheduleDto } from '@src/class/dto/class-response.dto';
 import { Expose } from 'class-transformer';
 
 export class StudentDto {

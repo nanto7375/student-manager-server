@@ -2,11 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClassSchedule } from './entity/class-schedule.entity';
 import { Repository } from 'typeorm';
-import { RegisterScheduleRequestDto } from './dto/schedule-request.dto';
+import { RegisterScheduleRequestDto } from './dto/class-request.dto';
 import { mapDayOfWeekToNumber } from '@src/common/constant/date.const';
 
 @Injectable()
-export class ScheduleService {
+export class ClassService {
   constructor(
     @InjectRepository(ClassSchedule)
     private readonly scheduleRepository: Repository<ClassSchedule>,

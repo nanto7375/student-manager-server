@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { ClassSchedule } from '@src/schedule/entity/class-schedule.entity';
+import { ClassSchedule } from '@src/class/entity/class-schedule.entity';
 import { TuitionPayment } from '@src/tuition-payment/entity/tuition-payment.entity';
 
 @Entity()

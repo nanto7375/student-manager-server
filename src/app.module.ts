@@ -16,7 +16,7 @@ import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { BannedIpGuard } from './auth/guard/banned-ip.guard';
 import { MyCacheModule } from './configs/cache/my-cache.module';
-import { ScheduleModule } from './schedule/schedule.module';
+import { ClassModule } from './class/class.module';
 import { StudentModule } from './student/student.module';
 import { TuitionPaymentModule } from './tuition-payment/tuition-payment.module';
 import { AuthGuard } from './auth/guard/auth.guard';
@@ -35,7 +35,7 @@ import { RoleGuard } from './admin/admin-role.guard';
     MyCacheModule,
     AuthModule,
     AdminModule,
-    ScheduleModule,
+    ClassModule,
     StudentModule,
     TuitionPaymentModule,
   ],

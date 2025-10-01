@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Student } from './entity/student.entity';
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
 import { StudentBuilder } from './student.builder';
-import { ClassSchedule } from '@src/schedule/entity/class-schedule.entity';
+import { ClassSchedule } from '@src/class/entity/class-schedule.entity';
 import { NotFound } from '@src/common/exception/definition.exception';
 
 type RegisterStudentParams = {
