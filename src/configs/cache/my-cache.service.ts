@@ -1,9 +1,8 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { ExternalServerError } from '@src/common/exception/definition.exception';
 
 @Injectable()
 export class MyCacheService<T> {
@@ -19,7 +18,7 @@ export class MyCacheService<T> {
       return (await this.cacheManager.get(key)) as T;
     } catch (e) {
       this.logger.error(e.message);
-      throw new ExternalServerError('redis error');
+      throw new InternalServerErrorException('redis error');
     }
   }
 
@@ -28,7 +27,7 @@ export class MyCacheService<T> {
       return await this.cacheManager.set(key, value, ttl ?? 0);
     } catch (e) {
       this.logger.error(e.message);
-      throw new ExternalServerError('redis error');
+      throw new InternalServerErrorException('redis error');
     }
   }
 
@@ -37,7 +36,7 @@ export class MyCacheService<T> {
       return await this.cacheManager.del(key);
     } catch (e) {
       this.logger.error(e.message);
-      throw new ExternalServerError('redis error');
+      throw new InternalServerErrorException('redis error');
     }
   }
 
@@ -46,7 +45,7 @@ export class MyCacheService<T> {
       return await this.cacheManager.store.keys(pattern);
     } catch (e) {
       this.logger.error(e.message);
-      throw new ExternalServerError('redis error');
+      throw new InternalServerErrorException('redis error');
     }
   }
 }

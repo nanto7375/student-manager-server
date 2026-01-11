@@ -1,5 +1,5 @@
 import { map, Observable } from 'rxjs';
-import { CallHandler, ExecutionContext, HttpStatus, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { MyLogger } from '@src/configs/logger/my-logger';
 
 @Injectable()
@@ -11,8 +11,8 @@ export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       map((data) => {
-        this.logger.log({ status: HttpStatus.OK, data });
-        return { code: 0, message: data };
+        this.logger.log(data);
+        return { message: data };
       }),
     );
   }

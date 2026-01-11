@@ -7,10 +7,10 @@ import { Student } from './entity/student.entity';
 import { StudentBuilder } from './student.builder';
 
 import { AuthModule } from '@src/auth/auth.module';
-import { ScheduleModule } from '@src/class/class.module';
+import { ClassModule } from '@src/class/class.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Student]), AuthModule, ScheduleModule],
+  imports: [TypeOrmModule.forFeature([Student]), AuthModule, ClassModule],
   controllers: [StudentController],
   providers: [StudentService, StudentBuilder],
 })

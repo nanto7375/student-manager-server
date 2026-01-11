@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -6,7 +6,6 @@ import { Student } from './entity/student.entity';
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
 import { StudentBuilder } from './student.builder';
 import { ClassSchedule } from '@src/class/entity/class-schedule.entity';
-import { NotFound } from '@src/common/exception/definition.exception';
 
 type RegisterStudentParams = {
   studentDto: RegisterStudentRequestDto;
@@ -74,7 +73,7 @@ export class StudentService {
 
   async getStudentOrThrow(id: number) {
     const student = await this.studentRepository.findOne({ where: { id } });
-    if (!student) throw new NotFound('not found student');
+    if (!student) throw new NotFoundException('not found student');
     return student;
   }
 }

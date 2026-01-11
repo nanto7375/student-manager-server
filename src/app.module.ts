@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import { AppController } from './app.controller';
-import { GlobalExceptionFilter, NotFoundExceptionFilter } from './common/exception-filter';
+import { GlobalExceptionFilter, NotFoundExceptionFilter } from './common/exception-filters';
 import { RequestMiddleware } from './common/request.middleware';
 import { ResponseInterceptor } from './common/response.interceptor';
 
@@ -14,11 +14,12 @@ import { MyLoggerModule } from './configs/logger/my-logger.module';
 import { MySqlConfigService } from './configs/mysql';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
-import { BannedIpGuard } from './auth/guard/banned-ip.guard';
 import { MyCacheModule } from './configs/cache/my-cache.module';
 import { ClassModule } from './class/class.module';
 import { StudentModule } from './student/student.module';
 import { TuitionPaymentModule } from './tuition-payment/tuition-payment.module';
+
+import { BannedIpGuard } from './auth/guard/banned-ip.guard';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { RoleGuard } from './admin/admin-role.guard';
 
@@ -41,10 +42,10 @@ import { RoleGuard } from './admin/admin-role.guard';
   ],
   controllers: [AppController],
   providers: [
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
-    { provide: APP_GUARD, useClass: BannedIpGuard },
-    { provide: APP_GUARD, useClass: AuthGuard },
-    { provide: APP_GUARD, useClass: RoleGuard },
+    // { provide: APP_GUARD, useClass: ThrottlerGuard },
+    // { provide: APP_GUARD, useClass: BannedIpGuard },
+    // { provide: APP_GUARD, useClass: AuthGuard },
+    // { provide: APP_GUARD, useClass: RoleGuard },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: APP_FILTER, useClass: NotFoundExceptionFilter },

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, SchoolLevel } from '@src/common/constant/common.const';
-import { ScheduleDto } from '@src/class/dto/class-response.dto';
+import { ClassScheduleDto } from '@src/class/dto/class-response.dto';
 import { Expose } from 'class-transformer';
 
 export class StudentDto {
@@ -36,9 +36,9 @@ export class StudentDto {
   @Expose()
   schoolLevel: SchoolLevel;
 
-  @ApiProperty({ type: () => ScheduleDto, description: '수업 시간' })
+  @ApiProperty({ type: () => ClassScheduleDto, description: '수업 시간' })
   @Expose()
-  classSchedule: ScheduleDto;
+  classSchedule: ClassScheduleDto;
 
   @ApiProperty({ description: '수업료' })
   @Expose()

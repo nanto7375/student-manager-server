@@ -1,11 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { BadRequest, NotFound } from '@src/common/exception/definition.exception';
 import { Admin } from './entity/admin.entity';
 import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
-import { HashService } from '@src/common/utils/hash';
+import { MyBcrypt } from '@src/common/utils/bcrypt';
 import { PaginationDto } from '@src/common/common.dto';
 
 @Injectable()
@@ -13,16 +12,16 @@ export class AdminService {
   constructor(
     @InjectRepository(Admin)
     private readonly adminRepository: Repository<Admin>,
-    private readonly hashService: HashService,
+    private readonly myBcrypt: MyBcrypt,
   ) {}
 
   async registerAdmin(createAdminDto: AdminCreateDto) {
     const adminInDb = await this.adminRepository.findOne({ where: { email: createAdminDto.email } });
-    if (adminInDb) throw new BadRequest('이미 존재하는 관리자입니다.');
+    if (adminInDb) throw new BadRequestException('이미 존재하는 관리자입니다.');
 
     const admin = Admin.of({
       ...createAdminDto,
-      password: await this.hashService.hash(createAdminDto.password),
+      password: await this.myBcrypt.hash(createAdminDto.password),
     });
     return this.adminRepository.save(admin);
   }
@@ -43,13 +42,13 @@ export class AdminService {
 
   async getAdminOrThrow(id: number) {
     const admin = await this.adminRepository.findOne({ where: { id } });
-    if (!admin) throw new NotFound('존재하지 않는 관리자입니다.');
+    if (!admin) throw new NotFoundException('존재하지 않는 관리자입니다.');
     return admin.withoutPassword;
   }
 
   async getAdminByEmailOrThrow(email: string) {
     const admin = await this.adminRepository.findOne({ where: { email, isActive: true } });
-    if (!admin) throw new NotFound('존재하지 않는 관리자입니다.');
+    if (!admin) throw new NotFoundException('존재하지 않는 관리자입니다.');
     return admin;
   }
 

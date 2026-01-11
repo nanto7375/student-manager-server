@@ -4,7 +4,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminRoleType } from '@src/admin/entity/admin.entity';
 import { AdminEmail } from '@src/admin/decorator/admin.decorator';
 import { StudentService } from './student.service';
-import { ScheduleService } from '@src/class/class.service';
+import { ClassService } from '@src/class/class.service';
 
 import { toInstance } from '@src/common/utils/toInstance';
 import { now } from '@src/common/utils/etc';
@@ -17,7 +17,7 @@ import { AdminLevel } from '@src/admin/decorator/admin-level.decorator';
 export class StudentController {
   constructor(
     private readonly studentService: StudentService,
-    private readonly scheduleService: ScheduleService,
+    private readonly classService: ClassService,
   ) {}
 
   @Post()
@@ -29,7 +29,7 @@ export class StudentController {
 
     const student = await this.studentService.registerStudent({
       studentDto,
-      classSchedule: await this.scheduleService.getClassScheduleOrThrow(studentDto.classScheduleId),
+      classSchedule: await this.classService.getClassScheduleOrThrow(studentDto.classScheduleId),
     });
 
     return toInstance(StudentDto, student);
@@ -43,7 +43,7 @@ export class StudentController {
     const student = await this.studentService.patchStudent({
       student: await this.studentService.getStudentOrThrow(id),
       studentDto,
-      classSchedule: studentDto.classScheduleId ? await this.scheduleService.getClassScheduleOrThrow(studentDto.classScheduleId) : undefined,
+      classSchedule: studentDto.classScheduleId ? await this.classService.getClassScheduleOrThrow(studentDto.classScheduleId) : undefined,
     });
 
     return toInstance(StudentDto, student);

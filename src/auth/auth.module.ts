@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { BannedIp } from './entity/banned-ip.entity';
-import { HashService } from '@src/common/utils/hash';
+import { MyBcrypt } from '@src/common/utils/bcrypt';
 import { AdminModule } from '@src/admin/admin.module';
 import { FailedSigninAttemptCache } from './cache/failed-signin-attempt.cache';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
@@ -17,7 +17,7 @@ import { DiscardedTokenCache } from './cache/discarded-token.cache';
     AdminModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, HashService, FailedSigninAttemptCache, DiscardedTokenCache],
+  providers: [AuthService, MyBcrypt, FailedSigninAttemptCache, DiscardedTokenCache],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class HashService {
+export class MyBcrypt {
   private readonly _SALT: number;
 
   constructor(configService: ConfigService) {
@@ -14,7 +14,7 @@ export class HashService {
     return bcrypt.hash(password, this._SALT);
   }
 
-  compare(password: string, hashedPassword: string) {
+  compare(password: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(password, hashedPassword);
   }
 }

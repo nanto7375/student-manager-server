@@ -1,8 +1,8 @@
 import { Student } from './entity/student.entity';
 import { Gender, SchoolLevel } from '@src/common/constant/common.const';
 import { ClassSchedule } from '@src/class/entity/class-schedule.entity';
-import { BadRequest } from '@src/common/exception/definition.exception';
 import { isNullish, now } from '@src/common/utils/etc';
+import { BadRequestException } from '@nestjs/common';
 
 type CreatorSetBirth = {
   birthYear: string;
@@ -40,34 +40,34 @@ class StudentValidator {
   constructor(private readonly currentYear: number = now().getFullYear()) {}
 
   validateStudentName(name: string) {
-    if (name.length < 1 || name.length > 30) throw new BadRequest('wrong name');
+    if (name.length < 1 || name.length > 30) throw new BadRequestException('wrong name');
   }
   validateBirthYear(birthYear: string) {
-    if (birthYear.length !== 4 || !Number(birthYear)) throw new BadRequest('wrong birthYear');
-    if (Number(birthYear) < this.currentYear) throw new BadRequest('wrong birthYear');
+    if (birthYear.length !== 4 || !Number(birthYear)) throw new BadRequestException('wrong birthYear');
+    if (Number(birthYear) < this.currentYear) throw new BadRequestException('wrong birthYear');
   }
   validateBirthDate(birthDate: string) {
-    if (birthDate.length !== 4 || !Number(birthDate)) throw new BadRequest('wrong birthDate');
+    if (birthDate.length !== 4 || !Number(birthDate)) throw new BadRequestException('wrong birthDate');
 
     const month = Number(birthDate.substring(0, 2));
     const day = Number(birthDate.substring(2, 4));
-    if (month < 1 || month > 12) throw new BadRequest('wrong birthDate');
-    if (day < 1 || day > 31) throw new BadRequest('wrong birthDate');
+    if (month < 1 || month > 12) throw new BadRequestException('wrong birthDate');
+    if (day < 1 || day > 31) throw new BadRequestException('wrong birthDate');
   }
   validateGender(gender: Gender) {
-    if (!Object.values(Gender).includes(gender)) throw new BadRequest('wrong gender');
+    if (!Object.values(Gender).includes(gender)) throw new BadRequestException('wrong gender');
   }
   validatePhone(phone: string) {
-    if (phone.length < 9 || phone.length > 13) throw new BadRequest('wrong phone');
+    if (phone.length < 9 || phone.length > 13) throw new BadRequestException('wrong phone');
   }
   validateTuition(tuition: number) {
-    if (tuition < 100_000) throw new BadRequest('wrong tuition');
+    if (tuition < 100_000) throw new BadRequestException('wrong tuition');
   }
   validateSchoolName(schoolName: string) {
-    if (schoolName.length < 1 || schoolName.length > 30) throw new BadRequest('wrong schoolName');
+    if (schoolName.length < 1 || schoolName.length > 30) throw new BadRequestException('wrong schoolName');
   }
   validateSchoolLevel(schoolLevel: SchoolLevel) {
-    if (!Object.values(SchoolLevel).includes(schoolLevel)) throw new BadRequest('wrong schoolLevel');
+    if (!Object.values(SchoolLevel).includes(schoolLevel)) throw new BadRequestException('wrong schoolLevel');
   }
 }
 
