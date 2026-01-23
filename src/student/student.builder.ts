@@ -1,13 +1,12 @@
 import { Student } from './entity/student.entity';
-import { Gender, SchoolLevel } from '@src/common/constant/common.const';
-import { ClassSchedule } from '@src/class/entity/class-schedule.entity';
+import { SchoolLevel } from '@src/common/constant/common.const';
+import { Schedule } from '@src/schedule/entity/schedule.entity';
 import { isNullish, now } from '@src/common/utils/etc';
 import { BadRequestException } from '@nestjs/common';
 
 type CreatorSetBirth = {
   birthYear: string;
   birthDate: string;
-  gender: Gender;
 };
 type CreatorSetPhone = {
   phone: string;
@@ -17,9 +16,8 @@ type CreatorSetSchool = {
   schoolName: string;
   schoolLevel: SchoolLevel;
 };
-type CreatorSetClass = {
-  classSchedule: ClassSchedule;
-  tuition: number;
+type CreatorSetSchedule = {
+  schedule: Schedule;
   registeredAt: Date;
 };
 
@@ -31,9 +29,8 @@ type EditorSetSchool = {
   schoolName: string;
   schoolLevel: SchoolLevel;
 };
-type EditorSetClass = {
-  classSchedule: ClassSchedule;
-  tuition: number;
+type EditorSetLesson = {
+  schedule: Schedule;
 };
 
 class StudentValidator {
@@ -54,14 +51,8 @@ class StudentValidator {
     if (month < 1 || month > 12) throw new BadRequestException('wrong birthDate');
     if (day < 1 || day > 31) throw new BadRequestException('wrong birthDate');
   }
-  validateGender(gender: Gender) {
-    if (!Object.values(Gender).includes(gender)) throw new BadRequestException('wrong gender');
-  }
   validatePhone(phone: string) {
     if (phone.length < 9 || phone.length > 13) throw new BadRequestException('wrong phone');
-  }
-  validateTuition(tuition: number) {
-    if (tuition < 100_000) throw new BadRequestException('wrong tuition');
   }
   validateSchoolName(schoolName: string) {
     if (schoolName.length < 1 || schoolName.length > 30) throw new BadRequestException('wrong schoolName');
@@ -82,14 +73,12 @@ class StudentCreator {
     this._student.name = name;
   }
 
-  setBirth({ birthYear, birthDate, gender }: CreatorSetBirth) {
+  setBirth({ birthYear, birthDate }: CreatorSetBirth) {
     this.validator.validateBirthYear(birthYear);
     this.validator.validateBirthDate(birthDate);
-    this.validator.validateGender(gender);
 
     this._student.birthYear = birthYear;
     this._student.birthDate = birthDate;
-    this._student.gender = gender;
     return this;
   }
   setContacts({ phone, parentPhone }: CreatorSetPhone) {
@@ -108,11 +97,8 @@ class StudentCreator {
     this._student.schoolLevel = schoolLevel;
     return this;
   }
-  setClass({ classSchedule, tuition, registeredAt }: CreatorSetClass) {
-    this.validator.validateTuition(tuition);
-
-    this._student.classSchedule = classSchedule;
-    this._student.tuition = tuition;
+  setSchedule({ schedule, registeredAt }: CreatorSetSchedule) {
+    this._student.schedule = schedule;
     this._student.registeredAt = registeredAt;
     return this;
   }
@@ -146,11 +132,8 @@ class StudentEditor {
     if (schoolLevel) this._student.schoolLevel = schoolLevel;
     return this;
   }
-  setClass({ classSchedule, tuition }: EditorSetClass) {
-    !isNullish(tuition) && this.validator.validateTuition(tuition);
-
-    if (classSchedule) this._student.classSchedule = classSchedule;
-    if (tuition) this._student.tuition = tuition;
+  setSchedule({ schedule }: EditorSetLesson) {
+    if (schedule) this._student.schedule = schedule;
     return this;
   }
   edit() {

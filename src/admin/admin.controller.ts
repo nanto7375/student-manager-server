@@ -10,7 +10,7 @@ import { AdminDto } from './dto/admin-response.dto';
 import { AdminRoleType } from './entity/admin.entity';
 import { PaginationRequestDto } from '@src/common/common.dto';
 import { AdminLevel } from './decorator/admin-level.decorator';
-import { AdminId } from './decorator/admin.decorator';
+import { AdminId } from './decorator/admin.decorators';
 
 @Controller('admins')
 @ApiTags('admin')

@@ -1,6 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { ClassSchedule } from '@src/class/entity/class-schedule.entity';
-import { TuitionPayment } from '@src/tuition-payment/entity/tuition-payment.entity';
+import { Schedule } from '@src/schedule/entity/schedule.entity';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Student {
@@ -16,37 +15,30 @@ export class Student {
   @Column({ type: 'char', length: 4, nullable: true, comment: 'MMDD' })
   birthDate: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true, comment: 'MALE,FEMALE' })
-  gender: string;
-
-  @Column({ type: 'int', unsigned: true, nullable: true })
-  tuition: number;
-
-  @Column({ type: 'varchar', length: 14, nullable: true, comment: '010-1234-5678' })
-  phone: string;
-
-  @Column({ type: 'varchar', length: 14, nullable: true, comment: '010-1234-5678' })
-  parentPhone: string;
+  @Column({ type: 'int', unsigned: true, nullable: true, comment: '1: 초등학교, 2: 중학교, 3: 고등학교' })
+  schoolLevel: number;
 
   @Column({ type: 'varchar', length: 30, nullable: true })
   schoolName: string;
 
-  @Column({ type: 'varchar', length: 10, nullable: true, comment: '초등학교,중학교,고등학교' })
-  schoolLevel: string;
+  @Column()
+  note: string;
 
   @Column({ type: 'int', unsigned: true, nullable: true })
-  classScheduleId: number;
+  scheduleId: number;
 
-  @ManyToOne(() => ClassSchedule, (classSchedule) => classSchedule.id, { nullable: true })
-  classSchedule: ClassSchedule;
+  @ManyToOne(() => Schedule, (schedule) => schedule.id, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+  schedule: Schedule;
 
-  @OneToMany(() => TuitionPayment, (tuitionPayment) => tuitionPayment.student)
-  tuitionPayments: TuitionPayment[];
+  @Column({ type: 'varchar', length: 20, nullable: true, comment: '010-1234-5678' })
+  phone: string;
+
+  @Column({ type: 'varchar', length: 20, nullable: true, comment: '010-1234-5678' })
+  parentPhone: string;
 
   @Column({ type: 'timestamp', precision: 6, nullable: true, comment: '등록일' })
   registeredAt: Date;
 
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })

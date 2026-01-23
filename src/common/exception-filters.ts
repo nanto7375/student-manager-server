@@ -12,9 +12,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     const { message, stack } = httpException;
     const status = httpException.getStatus();
-
-    const method = status >= 500 ? 'error' : 'warn';
-    this.logger[method]({ message, status }, stack);
+    this.logger[status >= 500 ? 'error' : 'warn']({ message, status }, stack);
 
     host
       .switchToHttp()
@@ -37,8 +35,7 @@ export class NotFoundExceptionFilter implements ExceptionFilter {
     const http = host.switchToHttp();
     const { hostname, ip, method, url, headers, body } = http.getRequest();
 
-    const exception = new NotFoundException(url as string);
-    const { message, stack } = exception;
+    const { message, stack } = new NotFoundException(url as string);
     this.logger.warn({ message, hostname, ip, method, url, headers, body }, stack);
 
     http.getResponse().status(404).json({ message });

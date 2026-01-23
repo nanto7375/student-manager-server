@@ -57,18 +57,6 @@ export class RegisterStudentRequestDto {
 }
 
 export class PatchStudentRequestDto {
-  @ApiProperty({ description: '수업 시간' })
-  @Optional()
-  @IsNotEmpty()
-  @IsNumber()
-  classScheduleId: number;
-
-  @ApiProperty({ description: '수업료' })
-  @Optional()
-  @IsNotEmpty()
-  @IsNumber()
-  tuition: number;
-
   @ApiProperty({ description: '전화번호' })
   @Optional()
   @IsNotEmpty()

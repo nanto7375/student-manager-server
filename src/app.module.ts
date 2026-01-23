@@ -15,9 +15,8 @@ import { MySqlConfigService } from './configs/mysql';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { MyCacheModule } from './configs/cache/my-cache.module';
-import { ClassModule } from './class/class.module';
+import { ScheduleModule } from './schedule/schedule.module';
 import { StudentModule } from './student/student.module';
-import { TuitionPaymentModule } from './tuition-payment/tuition-payment.module';
 
 import { BannedIpGuard } from './auth/guard/banned-ip.guard';
 import { AuthGuard } from './auth/guard/auth.guard';
@@ -36,9 +35,8 @@ import { RoleGuard } from './admin/admin-role.guard';
     MyCacheModule,
     AuthModule,
     AdminModule,
-    ClassModule,
+    ScheduleModule,
     StudentModule,
-    TuitionPaymentModule,
   ],
   controllers: [AppController],
   providers: [

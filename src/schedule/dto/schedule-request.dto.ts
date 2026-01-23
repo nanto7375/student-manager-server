@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DayOfWeek } from '@src/common/constant/date.const';
+import { DateUtils } from '@src/common/utils/date';
 import { IsEnum, IsString } from 'class-validator';
 
 export class RegisterScheduleRequestDto {
-  @ApiProperty({ description: '요일', enum: DayOfWeek })
-  @IsEnum(DayOfWeek)
-  dayOfWeek: DayOfWeek;
+  @ApiProperty({ description: '요일', enum: DateUtils.DayOfWeek })
+  @IsEnum(DateUtils.DayOfWeek)
+  dayOfWeek: typeof DateUtils.DayOfWeek;
 
   @ApiProperty({ description: '시작 시간: HHMM' })
   @IsString()

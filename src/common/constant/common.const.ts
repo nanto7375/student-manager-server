@@ -4,7 +4,7 @@ export enum Gender {
 }
 
 export enum SchoolLevel {
-  ELEMENTARY = '초등학교',
-  MIDDLE = '중학교',
-  HIGH = '고등학교',
+  ELEMENTARY = 1,
+  MIDDLE = 2,
+  HIGH = 3,
 }

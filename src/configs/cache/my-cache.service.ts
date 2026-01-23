@@ -31,7 +31,7 @@ export class MyCacheService<T> {
     }
   }
 
-  async del(key: string) {
+  async delete(key: string) {
     try {
       return await this.cacheManager.del(key);
     } catch (e) {

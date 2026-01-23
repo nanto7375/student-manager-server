@@ -24,7 +24,7 @@ export class FailedSigninAttemptCache {
   }
 
   async clear(email: string) {
-    await this.cacheService.del(`${this._FAILED_ATTEMPTS_CACHE_KEY_PREFIX}:${email}`);
+    await this.cacheService.delete(`${this._FAILED_ATTEMPTS_CACHE_KEY_PREFIX}:${email}`);
     return true;
   }
 }

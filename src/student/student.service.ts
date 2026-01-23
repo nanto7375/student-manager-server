@@ -5,16 +5,15 @@ import { Repository } from 'typeorm';
 import { Student } from './entity/student.entity';
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
 import { StudentBuilder } from './student.builder';
-import { ClassSchedule } from '@src/class/entity/class-schedule.entity';
+import { Schedule } from '@src/schedule/entity/schedule.entity';
 
 type RegisterStudentParams = {
   studentDto: RegisterStudentRequestDto;
-  classSchedule: ClassSchedule;
+  schedule: Schedule;
 };
 type PatchStudentParams = {
   student: Student;
   studentDto: PatchStudentRequestDto;
-  classSchedule?: ClassSchedule;
 };
 
 @Injectable()
@@ -25,13 +24,12 @@ export class StudentService {
     private readonly studentBuilder: StudentBuilder,
   ) {}
 
-  async registerStudent({ studentDto, classSchedule }: RegisterStudentParams) {
+  async registerStudent({ studentDto, schedule }: RegisterStudentParams) {
     const newStudent = this.studentBuilder
       .creator(studentDto.name)
       .setBirth({
         birthYear: studentDto.birthYear,
         birthDate: studentDto.birthDate,
-        gender: studentDto.gender,
       })
       .setContacts({
         phone: studentDto.phone,
@@ -41,9 +39,8 @@ export class StudentService {
         schoolName: studentDto.schoolName,
         schoolLevel: studentDto.schoolLevel,
       })
-      .setClass({
-        classSchedule,
-        tuition: studentDto.tuition,
+      .setSchedule({
+        schedule,
         registeredAt: studentDto.registeredAt,
       })
       .create();
@@ -51,7 +48,7 @@ export class StudentService {
     return await this.studentRepository.save(newStudent);
   }
 
-  async patchStudent({ student, studentDto, classSchedule }: PatchStudentParams) {
+  async updateStudentPersonalInfo({ student, studentDto }: PatchStudentParams) {
     const updatedStudent = this.studentBuilder
       .editor(student)
       .setContacts({
@@ -61,10 +58,6 @@ export class StudentService {
       .setSchool({
         schoolName: studentDto.schoolName,
         schoolLevel: studentDto.schoolLevel,
-      })
-      .setClass({
-        classSchedule,
-        tuition: studentDto.tuition,
       })
       .edit();
 
