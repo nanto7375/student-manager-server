@@ -8,15 +8,13 @@ export class RegisterStudentRequestDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ description: '수업 시간' })
+  @ApiProperty({ description: '수업 시간', nullable: true })
+  @Nullable()
   @IsNumber()
-  classScheduleId: number;
+  scheduleId: number;
 
-  @ApiProperty({ description: '수업료' })
-  @IsNumber()
-  tuition: number;
-
-  @ApiProperty({ description: '생년' })
+  @ApiProperty({ description: '생년', nullable: true })
+  @Nullable()
   @IsString()
   birthYear: string;
 
@@ -24,11 +22,6 @@ export class RegisterStudentRequestDto {
   @Nullable()
   @IsString()
   birthDate: string;
-
-  @ApiProperty({ description: '성별', nullable: true, enum: Gender })
-  @Nullable()
-  @IsEnum(Gender)
-  gender: Gender;
 
   @ApiProperty({ description: '전화번호', nullable: true })
   @Nullable()
@@ -50,34 +43,49 @@ export class RegisterStudentRequestDto {
   @IsEnum(SchoolLevel)
   schoolLevel: SchoolLevel;
 
-  @ApiProperty({ description: '등록일', nullable: true })
+  @ApiProperty({ description: '비고', nullable: true })
   @Nullable()
+  @IsString()
+  note: string;
+
+  @ApiProperty({ description: '등록일' })
   @IsDate()
   registeredAt: Date;
 }
 
 export class PatchStudentRequestDto {
-  @ApiProperty({ description: '전화번호' })
-  @Optional()
-  @IsNotEmpty()
+  @ApiProperty({ description: '생년', nullable: true })
+  @Nullable()
+  @IsString()
+  birthYear: string;
+
+  @ApiProperty({ description: '생월일', nullable: true })
+  @Nullable()
+  @IsString()
+  birthDate: string;
+
+  @ApiProperty({ description: '전화번호', nullable: true })
+  @Nullable()
   @IsString()
   phone: string;
 
-  @ApiProperty({ description: '부모 전화번호' })
-  @Optional()
-  @IsNotEmpty()
+  @ApiProperty({ description: '부모 전화번호', nullable: true })
+  @Nullable()
   @IsString()
   parentPhone: string;
 
-  @ApiProperty({ description: '학교명' })
-  @Optional()
-  @IsNotEmpty()
+  @ApiProperty({ description: '학교명', nullable: true })
+  @Nullable()
   @IsString()
   schoolName: string;
 
-  @ApiProperty({ description: '학교 레벨' })
-  @Optional()
-  @IsNotEmpty()
+  @ApiProperty({ description: '학교 레벨', nullable: true, enum: SchoolLevel })
+  @Nullable()
   @IsEnum(SchoolLevel)
   schoolLevel: SchoolLevel;
+
+  @ApiProperty({ description: '비고', nullable: true })
+  @Nullable()
+  @IsString()
+  note: string;
 }

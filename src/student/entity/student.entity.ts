@@ -1,5 +1,5 @@
 import { Schedule } from '@src/schedule/entity/schedule.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Student {
@@ -9,7 +9,7 @@ export class Student {
   @Column({ type: 'varchar', length: 30 })
   name: string;
 
-  @Column({ type: 'char', length: 4, comment: 'YYYY' })
+  @Column({ type: 'char', length: 4, nullable: true, comment: 'YYYY' })
   birthYear: string;
 
   @Column({ type: 'char', length: 4, nullable: true, comment: 'MMDD' })
@@ -21,7 +21,7 @@ export class Student {
   @Column({ type: 'varchar', length: 30, nullable: true })
   schoolName: string;
 
-  @Column()
+  @Column({ nullable: true, comment: '비고' })
   note: string;
 
   @Column({ type: 'int', unsigned: true, nullable: true })

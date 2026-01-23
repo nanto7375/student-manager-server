@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Gender, SchoolLevel } from '@src/common/constant/common.const';
-import { LessonScheduleDto } from '@src/schedule/dto/schedule-response.dto';
+import { SchoolLevel } from '@src/common/constant/common.const';
+import { ScheduleDto } from '@src/schedule/dto/schedule-response.dto';
 import { Expose } from 'class-transformer';
 
 export class StudentDto {
@@ -16,19 +16,15 @@ export class StudentDto {
   @Expose()
   birthDate: string;
 
-  @ApiProperty({ description: '성별', enum: Gender })
-  @Expose()
-  gender: Gender;
-
   @ApiProperty({ description: '전화번호: 010-1234-5678' })
   @Expose()
   phone: string;
 
-  @ApiProperty({ description: '부모 전화번호' })
+  @ApiProperty({ description: '부모님 전화번호: 010-1234-5678' })
   @Expose()
   parentPhone: string;
 
-  @ApiProperty({ description: '학교명' })
+  @ApiProperty({ description: '학교명: 가나초등학교, 다라중학교, 마바고등학교' })
   @Expose()
   schoolName: string;
 
@@ -36,15 +32,19 @@ export class StudentDto {
   @Expose()
   schoolLevel: SchoolLevel;
 
-  @ApiProperty({ type: () => LessonScheduleDto, description: '수업 시간' })
+  @ApiProperty({ description: '비고' })
   @Expose()
-  classSchedule: LessonScheduleDto;
+  note: string;
 
-  @ApiProperty({ description: '수업료' })
+  @ApiProperty({ type: () => ScheduleDto, description: '수업 시간' })
   @Expose()
-  tuition: number;
+  schedule: ScheduleDto;
 
   @ApiProperty({ description: '등록일' })
   @Expose()
   registeredAt: Date;
+
+  @ApiProperty({ description: '퇴원일' })
+  @Expose()
+  deletedAt: Date;
 }

@@ -6,14 +6,18 @@ import { Student } from './entity/student.entity';
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
 import { StudentBuilder } from './student.builder';
 import { Schedule } from '@src/schedule/entity/schedule.entity';
+import { ScheduleService } from '@src/schedule/schedule.service';
 
 type RegisterStudentParams = {
   studentDto: RegisterStudentRequestDto;
-  schedule: Schedule;
 };
-type PatchStudentParams = {
-  student: Student;
+type UpdatePersonalInfoParams = {
+  studentId: number;
   studentDto: PatchStudentRequestDto;
+};
+type ChangeScheduleParams = {
+  studentId: number;
+  scheduleId: number;
 };
 
 @Injectable()
@@ -22,11 +26,17 @@ export class StudentService {
     @InjectRepository(Student)
     private readonly studentRepository: Repository<Student>,
     private readonly studentBuilder: StudentBuilder,
+    private readonly scheduleService: ScheduleService,
   ) {}
 
-  async registerStudent({ studentDto, schedule }: RegisterStudentParams) {
+  async register(studentDto: RegisterStudentRequestDto) {
+    const schedule = studentDto.scheduleId ? await this.scheduleService.getScheduleOrThrow(studentDto.scheduleId) : null;
+
     const newStudent = this.studentBuilder
-      .creator(studentDto.name)
+      .creator({
+        name: studentDto.name,
+        registeredAt: studentDto.registeredAt,
+      })
       .setBirth({
         birthYear: studentDto.birthYear,
         birthDate: studentDto.birthDate,
@@ -39,18 +49,21 @@ export class StudentService {
         schoolName: studentDto.schoolName,
         schoolLevel: studentDto.schoolLevel,
       })
-      .setSchedule({
-        schedule,
-        registeredAt: studentDto.registeredAt,
-      })
+      .setNote(studentDto.note)
+      .setSchedule(schedule)
       .create();
 
     return await this.studentRepository.save(newStudent);
   }
 
-  async updateStudentPersonalInfo({ student, studentDto }: PatchStudentParams) {
+  async updatePersonalInfo({ studentId, studentDto }: UpdatePersonalInfoParams) {
+    const student = await this.getStudentOrThrow(studentId);
     const updatedStudent = this.studentBuilder
       .editor(student)
+      .setBirth({
+        birthYear: studentDto.birthYear,
+        birthDate: studentDto.birthDate,
+      })
       .setContacts({
         phone: studentDto.phone,
         parentPhone: studentDto.parentPhone,
@@ -59,9 +72,17 @@ export class StudentService {
         schoolName: studentDto.schoolName,
         schoolLevel: studentDto.schoolLevel,
       })
+      .setNote(studentDto.note)
       .edit();
 
     return await this.studentRepository.save(updatedStudent);
+  }
+
+  async changeSchedule({ studentId, scheduleId }: ChangeScheduleParams) {
+    const student = await this.getStudentOrThrow(studentId);
+    const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
+    student.schedule = schedule;
+    return await this.studentRepository.save(student);
   }
 
   async getStudentOrThrow(id: number) {

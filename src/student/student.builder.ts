@@ -4,46 +4,30 @@ import { Schedule } from '@src/schedule/entity/schedule.entity';
 import { isNullish, now } from '@src/common/utils/etc';
 import { BadRequestException } from '@nestjs/common';
 
-type CreatorSetBirth = {
+type SetBirthParams = {
   birthYear: string;
   birthDate: string;
 };
-type CreatorSetPhone = {
+type SetContactsParams = {
   phone: string;
   parentPhone: string;
 };
-type CreatorSetSchool = {
+type SetSchoolParams = {
   schoolName: string;
   schoolLevel: SchoolLevel;
-};
-type CreatorSetSchedule = {
-  schedule: Schedule;
-  registeredAt: Date;
-};
-
-type EditorSetPhone = {
-  phone: string;
-  parentPhone: string;
-};
-type EditorSetSchool = {
-  schoolName: string;
-  schoolLevel: SchoolLevel;
-};
-type EditorSetLesson = {
-  schedule: Schedule;
 };
 
 class StudentValidator {
   constructor(private readonly currentYear: number = now().getFullYear()) {}
 
-  validateStudentName(name: string) {
+  name(name: string) {
     if (name.length < 1 || name.length > 30) throw new BadRequestException('wrong name');
   }
-  validateBirthYear(birthYear: string) {
+  birthYear(birthYear: string) {
     if (birthYear.length !== 4 || !Number(birthYear)) throw new BadRequestException('wrong birthYear');
     if (Number(birthYear) < this.currentYear) throw new BadRequestException('wrong birthYear');
   }
-  validateBirthDate(birthDate: string) {
+  birthDate(birthDate: string) {
     if (birthDate.length !== 4 || !Number(birthDate)) throw new BadRequestException('wrong birthDate');
 
     const month = Number(birthDate.substring(0, 2));
@@ -51,55 +35,60 @@ class StudentValidator {
     if (month < 1 || month > 12) throw new BadRequestException('wrong birthDate');
     if (day < 1 || day > 31) throw new BadRequestException('wrong birthDate');
   }
-  validatePhone(phone: string) {
+  phone(phone: string) {
     if (phone.length < 9 || phone.length > 13) throw new BadRequestException('wrong phone');
   }
-  validateSchoolName(schoolName: string) {
+  schoolName(schoolName: string) {
     if (schoolName.length < 1 || schoolName.length > 30) throw new BadRequestException('wrong schoolName');
   }
-  validateSchoolLevel(schoolLevel: SchoolLevel) {
+  schoolLevel(schoolLevel: SchoolLevel) {
     if (!Object.values(SchoolLevel).includes(schoolLevel)) throw new BadRequestException('wrong schoolLevel');
   }
 }
 
 class StudentCreator {
-  private validator: StudentValidator;
   private _student: Student;
+  private validate: StudentValidator;
 
-  constructor(name: string) {
-    this.validator = new StudentValidator();
-    this.validator.validateStudentName(name);
+  constructor(name: string, registeredAt: Date) {
+    this.validate = new StudentValidator();
+    this.validate.name(name);
+
     this._student = new Student();
     this._student.name = name;
+    this._student.registeredAt = registeredAt;
   }
 
-  setBirth({ birthYear, birthDate }: CreatorSetBirth) {
-    this.validator.validateBirthYear(birthYear);
-    this.validator.validateBirthDate(birthDate);
+  setBirth({ birthYear, birthDate }: SetBirthParams) {
+    this.validate.birthYear(birthYear);
+    this.validate.birthDate(birthDate);
 
     this._student.birthYear = birthYear;
     this._student.birthDate = birthDate;
     return this;
   }
-  setContacts({ phone, parentPhone }: CreatorSetPhone) {
-    this.validator.validatePhone(phone);
-    this.validator.validatePhone(parentPhone);
+  setContacts({ phone, parentPhone }: SetContactsParams) {
+    this.validate.phone(phone);
+    this.validate.phone(parentPhone);
 
     this._student.phone = phone;
     this._student.parentPhone = parentPhone;
     return this;
   }
-  setSchool({ schoolName, schoolLevel }: CreatorSetSchool) {
-    this.validator.validateSchoolName(schoolName);
-    this.validator.validateSchoolLevel(schoolLevel);
+  setSchool({ schoolName, schoolLevel }: SetSchoolParams) {
+    this.validate.schoolName(schoolName);
+    this.validate.schoolLevel(schoolLevel);
 
     this._student.schoolName = schoolName;
     this._student.schoolLevel = schoolLevel;
     return this;
   }
-  setSchedule({ schedule, registeredAt }: CreatorSetSchedule) {
+  setSchedule(schedule: Schedule) {
     this._student.schedule = schedule;
-    this._student.registeredAt = registeredAt;
+    return this;
+  }
+  setNote(note: string) {
+    if (note) this._student.note = note;
     return this;
   }
   create() {
@@ -108,32 +97,40 @@ class StudentCreator {
 }
 
 class StudentEditor {
-  private validator: StudentValidator;
+  private validate: StudentValidator;
   private _student: Student;
 
   constructor(student: Student) {
-    this.validator = new StudentValidator();
+    this.validate = new StudentValidator();
     this._student = student;
   }
 
-  setContacts({ phone, parentPhone }: EditorSetPhone) {
-    !isNullish(phone) && this.validator.validatePhone(phone);
-    !isNullish(parentPhone) && this.validator.validatePhone(parentPhone);
+  setBirth({ birthYear, birthDate }: SetBirthParams) {
+    this.validate.birthYear(birthYear);
+    this.validate.birthDate(birthDate);
+
+    this._student.birthYear = birthYear;
+    this._student.birthDate = birthDate;
+    return this;
+  }
+  setContacts({ phone, parentPhone }: SetContactsParams) {
+    !isNullish(phone) && this.validate.phone(phone);
+    !isNullish(parentPhone) && this.validate.phone(parentPhone);
 
     if (phone) this._student.phone = phone;
     if (parentPhone) this._student.parentPhone = parentPhone;
     return this;
   }
-  setSchool({ schoolName, schoolLevel }: EditorSetSchool) {
-    !isNullish(schoolName) && this.validator.validateSchoolName(schoolName);
-    !isNullish(schoolLevel) && this.validator.validateSchoolLevel(schoolLevel);
+  setSchool({ schoolName, schoolLevel }: SetSchoolParams) {
+    !isNullish(schoolName) && this.validate.schoolName(schoolName);
+    !isNullish(schoolLevel) && this.validate.schoolLevel(schoolLevel);
 
     if (schoolName) this._student.schoolName = schoolName;
     if (schoolLevel) this._student.schoolLevel = schoolLevel;
     return this;
   }
-  setSchedule({ schedule }: EditorSetLesson) {
-    if (schedule) this._student.schedule = schedule;
+  setNote(note: string) {
+    if (note) this._student.note = note;
     return this;
   }
   edit() {
@@ -141,9 +138,13 @@ class StudentEditor {
   }
 }
 
+type CreatorParams = {
+  name: string;
+  registeredAt: Date;
+};
 export class StudentBuilder {
-  creator(name: string) {
-    return new StudentCreator(name);
+  creator({ name, registeredAt }: CreatorParams) {
+    return new StudentCreator(name, registeredAt);
   }
   editor(student: Student) {
     return new StudentEditor(student);
