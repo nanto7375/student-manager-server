@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, SchoolLevel } from '@src/common/constant/common.const';
-import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
 import { Nullable, Optional } from 'class-validator-extended';
 
 export class RegisterStudentRequestDto {
@@ -38,19 +38,20 @@ export class RegisterStudentRequestDto {
   @IsString()
   schoolName: string;
 
-  @ApiProperty({ description: '학교 레벨', nullable: true, enum: SchoolLevel })
+  @ApiProperty({ description: '학교 레벨 - 초, 중, 고', nullable: true, enum: SchoolLevel })
   @Nullable()
-  @IsEnum(SchoolLevel)
-  schoolLevel: SchoolLevel;
+  @IsNumber()
+  schoolLevel: number;
+
+  @ApiProperty({ description: '학교 학년', nullable: true })
+  @Nullable()
+  @IsNumber()
+  schoolGrade: number;
 
   @ApiProperty({ description: '비고', nullable: true })
   @Nullable()
   @IsString()
   note: string;
-
-  @ApiProperty({ description: '등록일' })
-  @IsDate()
-  registeredAt: Date;
 }
 
 export class PatchStudentRequestDto {
@@ -84,8 +85,10 @@ export class PatchStudentRequestDto {
   @IsEnum(SchoolLevel)
   schoolLevel: SchoolLevel;
 
-  @ApiProperty({ description: '비고', nullable: true })
+  @ApiProperty({ description: '학교 학년', nullable: true })
   @Nullable()
-  @IsString()
-  note: string;
+  @IsNumber()
+  @Min(1)
+  @Max(6)
+  schoolGrade: number;
 }

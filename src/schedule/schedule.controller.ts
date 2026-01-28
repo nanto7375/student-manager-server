@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ScheduleService } from './schedule.service';
@@ -20,5 +20,13 @@ export class ScheduleController {
   async getSchedules() {
     const schedules = await this.scheduleService.getSchedules();
     return toInstance(ScheduleDto, schedules);
+  }
+
+  @Get(':scheduleId')
+  @ApiOperation({ summary: '수업 시간 상세 조회' })
+  @ApiOkResponse({ type: ScheduleDto })
+  async getSchedule(@Param('scheduleId', ParseIntPipe) scheduleId: number) {
+    const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
+    return toInstance(ScheduleDto, schedule);
   }
 }

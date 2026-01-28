@@ -15,6 +15,7 @@ type SetContactsParams = {
 type SetSchoolParams = {
   schoolName: string;
   schoolLevel: SchoolLevel;
+  schoolGrade: number;
 };
 
 class StudentValidator {
@@ -25,7 +26,7 @@ class StudentValidator {
   }
   birthYear(birthYear: string) {
     if (birthYear.length !== 4 || !Number(birthYear)) throw new BadRequestException('wrong birthYear');
-    if (Number(birthYear) < this.currentYear) throw new BadRequestException('wrong birthYear');
+    if (Number(birthYear) > this.currentYear) throw new BadRequestException('wrong birthYear');
   }
   birthDate(birthDate: string) {
     if (birthDate.length !== 4 || !Number(birthDate)) throw new BadRequestException('wrong birthDate');
@@ -36,13 +37,16 @@ class StudentValidator {
     if (day < 1 || day > 31) throw new BadRequestException('wrong birthDate');
   }
   phone(phone: string) {
-    if (phone.length < 9 || phone.length > 13) throw new BadRequestException('wrong phone');
+    if (phone.length > 13) throw new BadRequestException('wrong phone');
   }
   schoolName(schoolName: string) {
     if (schoolName.length < 1 || schoolName.length > 30) throw new BadRequestException('wrong schoolName');
   }
   schoolLevel(schoolLevel: SchoolLevel) {
     if (!Object.values(SchoolLevel).includes(schoolLevel)) throw new BadRequestException('wrong schoolLevel');
+  }
+  schoolGrade(schoolGrade: number) {
+    if (schoolGrade < 1 || schoolGrade > 6) throw new BadRequestException('wrong schoolGrade');
   }
 }
 
@@ -75,12 +79,14 @@ class StudentCreator {
     this._student.parentPhone = parentPhone;
     return this;
   }
-  setSchool({ schoolName, schoolLevel }: SetSchoolParams) {
+  setSchool({ schoolName, schoolLevel, schoolGrade }: SetSchoolParams) {
     this.validate.schoolName(schoolName);
     this.validate.schoolLevel(schoolLevel);
+    this.validate.schoolGrade(schoolGrade);
 
     this._student.schoolName = schoolName;
     this._student.schoolLevel = schoolLevel;
+    this._student.schoolGrade = schoolGrade;
     return this;
   }
   setSchedule(schedule: Schedule) {
@@ -121,16 +127,14 @@ class StudentEditor {
     if (parentPhone) this._student.parentPhone = parentPhone;
     return this;
   }
-  setSchool({ schoolName, schoolLevel }: SetSchoolParams) {
+  setSchool({ schoolName, schoolLevel, schoolGrade }: SetSchoolParams) {
     !isNullish(schoolName) && this.validate.schoolName(schoolName);
     !isNullish(schoolLevel) && this.validate.schoolLevel(schoolLevel);
+    !isNullish(schoolGrade) && this.validate.schoolGrade(schoolGrade);
 
     if (schoolName) this._student.schoolName = schoolName;
     if (schoolLevel) this._student.schoolLevel = schoolLevel;
-    return this;
-  }
-  setNote(note: string) {
-    if (note) this._student.note = note;
+    if (schoolGrade) this._student.schoolGrade = schoolGrade;
     return this;
   }
   edit() {

@@ -32,6 +32,10 @@ export class StudentDto {
   @Expose()
   schoolLevel: SchoolLevel;
 
+  @ApiProperty({ description: '학교 학년' })
+  @Expose()
+  schoolGrade: number;
+
   @ApiProperty({ description: '비고' })
   @Expose()
   note: string;

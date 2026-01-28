@@ -14,4 +14,23 @@ import { AdminLevel } from '@src/admin/decorator/admin-level.decorator';
 @ApiTags('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
+
+  @Post()
+  @ApiOperation({ summary: '학생 등록' })
+  @ApiOkResponse({ type: StudentDto })
+  async register(@Body() registerStudentRequestDto: RegisterStudentRequestDto) {
+    const student = await this.studentService.register({
+      ...registerStudentRequestDto,
+      registeredAt: now(),
+    });
+    return toInstance(StudentDto, student);
+  }
+
+  @Patch(':studentId')
+  @ApiOperation({ summary: '학생 정보 수정' })
+  @ApiOkResponse({ type: StudentDto })
+  async updatePersonalInfo(@Param('studentId', ParseIntPipe) studentId: number, @Body() patchStudentRequestDto: PatchStudentRequestDto) {
+    const student = await this.studentService.updatePersonalInfo({ studentId, studentDto: patchStudentRequestDto });
+    return toInstance(StudentDto, student);
+  }
 }

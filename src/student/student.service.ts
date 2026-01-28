@@ -3,14 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Student } from './entity/student.entity';
-import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
 import { StudentBuilder } from './student.builder';
-import { Schedule } from '@src/schedule/entity/schedule.entity';
 import { ScheduleService } from '@src/schedule/schedule.service';
 
-type RegisterStudentParams = {
-  studentDto: RegisterStudentRequestDto;
-};
+import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
+
 type UpdatePersonalInfoParams = {
   studentId: number;
   studentDto: PatchStudentRequestDto;
@@ -29,7 +26,7 @@ export class StudentService {
     private readonly scheduleService: ScheduleService,
   ) {}
 
-  async register(studentDto: RegisterStudentRequestDto) {
+  async register({ ...studentDto }: RegisterStudentRequestDto & { registeredAt: Date }) {
     const schedule = studentDto.scheduleId ? await this.scheduleService.getScheduleOrThrow(studentDto.scheduleId) : null;
 
     const newStudent = this.studentBuilder
@@ -48,6 +45,7 @@ export class StudentService {
       .setSchool({
         schoolName: studentDto.schoolName,
         schoolLevel: studentDto.schoolLevel,
+        schoolGrade: studentDto.schoolGrade,
       })
       .setNote(studentDto.note)
       .setSchedule(schedule)
@@ -58,6 +56,7 @@ export class StudentService {
 
   async updatePersonalInfo({ studentId, studentDto }: UpdatePersonalInfoParams) {
     const student = await this.getStudentOrThrow(studentId);
+
     const updatedStudent = this.studentBuilder
       .editor(student)
       .setBirth({
@@ -71,8 +70,8 @@ export class StudentService {
       .setSchool({
         schoolName: studentDto.schoolName,
         schoolLevel: studentDto.schoolLevel,
+        schoolGrade: studentDto.schoolGrade,
       })
-      .setNote(studentDto.note)
       .edit();
 
     return await this.studentRepository.save(updatedStudent);

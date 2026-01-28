@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Schedule } from './entity/schedule.entity';
 import { Repository } from 'typeorm';
+
+import { Schedule } from './entity/schedule.entity';
+
 import { DateUtils } from '@src/common/utils/date';
 
 @Injectable()
