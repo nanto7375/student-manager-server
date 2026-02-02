@@ -3,6 +3,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 
 import { AppController } from './app.controller';
 import { GlobalExceptionFilter, NotFoundExceptionFilter } from './common/exception-filters';
@@ -32,6 +33,7 @@ import { ActivityModule } from './activity/activity.module';
     ]),
     TypeOrmModule.forRootAsync({ useClass: MySqlConfigService }),
     EventEmitterModule.forRoot(),
+    NestScheduleModule.forRoot(),
     MyLoggerModule,
     MyCacheModule,
     AuthModule,

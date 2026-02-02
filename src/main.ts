@@ -14,6 +14,7 @@ import { logger } from './configs/logger/winston-logger';
 import { Environment } from './configs/config.service';
 import { ValidationError } from 'class-validator';
 
+// TODO: dayjs 커스텀 클래스 작성
 dayjs.extend(utc);
 dayjs.extend(timezone);
 

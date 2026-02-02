@@ -18,6 +18,10 @@ export class ScheduleService {
   }
 
   async getSchedules() {
-    return await this.scheduleRepository.find();
+    return await this.scheduleRepository.find({ cache: 1_000 * 60 * 10 });
+  }
+
+  async getSchedulesWithStudents() {
+    return await this.scheduleRepository.find({ relations: { students: true } });
   }
 }
