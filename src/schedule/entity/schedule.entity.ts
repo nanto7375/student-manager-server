@@ -4,7 +4,7 @@ import { Student } from '@src/student/entity/student.entity';
 
 @Entity()
 export class Schedule {
-  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'char', length: 1, comment: '월,화,수,목,금,토,일' })
@@ -16,7 +16,7 @@ export class Schedule {
   @Column({ type: 'char', length: 4, comment: 'HHMM' })
   endTime: string;
 
-  @Column({ type: 'int', unsigned: true, nullable: true })
+  @Column({ nullable: true })
   lessonId: number;
 
   @ManyToOne(() => Lesson, (lesson) => lesson.id, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })

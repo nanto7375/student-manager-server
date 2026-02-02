@@ -3,7 +3,7 @@ import { Column, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, Up
 
 @Entity()
 export class Student {
-  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar', length: 30 })
@@ -27,7 +27,7 @@ export class Student {
   @Column({ nullable: true, comment: '비고' })
   note: string;
 
-  @Column({ type: 'int', unsigned: true, nullable: true })
+  @Column({ nullable: true })
   scheduleId: number;
 
   @ManyToOne(() => Schedule, (schedule) => schedule.id, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })

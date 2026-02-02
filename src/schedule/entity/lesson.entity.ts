@@ -6,7 +6,7 @@ export const LessonName = {
 
 @Entity()
 export class Lesson {
-  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'char', length: 3 })

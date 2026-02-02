@@ -24,7 +24,7 @@ export const getAdminRoleLevel = (role: AdminRoleType) => {
 
 @Entity()
 export class Admin {
-  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
