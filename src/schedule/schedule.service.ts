@@ -4,8 +4,6 @@ import { Repository } from 'typeorm';
 
 import { Schedule } from './entity/schedule.entity';
 
-import { DateUtils } from '@src/common/utils/date';
-
 @Injectable()
 export class ScheduleService {
   constructor(

@@ -1,6 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Student } from '@src/student/entity/student.entity';
-import { Schedule } from '@src/schedule/entity/schedule.entity';
 
 @Entity()
 export class ActivityRecord {

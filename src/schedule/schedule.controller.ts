@@ -21,12 +21,4 @@ export class ScheduleController {
     const schedules = await this.scheduleService.getSchedules();
     return toInstance(ScheduleDto, schedules);
   }
-
-  @Get(':scheduleId')
-  @ApiOperation({ summary: '수업 시간 상세 조회' })
-  @ApiOkResponse({ type: ScheduleDto })
-  async getSchedule(@Param('scheduleId', ParseIntPipe) scheduleId: number) {
-    const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
-    return toInstance(ScheduleDto, schedule);
-  }
 }
