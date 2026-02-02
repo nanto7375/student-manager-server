@@ -21,6 +21,7 @@ import { StudentModule } from './student/student.module';
 import { BannedIpGuard } from './auth/guard/banned-ip.guard';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { RoleGuard } from './admin/admin-role.guard';
+import { ActivityModule } from './activity/activity.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { RoleGuard } from './admin/admin-role.guard';
     AdminModule,
     ScheduleModule,
     StudentModule,
+    ActivityModule,
   ],
   controllers: [AppController],
   providers: [

@@ -39,10 +39,8 @@ export class Student {
   @Column({ type: 'varchar', length: 20, nullable: true, comment: '010-1234-5678' })
   parentPhone: string;
 
-  @Column({ type: 'timestamp', precision: 6, nullable: true, comment: '등록일' })
+  @Column({ type: 'timestamp', nullable: true, comment: '등록일' })
   registeredAt: Date;
-
-  createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   updatedAt: Date;
