@@ -4,9 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ActivityController } from './activity.controller';
 import { ActivityService } from './activity.service';
 import { ActivityRecord } from './entity/activity-record.entity';
+import { ActivityGenerationLog } from './entity/activity-generation-log.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ActivityRecord])],
+  imports: [TypeOrmModule.forFeature([ActivityRecord, ActivityGenerationLog])],
   controllers: [ActivityController],
   providers: [ActivityService],
 })

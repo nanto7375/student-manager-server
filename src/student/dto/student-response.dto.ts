@@ -52,3 +52,29 @@ export class StudentDto {
   @Expose()
   deletedAt: Date;
 }
+
+export class StudentInActivityDto {
+  @ApiProperty({ description: '이름' })
+  @Expose()
+  name: string;
+
+  @ApiProperty({ description: '생년: YYYY' })
+  @Expose()
+  birthYear: string;
+
+  @ApiProperty({ description: '생월일: MMDD' })
+  @Expose()
+  birthDate: string;
+
+  @ApiProperty({ description: '학교명: 가나초등학교, 다라중학교, 마바고등학교' })
+  @Expose()
+  schoolName: string;
+
+  @ApiProperty({ description: '학교 레벨', enum: SchoolLevel })
+  @Expose()
+  schoolLevel: SchoolLevel;
+
+  @ApiProperty({ description: '학교 학년' })
+  @Expose()
+  schoolGrade: number;
+}
