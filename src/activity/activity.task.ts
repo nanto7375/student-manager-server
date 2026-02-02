@@ -15,35 +15,40 @@ export class ActivityTask {
     this.logger.setContext('ActivityTask');
   }
 
+  // TODO: refactoring
   @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
   async generateActivityRecords() {
-    const currentMonth = dayjs().format('YYYYMM');
-    const nextMonth = dayjs().add(1, 'month').format('YYYYMM');
-    const logs = await this.activityService.getAGLsForThisAndNextMonth({
-      thisMonth: currentMonth,
-      nextMonth: nextMonth,
-    });
+    try {
+      const currentMonth = dayjs().format('YYYYMM');
+      const nextMonth = dayjs().add(1, 'month').format('YYYYMM');
+      const logs = await this.activityService.getAGLsForThisAndNextMonth({
+        thisMonth: currentMonth,
+        nextMonth: nextMonth,
+      });
 
-    let [thisMonthCompleted, nextMonthCompleted] = [false, false];
-    logs.forEach((log) => {
-      if (log.generatedActivityMonth === currentMonth) thisMonthCompleted = true;
-      if (log.generatedActivityMonth === nextMonth) nextMonthCompleted = true;
-    });
-    if (thisMonthCompleted && nextMonthCompleted) return;
+      let [thisMonthCompleted, nextMonthCompleted] = [false, false];
+      logs.forEach((log) => {
+        if (log.generatedActivityMonth === currentMonth) thisMonthCompleted = true;
+        if (log.generatedActivityMonth === nextMonth) nextMonthCompleted = true;
+      });
+      if (thisMonthCompleted && nextMonthCompleted) return;
 
-    const monthsToGenerate = [];
-    if (!thisMonthCompleted) monthsToGenerate.push(currentMonth);
-    if (!nextMonthCompleted) monthsToGenerate.push(nextMonth);
+      const monthsToGenerate = [];
+      if (!thisMonthCompleted) monthsToGenerate.push(currentMonth);
+      if (!nextMonthCompleted) monthsToGenerate.push(nextMonth);
 
-    const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
-    for (const month of monthsToGenerate) {
-      for (const schedule of schedulesWithStudents) {
-        await this.activityService.generateActivityRecordsForMonth({
-          students: schedule.students,
-          month: month,
-        });
+      const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
+      for (const month of monthsToGenerate) {
+        for (const schedule of schedulesWithStudents) {
+          await this.activityService.generateActivityRecordsForMonth({
+            students: schedule.students,
+            month: month,
+          });
+        }
+        await this.activityService.generateAGLs({ month: month });
       }
-      await this.activityService.generateAGLs({ month: month });
+    } catch (error) {
+      this.logger.error(error);
     }
   }
 }

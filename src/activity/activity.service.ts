@@ -32,7 +32,6 @@ export class ActivityService {
       activityRecord.date = month;
       return activityRecord;
     });
-
     return await this.activityRecordRepository.save(activityRecords);
   }
 
