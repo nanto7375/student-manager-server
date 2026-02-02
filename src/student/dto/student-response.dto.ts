@@ -54,6 +54,10 @@ export class StudentDto {
 }
 
 export class StudentInActivityDto {
+  @ApiProperty({ description: '학생 id' })
+  @Expose()
+  id: number;
+
   @ApiProperty({ description: '이름' })
   @Expose()
   name: string;
@@ -77,4 +81,8 @@ export class StudentInActivityDto {
   @ApiProperty({ description: '학교 학년' })
   @Expose()
   schoolGrade: number;
+
+  @ApiProperty({ description: '수업 시간 id' })
+  @Expose()
+  scheduleId: number;
 }

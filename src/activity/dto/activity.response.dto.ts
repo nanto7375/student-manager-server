@@ -12,10 +12,6 @@ export class ActivityRecordDto {
   @Expose()
   student: StudentInActivityDto;
 
-  @ApiProperty({ description: '수업 id' })
-  @Expose()
-  scheduleId: number;
-
   @ApiProperty({ description: '날짜' })
   @Expose()
   date: string;
