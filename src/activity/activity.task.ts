@@ -19,7 +19,7 @@ export class ActivityTask {
   async generateActivityRecords() {
     const currentMonth = dayjs().format('YYYYMM');
     const nextMonth = dayjs().add(1, 'month').format('YYYYMM');
-    const logs = await this.activityService.getActivityGenerationLogsForThisAndNextMonth({
+    const logs = await this.activityService.getAGLsForThisAndNextMonth({
       thisMonth: currentMonth,
       nextMonth: nextMonth,
     });
@@ -43,7 +43,7 @@ export class ActivityTask {
           month: month,
         });
       }
-      await this.activityService.generateActivityGenerationLog({ month: month });
+      await this.activityService.generateAGLs({ month: month });
     }
   }
 }

@@ -5,6 +5,9 @@ import { In, Repository } from 'typeorm';
 import { ActivityGenerationLog } from './entity/activity-generation-log.entity';
 import { Student } from '@src/student/entity/student.entity';
 
+/**
+ * @description AGL: Activity Generation Log
+ */
 @Injectable()
 export class ActivityService {
   constructor(
@@ -22,11 +25,6 @@ export class ActivityService {
     return activityRecords;
   }
 
-  async getActivityGenerationLogsForThisAndNextMonth({ thisMonth, nextMonth }: { thisMonth: string; nextMonth: string }) {
-    const activityGenerationLogs = await this.activityGenerationLogRepository.find({ where: { generatedActivityMonth: In([thisMonth, nextMonth]) } });
-    return activityGenerationLogs;
-  }
-
   async generateActivityRecordsForMonth({ students, month }: { students: Student[]; month: string }) {
     const activityRecords = students.map((student): ActivityRecord => {
       const activityRecord = new ActivityRecord();
@@ -38,9 +36,14 @@ export class ActivityService {
     return await this.activityRecordRepository.save(activityRecords);
   }
 
-  async generateActivityGenerationLog({ month }: { month: string }) {
+  async generateAGLs({ month }: { month: string }) {
     const activityGenerationLog = new ActivityGenerationLog();
     activityGenerationLog.generatedActivityMonth = month;
     return await this.activityGenerationLogRepository.save(activityGenerationLog);
+  }
+
+  async getAGLsForThisAndNextMonth({ thisMonth, nextMonth }: { thisMonth: string; nextMonth: string }) {
+    const activityGenerationLogs = await this.activityGenerationLogRepository.find({ where: { generatedActivityMonth: In([thisMonth, nextMonth]) } });
+    return activityGenerationLogs;
   }
 }
