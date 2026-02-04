@@ -23,6 +23,7 @@ import { BannedIpGuard } from './auth/guard/banned-ip.guard';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { RoleGuard } from './admin/admin-role.guard';
 import { ActivityModule } from './activity/activity.module';
+import { AppBootstrapService } from './app-bootstrap.service';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { ActivityModule } from './activity/activity.module';
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: APP_FILTER, useClass: NotFoundExceptionFilter },
+    AppBootstrapService,
   ],
 })
 export class AppModule {
