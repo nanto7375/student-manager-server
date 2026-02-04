@@ -7,10 +7,11 @@ import { ActivityRecord } from './entity/activity-record.entity';
 import { ActivityGenerationLog } from './entity/activity-generation-log.entity';
 import { ActivityTask } from './activity.task';
 import { ScheduleModule } from '@src/schedule/schedule.module';
+import { ActivityListener } from './activity.listener';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ActivityRecord, ActivityGenerationLog]), ScheduleModule],
   controllers: [ActivityController],
-  providers: [ActivityService, ActivityTask],
+  providers: [ActivityService, ActivityTask, ActivityListener],
 })
 export class ActivityModule {}

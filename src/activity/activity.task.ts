@@ -47,6 +47,7 @@ export class ActivityTask {
         }
         await this.activityService.generateAGLs({ month: month });
       }
+      this.logger.log(`Activity records generated for ${monthsToGenerate.join(', ')}`);
     } catch (error) {
       this.logger.error(error);
     }
