@@ -6,7 +6,7 @@ export class ActivityGenerationLog {
   id: number;
 
   @Column({ type: 'char', length: 6, comment: 'YYYYMM' })
-  generatedActivityMonth: string;
+  generatedActivityYearMonth: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   createdAt: Date;

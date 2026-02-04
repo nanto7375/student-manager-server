@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ActivityRecord } from './entity/activity-record.entity';
 import { In, Repository } from 'typeorm';
+import * as dayjs from 'dayjs';
+
+import { ActivityRecord } from './entity/activity-record.entity';
 import { ActivityGenerationLog } from './entity/activity-generation-log.entity';
 import { Student } from '@src/student/entity/student.entity';
 
@@ -25,24 +27,25 @@ export class ActivityService {
     return activityRecords;
   }
 
-  async generateActivityRecordsForMonth({ students, month }: { students: Student[]; month: string }) {
+  async generateActivityRecordsForMonth({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: string; yearMonth: string }) {
+    const dates = dayjs(yearMonth, 'YYYYMM').daysInMonth();
     const activityRecords = students.map((student): ActivityRecord => {
       const activityRecord = new ActivityRecord();
       activityRecord.student = student;
-      activityRecord.date = month;
+      // activityRecord.date = month;
       return activityRecord;
     });
     return await this.activityRecordRepository.save(activityRecords);
   }
 
-  async generateAGLs({ month }: { month: string }) {
+  async generateAGLs({ yearMonth }: { yearMonth: string }) {
     const activityGenerationLog = new ActivityGenerationLog();
-    activityGenerationLog.generatedActivityMonth = month;
+    activityGenerationLog.generatedActivityYearMonth = yearMonth;
     return await this.activityGenerationLogRepository.save(activityGenerationLog);
   }
 
-  async getAGLsForThisAndNextMonth({ thisMonth, nextMonth }: { thisMonth: string; nextMonth: string }) {
-    const activityGenerationLogs = await this.activityGenerationLogRepository.find({ where: { generatedActivityMonth: In([thisMonth, nextMonth]) } });
+  async getAGLsInThisAndNextMonth({ thisMonth, nextMonth }: { thisMonth: string; nextMonth: string }) {
+    const activityGenerationLogs = await this.activityGenerationLogRepository.find({ where: { generatedActivityYearMonth: In([thisMonth, nextMonth]) } });
     return activityGenerationLogs;
   }
 }

@@ -6,8 +6,9 @@ import { ActivityService } from './activity.service';
 import { ActivityRecord } from './entity/activity-record.entity';
 import { ActivityGenerationLog } from './entity/activity-generation-log.entity';
 import { ActivityTask } from './activity.task';
-import { ScheduleModule } from '@src/schedule/schedule.module';
 import { ActivityListener } from './activity.listener';
+
+import { ScheduleModule } from '@src/schedule/schedule.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ActivityRecord, ActivityGenerationLog]), ScheduleModule],

@@ -1,13 +1,13 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-export const APP_EVENT_BOOTSTRAP_COMPLETED = 'app.bootstrap.completed';
+import { APP_BOOTSTRAP_COMPLETED } from './common/constant/event.const';
 
 @Injectable()
 export class AppBootstrapService implements OnApplicationBootstrap {
   constructor(private readonly eventEmitter: EventEmitter2) {}
 
   onApplicationBootstrap(): void {
-    this.eventEmitter.emit(APP_EVENT_BOOTSTRAP_COMPLETED);
+    this.eventEmitter.emit(APP_BOOTSTRAP_COMPLETED);
   }
 }
