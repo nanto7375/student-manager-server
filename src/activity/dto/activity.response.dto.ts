@@ -26,7 +26,7 @@ export class ActivityRecordDto {
 
   @ApiProperty({ description: '감상문 제출 여부' })
   @Expose()
-  report: boolean;
+  report1: boolean;
 
   @ApiProperty({ description: '주간 레오(과제2) 제출 여부' })
   @Expose()

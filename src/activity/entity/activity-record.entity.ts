@@ -23,7 +23,7 @@ export class ActivityRecord {
   attended: boolean;
 
   @Column({ default: false, comment: '감상문 제출 여부' })
-  report: boolean;
+  report1: boolean;
 
   @Column({ default: false, comment: '주간 레오(과제2) 제출 여부' })
   report2: boolean;
