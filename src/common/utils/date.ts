@@ -1,15 +1,5 @@
 export class DateUtils {
-  static readonly DayOfWeek = { MON: '월', TUE: '화', WED: '수', THU: '목', FRI: '금', SAT: '토', SUN: '일' };
-
-  static readonly mapDayOfWeekToNumber = {
-    [this.DayOfWeek.MON]: 1,
-    [this.DayOfWeek.TUE]: 2,
-    [this.DayOfWeek.WED]: 3,
-    [this.DayOfWeek.THU]: 4,
-    [this.DayOfWeek.FRI]: 5,
-    [this.DayOfWeek.SAT]: 6,
-    [this.DayOfWeek.SUN]: 7,
-  };
+  static readonly DayOfWeek = { SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6 };
 
   static readonly Month = { _1: '01', _2: '02', _3: '03', _4: '04', _5: '05', _6: '06', _7: '07', _8: '08', _9: '09', _10: '10', _11: '11', _12: '12' };
 

@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class ActivityGenerationLog {
+export class ActivityRecordGenerationLog {
   @PrimaryGeneratedColumn()
   id: number;
 

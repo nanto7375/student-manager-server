@@ -7,8 +7,8 @@ export class Schedule {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'char', length: 1, comment: '월,화,수,목,금,토,일' })
-  dayOfWeek: string;
+  @Column({ type: 'int', unsigned: true, comment: '1: 월, 2: 화, 3: 수, 4: 목, 5: 금, 6: 토, 7: 일' })
+  dayOfWeek: number;
 
   @Column({ type: 'char', length: 4, comment: 'HHMM' })
   startTime: string;

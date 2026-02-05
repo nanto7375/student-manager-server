@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DateUtils } from '@src/common/utils/date';
 import { Expose, Type } from 'class-transformer';
 
 export class LessonDto {
@@ -21,9 +20,9 @@ export class ScheduleDto {
   @Expose()
   id: number;
 
-  @ApiProperty({ description: '요일', enum: DateUtils.DayOfWeek })
+  @ApiProperty({ description: '요일' })
   @Expose()
-  dayOfWeek: typeof DateUtils.DayOfWeek;
+  dayOfWeek: number;
 
   @ApiProperty({ description: '수업' })
   @Type(() => LessonDto)
