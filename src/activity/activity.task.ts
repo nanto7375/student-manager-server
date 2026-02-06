@@ -18,6 +18,7 @@ export class ActivityTask {
   }
 
   // TODO: refactoring
+  // TODO: queue로 처리?
   @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
   async generateActivityRecordsForAllStudents() {
     try {
