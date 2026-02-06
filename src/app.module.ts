@@ -26,6 +26,7 @@ import { ActivityModule } from './activity/activity.module';
 import { AppBootstrapService } from './app-bootstrap.service';
 import { DateUtil } from './common/utils/date';
 import { UtilsModule } from './common/utils/utils.module';
+import { PrismaModule } from './configs/prisma/prisma.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { UtilsModule } from './common/utils/utils.module';
     StudentModule,
     ActivityModule,
     UtilsModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [

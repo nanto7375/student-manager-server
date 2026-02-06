@@ -9,6 +9,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
   catch(exception: HttpException, host: ArgumentsHost) {
     const httpException = exception instanceof HttpException ? exception : new InternalServerErrorException();
+    if (httpException instanceof InternalServerErrorException) this.logger.error(exception);
 
     const { message, stack } = httpException;
     const status = httpException.getStatus();
@@ -20,7 +21,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       .status(status)
       .json({
         message,
-        ...(exception.getResponse() && { optionalInfo: exception.getResponse() }),
+        ...(exception.getResponse?.() && { optionalInfo: exception.getResponse() }),
       });
   }
 }

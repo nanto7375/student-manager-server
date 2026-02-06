@@ -1,0 +1,138 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ActivityGenerationLog {
+  id                     Int      @id @default(autoincrement())
+  generatedActivityMonth String   @map("generated_activity_month") @db.Char(6)
+  createdAt              DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("activity_generation_log")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ActivityRecord {
+  id                 Int                 @id @default(autoincrement())
+  studentId          Int                 @map("student_id")
+  date               String              @db.Char(8)
+  isMakeup           Int                 @default(0) @map("is_makeup") @db.TinyInt
+  attended           Int                 @default(0) @db.TinyInt
+  report1            Int                 @default(0) @db.TinyInt
+  report2            Int                 @default(0) @db.TinyInt
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt          DateTime            @default(now()) @map("updated_at") @db.Timestamp(6)
+  student            Student             @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_af5423ecbecaf2606b909307ca8")
+  activityRecordLogs ActivityRecordLog[]
+
+  @@index([studentId], map: "FK_af5423ecbecaf2606b909307ca8")
+  @@index([date], map: "IDX_979544e3d084794e13c2d14a39")
+  @@map("activity_record")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ActivityRecordGenerationLog {
+  id                         Int      @id @default(autoincrement())
+  generatedActivityYearMonth String   @map("generated_activity_year_month") @db.Char(6)
+  createdAt                  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("activity_record_generation_log")
+}
+
+model ActivityRecordLog {
+  id               Int            @id @default(autoincrement())
+  activityRecordId Int            @map("activity_record_id")
+  adminId          Int            @map("admin_id")
+  key              String         @db.VarChar(255)
+  value            String         @db.VarChar(255)
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
+  activityRecord   ActivityRecord @relation(fields: [activityRecordId], references: [id], map: "FK_19c9c39aa43bdb5ef49ed5fefca")
+  admin            Admin          @relation(fields: [adminId], references: [id], map: "FK_b5267e703f03876c725e05a2e01")
+
+  @@index([activityRecordId], map: "FK_19c9c39aa43bdb5ef49ed5fefca")
+  @@index([adminId], map: "FK_b5267e703f03876c725e05a2e01")
+  @@map("activity_record_log")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Admin {
+  id                 Int                 @id @default(autoincrement())
+  password           String              @db.VarChar(255)
+  name               String              @db.VarChar(30)
+  email              String              @unique(map: "IDX_de87485f6489f5d0995f584195") @db.VarChar(255)
+  phone              String?             @db.VarChar(20)
+  role               String              @default("staff") @db.VarChar(20)
+  isActive           Int                 @default(1) @map("is_active") @db.TinyInt
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt          DateTime            @default(now()) @map("updated_at") @db.Timestamp(6)
+  deletedAt          DateTime?           @map("deleted_at") @db.Timestamp(6)
+  activityRecordLogs ActivityRecordLog[]
+
+  @@map("admin")
+}
+
+model BannedIp {
+  id        Int      @id @default(autoincrement())
+  ip        String   @unique(map: "IDX_70671f15d0b5eca41ad754d94e") @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("banned_ip")
+}
+
+model Lesson {
+  id        Int        @id @default(autoincrement())
+  code      String     @db.Char(3)
+  name      String     @db.VarChar(30)
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime   @default(now()) @map("updated_at") @db.Timestamp(6)
+  deletedAt DateTime?  @map("deleted_at") @db.Timestamp(6)
+  schedules Schedule[]
+
+  @@map("lesson")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Schedule {
+  id        Int       @id @default(autoincrement())
+  startTime String    @map("start_time") @db.Char(4)
+  endTime   String    @map("end_time") @db.Char(4)
+  lessonId  Int?      @map("lesson_id")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
+  dayOfWeek Int       @map("day_of_week") @db.UnsignedInt
+  lesson    Lesson?   @relation(fields: [lessonId], references: [id], map: "FK_6c8c0c369dc1fa673c88bb6381a")
+  students  Student[]
+
+  @@index([lessonId], map: "FK_6c8c0c369dc1fa673c88bb6381a")
+  @@map("schedule")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Student {
+  id              Int              @id @default(autoincrement())
+  name            String           @db.VarChar(30)
+  birthYear       String?          @map("birth_year") @db.Char(4)
+  birthDate       String?          @map("birth_date") @db.Char(4)
+  schoolLevel     Int?             @map("school_level") @db.UnsignedInt
+  schoolGrade     Int?             @map("school_grade") @db.UnsignedInt
+  schoolName      String?          @map("school_name") @db.VarChar(30)
+  note            String?          @db.VarChar(255)
+  scheduleId      Int?             @map("schedule_id")
+  phone           String?          @db.VarChar(20)
+  parentPhone     String?          @map("parent_phone") @db.VarChar(20)
+  registeredAt    DateTime?        @map("registered_at") @db.Timestamp(0)
+  updatedAt       DateTime         @default(now()) @map("updated_at") @db.Timestamp(6)
+  deletedAt       DateTime?        @map("deleted_at") @db.Timestamp(6)
+  activityRecords ActivityRecord[]
+  schedule        Schedule?        @relation(fields: [scheduleId], references: [id], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
+
+  @@index([scheduleId], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
+  @@map("student")
+}
