@@ -1,16 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { In, Repository } from 'typeorm';
 import * as dayjs from 'dayjs';
 
 import { ActivityRecord } from './entity/activity-record.entity';
 import { ActivityRecordGenerationLog } from './entity/activity-record-generation-log.entity';
+import { ActivityRecordLog } from './entity/activity-record-log';
+
 import { Student } from '@src/student/entity/student.entity';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 import { isNullish } from '@src/common/utils/etc';
-import { ActivityRecordLog } from './entity/activity-record-log';
 import { ActivityRecordUpdatedEvent } from './activity.event';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ACTIVITY_RECORD_UPDATED } from '@src/common/constant/event.const';
 
 /**
