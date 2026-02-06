@@ -22,7 +22,7 @@ export class ActivityTask {
     try {
       const currentYearMonth = dayjs().format('YYYYMM');
       const nextYearMonth = dayjs().add(1, 'month').format('YYYYMM');
-      const logs = await this.activityService.getAGLsInThisAndNextMonth({
+      const logs = await this.activityService.getARGLsInThisAndNextMonth({
         thisMonth: currentYearMonth,
         nextMonth: nextYearMonth,
       });
@@ -47,7 +47,7 @@ export class ActivityTask {
             yearMonth: yearMonth,
           });
         }
-        await this.activityService.generateAGLs({ yearMonth: yearMonth });
+        await this.activityService.generateARGLs({ yearMonth: yearMonth });
       }
       this.logger.log(`Activity records generated for ${yearMonthsToGenerate.join(', ')}`);
     } catch (error) {

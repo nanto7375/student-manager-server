@@ -66,13 +66,13 @@ export class ActivityService {
     await this.activityRecordRepository.save(activityRecords);
   }
 
-  async generateAGLs({ yearMonth }: { yearMonth: string }) {
+  async generateARGLs({ yearMonth }: { yearMonth: string }) {
     const activityGenerationLog = new ActivityRecordGenerationLog();
     activityGenerationLog.generatedActivityYearMonth = yearMonth;
     return await this.arglRepository.save(activityGenerationLog);
   }
 
-  async getAGLsInThisAndNextMonth({ thisMonth, nextMonth }: { thisMonth: string; nextMonth: string }) {
+  async getARGLsInThisAndNextMonth({ thisMonth, nextMonth }: { thisMonth: string; nextMonth: string }) {
     const activityGenerationLogs = await this.arglRepository.find({ where: { generatedActivityYearMonth: In([thisMonth, nextMonth]) } });
     return activityGenerationLogs;
   }
