@@ -1,8 +1,7 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { In, Repository } from 'typeorm';
-import * as dayjs from 'dayjs';
+import { Repository } from 'typeorm';
 
 import { ActivityRecord } from './entity/activity-record.entity';
 import { ActivityRecordGenerationLog } from './entity/activity-record-generation-log.entity';
@@ -39,23 +38,8 @@ export class ActivityService {
     return activityRecords;
   }
 
-  getActivityRecordDatesInMonth({ yearMonth, dayOfWeek }: { yearMonth: string; dayOfWeek: number }) {
-    const start = this.dateUtil.startOfMonth(yearMonth);
-    const result: string[] = [];
-
-    let current = start;
-    while (current.day() !== dayOfWeek) {
-      current = current.add(1, 'day');
-    }
-    while (current.format('YYYYMM') === yearMonth) {
-      result.push(current.format('YYYYMMDD'));
-      current = current.add(7, 'day');
-    }
-    return result;
-  }
-
   async generateThisMonthActivityRecords({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: number; yearMonth: string }) {
-    const dates = this.getActivityRecordDatesInMonth({ yearMonth, dayOfWeek });
+    const dates = this.dateUtil.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek });
     const activityRecords: ActivityRecord[] = [];
 
     for (const student of students) {

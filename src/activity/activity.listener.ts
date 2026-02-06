@@ -6,7 +6,7 @@ import { ActivityRecordUpdatedEvent } from './activity.event';
 import { ActivityService } from './activity.service';
 import { StudentScheduleRegisteredEvent } from '@src/student/student.event';
 import { MyLogger } from '@src/configs/logger/my-logger';
-import dayjs from 'dayjs';
+import { DateUtil } from '@src/common/utils/date';
 
 @Injectable()
 export class ActivityListener {
@@ -14,6 +14,7 @@ export class ActivityListener {
     private readonly activityTask: ActivityTask,
     private readonly activityService: ActivityService,
     private readonly logger: MyLogger,
+    private readonly dateUtil: DateUtil,
   ) {
     this.logger.setContext('ActivityListener');
   }
@@ -30,7 +31,7 @@ export class ActivityListener {
   @OnEvent(STUDENT_SCHEDULE_REGISTERED)
   async generateActivityRecordsForStudent({ student, schedule }: StudentScheduleRegisteredEvent) {
     try {
-      const yearMonth = dayjs().format('YYYYMM');
+      const yearMonth = this.dateUtil.currentYearMonth();
       await this.activityService.generateThisMonthActivityRecords({ students: [student], dayOfWeek: schedule.dayOfWeek, yearMonth });
     } catch (error) {
       this.logger.error(error);
