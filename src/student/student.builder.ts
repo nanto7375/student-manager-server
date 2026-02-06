@@ -64,37 +64,52 @@ class StudentCreator {
   }
 
   setBirth({ birthYear, birthDate }: SetBirthParams) {
-    this.validate.birthYear(birthYear);
-    this.validate.birthDate(birthDate);
-
-    this._student.birthYear = birthYear;
-    this._student.birthDate = birthDate;
+    if (!isNullish(birthYear)) {
+      this.validate.birthYear(birthYear);
+      this._student.birthYear = birthYear;
+    }
+    if (!isNullish(birthDate)) {
+      this.validate.birthDate(birthDate);
+      this._student.birthDate = birthDate;
+    }
     return this;
   }
   setContacts({ phone, parentPhone }: SetContactsParams) {
-    this.validate.phone(phone);
-    this.validate.phone(parentPhone);
-
-    this._student.phone = phone;
-    this._student.parentPhone = parentPhone;
+    if (!isNullish(phone)) {
+      this.validate.phone(phone);
+      this._student.phone = phone;
+    }
+    if (!isNullish(parentPhone)) {
+      this.validate.phone(parentPhone);
+      this._student.parentPhone = parentPhone;
+    }
     return this;
   }
   setSchool({ schoolName, schoolLevel, schoolGrade }: SetSchoolParams) {
-    this.validate.schoolName(schoolName);
-    this.validate.schoolLevel(schoolLevel);
-    this.validate.schoolGrade(schoolGrade);
-
-    this._student.schoolName = schoolName;
-    this._student.schoolLevel = schoolLevel;
-    this._student.schoolGrade = schoolGrade;
+    if (!isNullish(schoolName)) {
+      this.validate.schoolName(schoolName);
+      this._student.schoolName = schoolName;
+    }
+    if (!isNullish(schoolLevel)) {
+      this.validate.schoolLevel(schoolLevel);
+      this._student.schoolLevel = schoolLevel;
+    }
+    if (!isNullish(schoolGrade)) {
+      this.validate.schoolGrade(schoolGrade);
+      this._student.schoolGrade = schoolGrade;
+    }
     return this;
   }
   setSchedule(schedule: Schedule) {
-    this._student.schedule = schedule;
+    if (!isNullish(schedule)) {
+      this._student.schedule = schedule;
+    }
     return this;
   }
   setNote(note: string) {
-    if (note) this._student.note = note;
+    if (!isNullish(note)) {
+      this._student.note = note;
+    }
     return this;
   }
   create() {

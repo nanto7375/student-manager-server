@@ -7,6 +7,9 @@ import { StudentBuilder } from './student.builder';
 import { ScheduleService } from '@src/schedule/schedule.service';
 
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { STUDENT_SCHEDULE_REGISTERED } from '@src/common/constant/event.const';
+import { StudentScheduleRegisteredEvent } from './student.event';
 
 type UpdatePersonalInfoParams = {
   studentId: number;
@@ -24,6 +27,7 @@ export class StudentService {
     private readonly studentRepository: Repository<Student>,
     private readonly studentBuilder: StudentBuilder,
     private readonly scheduleService: ScheduleService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async register({ ...studentDto }: RegisterStudentRequestDto & { registeredAt: Date }) {
@@ -51,7 +55,11 @@ export class StudentService {
       .setSchedule(schedule)
       .create();
 
-    return await this.studentRepository.save(newStudent);
+    const savedStudent = await this.studentRepository.save(newStudent);
+    if (schedule) {
+      this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
+    }
+    return savedStudent;
   }
 
   async updatePersonalInfo({ studentId, studentDto }: UpdatePersonalInfoParams) {
@@ -81,7 +89,9 @@ export class StudentService {
     const student = await this.getStudentOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     student.schedule = schedule;
-    return await this.studentRepository.save(student);
+    const savedStudent = await this.studentRepository.save(student);
+    this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
+    return savedStudent;
   }
 
   async getStudentOrThrow(id: number) {

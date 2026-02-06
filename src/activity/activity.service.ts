@@ -52,6 +52,17 @@ export class ActivityService {
     return result;
   }
 
+  async generateActivityRecordsForStudent({ student, dayOfWeek, yearMonth }: { student: Student; dayOfWeek: number; yearMonth: string }) {
+    const dates = this.getActivityRecordDatesInMonth({ yearMonth, dayOfWeek });
+    const activityRecords: ActivityRecord[] = dates.map((date) => {
+      const activityRecord = new ActivityRecord();
+      activityRecord.student = student;
+      activityRecord.date = date;
+      return activityRecord;
+    });
+    return await this.activityRecordRepository.save(activityRecords);
+  }
+
   async generateActivityRecordsForMonth({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: number; yearMonth: string }) {
     const dates = this.getActivityRecordDatesInMonth({ yearMonth, dayOfWeek });
     const activityRecords: ActivityRecord[] = [];

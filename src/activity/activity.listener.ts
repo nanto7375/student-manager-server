@@ -1,29 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { ACTIVITY_RECORD_UPDATED, APP_BOOTSTRAP_COMPLETED, STUDENT_REGISTERED } from '../common/constant/event.const';
+import { ACTIVITY_RECORD_UPDATED, APP_BOOTSTRAP_COMPLETED, STUDENT_SCHEDULE_REGISTERED } from '../common/constant/event.const';
 import { ActivityTask } from './activity.task';
 import { ActivityRecordUpdatedEvent } from './activity.event';
 import { ActivityService } from './activity.service';
+import { StudentScheduleRegisteredEvent } from '@src/student/student.event';
+import { MyLogger } from '@src/configs/logger/my-logger';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class ActivityListener {
   constructor(
     private readonly activityTask: ActivityTask,
     private readonly activityService: ActivityService,
-  ) {}
+    private readonly logger: MyLogger,
+  ) {
+    this.logger.setContext('ActivityListener');
+  }
 
   @OnEvent(APP_BOOTSTRAP_COMPLETED)
   async generateActivityRecords() {
-    await this.activityTask.generateActivityRecords();
+    try {
+      await this.activityTask.generateActivityRecords();
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
-  @OnEvent(STUDENT_REGISTERED)
-  async generateActivityRecordsForStudent({ studentId }: { studentId: number }) {
-    // await this.activityTask.generateActivityRecordsForStudent(student);
+  @OnEvent(STUDENT_SCHEDULE_REGISTERED)
+  async generateActivityRecordsForStudent({ student, schedule }: StudentScheduleRegisteredEvent) {
+    try {
+      const yearMonthThis = dayjs().format('YYYYMM');
+      const yearMonthNext = dayjs().add(1, 'month').format('YYYYMM');
+      for (const yearMonth of [yearMonthThis, yearMonthNext]) {
+        await this.activityService.generateActivityRecordsForStudent({ student, dayOfWeek: schedule.dayOfWeek, yearMonth });
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   @OnEvent(ACTIVITY_RECORD_UPDATED)
-  async updateActivityRecordLog(event: ActivityRecordUpdatedEvent) {
-    await this.activityService.generateActivityRecordLog({ activityRecordId: event.activityRecordId, adminId: event.adminId, key: event.key, value: event.value });
+  async updateActivityRecordLog({ adminId, activityRecordId, key, value }: ActivityRecordUpdatedEvent) {
+    try {
+      await this.activityService.generateActivityRecordLog({ activityRecordId, adminId, key, value });
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 }
