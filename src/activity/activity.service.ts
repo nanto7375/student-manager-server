@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { In, Repository } from 'typeorm';
@@ -13,6 +13,7 @@ import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 import { isNullish } from '@src/common/utils/etc';
 import { ActivityRecordUpdatedEvent } from './activity.event';
 import { ACTIVITY_RECORD_UPDATED } from '@src/common/constant/event.const';
+import { DateUtil } from '@src/common/utils/date';
 
 /**
  * @description ARGL: ActivityRecordGenerationLog
@@ -27,6 +28,7 @@ export class ActivityService {
     @InjectRepository(ActivityRecordLog)
     private readonly arlRepository: Repository<ActivityRecordLog>,
     private readonly eventEmitter: EventEmitter2,
+    private readonly dateUtil: DateUtil,
   ) {}
 
   async getDailyActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
@@ -38,7 +40,7 @@ export class ActivityService {
   }
 
   getActivityRecordDatesInMonth({ yearMonth, dayOfWeek }: { yearMonth: string; dayOfWeek: number }) {
-    const start = dayjs(yearMonth, 'YYYYMM').startOf('month');
+    const start = this.dateUtil.startOfMonth(yearMonth);
     const result: string[] = [];
 
     let current = start;
