@@ -30,11 +30,8 @@ export class ActivityListener {
   @OnEvent(STUDENT_SCHEDULE_REGISTERED)
   async generateActivityRecordsForStudent({ student, schedule }: StudentScheduleRegisteredEvent) {
     try {
-      const yearMonthThis = dayjs().format('YYYYMM');
-      const yearMonthNext = dayjs().add(1, 'month').format('YYYYMM');
-      for (const yearMonth of [yearMonthThis, yearMonthNext]) {
-        await this.activityService.generateActivityRecordsForStudent({ student, dayOfWeek: schedule.dayOfWeek, yearMonth });
-      }
+      const yearMonth = dayjs().format('YYYYMM');
+      await this.activityService.generateThisMonthActivityRecords({ students: [student], dayOfWeek: schedule.dayOfWeek, yearMonth });
     } catch (error) {
       this.logger.error(error);
     }

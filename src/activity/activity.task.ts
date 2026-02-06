@@ -21,35 +21,19 @@ export class ActivityTask {
   async generateActivityRecords() {
     try {
       const currentYearMonth = dayjs().format('YYYYMM');
-      const nextYearMonth = dayjs().add(1, 'month').format('YYYYMM');
-      const logs = await this.activityService.getARGLsInThisAndNextMonth({
-        thisMonth: currentYearMonth,
-        nextMonth: nextYearMonth,
-      });
-
-      let [thisMonthCompleted, nextMonthCompleted] = [false, false];
-      logs.forEach((log) => {
-        if (log.generatedActivityYearMonth === currentYearMonth) thisMonthCompleted = true;
-        if (log.generatedActivityYearMonth === nextYearMonth) nextMonthCompleted = true;
-      });
-      if (thisMonthCompleted && nextMonthCompleted) return;
-
-      const yearMonthsToGenerate = [];
-      if (!thisMonthCompleted) yearMonthsToGenerate.push(currentYearMonth);
-      if (!nextMonthCompleted) yearMonthsToGenerate.push(nextYearMonth);
+      const thisMonthARGL = await this.activityService.getARGLsInThisMonth(currentYearMonth);
+      if (thisMonthARGL) return;
 
       const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
-      for (const yearMonth of yearMonthsToGenerate) {
-        for (const schedule of schedulesWithStudents) {
-          await this.activityService.generateActivityRecordsForMonth({
-            students: schedule.students,
-            dayOfWeek: schedule.dayOfWeek,
-            yearMonth: yearMonth,
-          });
-        }
-        await this.activityService.generateARGLs({ yearMonth: yearMonth });
+      for (const schedule of schedulesWithStudents) {
+        await this.activityService.generateThisMonthActivityRecords({
+          students: schedule.students,
+          dayOfWeek: schedule.dayOfWeek,
+          yearMonth: currentYearMonth,
+        });
       }
-      this.logger.log(`Activity records generated for ${yearMonthsToGenerate.join(', ')}`);
+      await this.activityService.generateARGLs({ yearMonth: currentYearMonth });
+      this.logger.log(`Activity records generated for ${currentYearMonth}`);
     } catch (error) {
       this.logger.error(error);
     }

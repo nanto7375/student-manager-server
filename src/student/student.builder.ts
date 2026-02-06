@@ -127,29 +127,40 @@ class StudentEditor {
   }
 
   setBirth({ birthYear, birthDate }: SetBirthParams) {
-    this.validate.birthYear(birthYear);
-    this.validate.birthDate(birthDate);
-
-    this._student.birthYear = birthYear;
-    this._student.birthDate = birthDate;
+    if (!isNullish(birthYear)) {
+      this.validate.birthYear(birthYear);
+      this._student.birthYear = birthYear;
+    }
+    if (!isNullish(birthDate)) {
+      this.validate.birthDate(birthDate);
+      this._student.birthDate = birthDate;
+    }
     return this;
   }
   setContacts({ phone, parentPhone }: SetContactsParams) {
-    !isNullish(phone) && this.validate.phone(phone);
-    !isNullish(parentPhone) && this.validate.phone(parentPhone);
-
-    if (phone) this._student.phone = phone;
-    if (parentPhone) this._student.parentPhone = parentPhone;
+    if (!isNullish(phone)) {
+      this.validate.phone(phone);
+      this._student.phone = phone;
+    }
+    if (!isNullish(parentPhone)) {
+      this.validate.phone(parentPhone);
+      this._student.parentPhone = parentPhone;
+    }
     return this;
   }
   setSchool({ schoolName, schoolLevel, schoolGrade }: SetSchoolParams) {
-    !isNullish(schoolName) && this.validate.schoolName(schoolName);
-    !isNullish(schoolLevel) && this.validate.schoolLevel(schoolLevel);
-    !isNullish(schoolGrade) && this.validate.schoolGrade(schoolGrade);
-
-    if (schoolName) this._student.schoolName = schoolName;
-    if (schoolLevel) this._student.schoolLevel = schoolLevel;
-    if (schoolGrade) this._student.schoolGrade = schoolGrade;
+    if (!isNullish(schoolName)) {
+      this.validate.schoolName(schoolName);
+      this._student.schoolName = schoolName;
+    }
+    if (!isNullish(schoolLevel)) {
+      this.validate.schoolLevel(schoolLevel);
+      this._student.schoolLevel = schoolLevel;
+    }
+    if (!isNullish(schoolGrade)) {
+      this.validate.schoolGrade(schoolGrade);
+      this._student.schoolGrade = schoolGrade;
+    }
     return this;
   }
   edit() {

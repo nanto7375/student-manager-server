@@ -52,18 +52,7 @@ export class ActivityService {
     return result;
   }
 
-  async generateActivityRecordsForStudent({ student, dayOfWeek, yearMonth }: { student: Student; dayOfWeek: number; yearMonth: string }) {
-    const dates = this.getActivityRecordDatesInMonth({ yearMonth, dayOfWeek });
-    const activityRecords: ActivityRecord[] = dates.map((date) => {
-      const activityRecord = new ActivityRecord();
-      activityRecord.student = student;
-      activityRecord.date = date;
-      return activityRecord;
-    });
-    return await this.activityRecordRepository.save(activityRecords);
-  }
-
-  async generateActivityRecordsForMonth({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: number; yearMonth: string }) {
+  async generateThisMonthActivityRecords({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: number; yearMonth: string }) {
     const dates = this.getActivityRecordDatesInMonth({ yearMonth, dayOfWeek });
     const activityRecords: ActivityRecord[] = [];
 
@@ -84,8 +73,8 @@ export class ActivityService {
     return await this.arglRepository.save(activityGenerationLog);
   }
 
-  async getARGLsInThisAndNextMonth({ thisMonth, nextMonth }: { thisMonth: string; nextMonth: string }) {
-    const activityGenerationLogs = await this.arglRepository.find({ where: { generatedActivityYearMonth: In([thisMonth, nextMonth]) } });
+  async getARGLsInThisMonth(yearMonth: string) {
+    const activityGenerationLogs = await this.arglRepository.findOne({ where: { generatedActivityYearMonth: yearMonth } });
     return activityGenerationLogs;
   }
 
