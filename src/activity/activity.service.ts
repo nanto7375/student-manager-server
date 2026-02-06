@@ -3,12 +3,12 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { Student } from '@src/generated/prisma/client';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
-import { isNullish } from '@src/common/utils/etc';
-import { ActivityRecordUpdatedEvent } from './activity.event';
 import { ACTIVITY_RECORD_UPDATED } from '@src/common/constant/event.const';
 import { DateUtil } from '@src/common/utils/date';
 import { Prisma } from '@src/generated/prisma/client';
 import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository } from './activity.repository';
+import { isNullish } from '@src/common/utils/etc';
+import { ActivityRecordUpdatedEvent } from './activity.event';
 
 /**
  * @description ARGL: ActivityRecordGenerationLog
