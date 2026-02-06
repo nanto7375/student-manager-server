@@ -6,7 +6,7 @@ import * as dayjs from 'dayjs';
 
 import { ActivityRecord } from './entity/activity-record.entity';
 import { ActivityRecordGenerationLog } from './entity/activity-record-generation-log.entity';
-import { ActivityRecordLog } from './entity/activity-record-log';
+import { ActivityRecordLog } from './entity/activity-record-log.entity';
 
 import { Student } from '@src/student/entity/student.entity';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
