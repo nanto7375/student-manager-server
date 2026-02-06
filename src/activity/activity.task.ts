@@ -19,12 +19,13 @@ export class ActivityTask {
 
   // TODO: refactoring
   @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
-  async generateActivityRecords() {
+  async generateActivityRecordsForAllStudents() {
     try {
       const currentYearMonth = this.dateUtil.currentYearMonth();
       const thisMonthARGL = await this.activityService.getARGLsInThisMonth(currentYearMonth);
       if (thisMonthARGL) return;
 
+      // TODO: transaction
       const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
       for (const schedule of schedulesWithStudents) {
         await this.activityService.generateThisMonthActivityRecords({
@@ -37,6 +38,12 @@ export class ActivityTask {
       this.logger.log(`Activity records generated for ${currentYearMonth}`);
     } catch (error) {
       this.logger.error(error);
+      setTimeout(
+        () => {
+          this.generateActivityRecordsForAllStudents();
+        },
+        1000 * 60 * 5,
+      );
     }
   }
 }

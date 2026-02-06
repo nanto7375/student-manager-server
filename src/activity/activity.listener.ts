@@ -22,7 +22,7 @@ export class ActivityListener {
   @OnEvent(APP_BOOTSTRAP_COMPLETED)
   async generateActivityRecords() {
     try {
-      await this.activityTask.generateActivityRecords();
+      await this.activityTask.generateActivityRecordsForAllStudents();
     } catch (error) {
       this.logger.error(error);
     }
