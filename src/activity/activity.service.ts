@@ -9,6 +9,7 @@ import { ACTIVITY_RECORD_UPDATED } from '@src/common/constant/event.const';
 import { DateUtil } from '@src/common/utils/date';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
 import { Prisma } from '@src/generated/prisma/client';
+import { ActivityRepository } from './activity.repository';
 
 /**
  * @description ARGL: ActivityRecordGenerationLog
@@ -18,11 +19,11 @@ export class ActivityService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly dateUtil: DateUtil,
-    private readonly prisma: PrismaService,
+    private readonly activityRepository: ActivityRepository,
   ) {}
 
   async getDailyActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
-    const activityRecords = await this.prisma.activityRecord.findMany({
+    const activityRecords = await this.activityRepository.getActivityRecordList({
       where: { date, student: { scheduleId } },
       include: { student: true },
     });
@@ -42,7 +43,7 @@ export class ActivityService {
         activityRecords.push(activityRecord);
       }
     }
-    await this.prisma.activityRecord.createMany({ data: activityRecords });
+    await this.activityRepository.createActivityRecordList(activityRecords);
   }
 
   async generateARGLs({ yearMonth }: { yearMonth: string }) {
@@ -50,16 +51,16 @@ export class ActivityService {
       generatedActivityYearMonth: yearMonth,
     };
     activityGenerationLog.generatedActivityYearMonth = yearMonth;
-    return await this.prisma.activityRecordGenerationLog.create({ data: activityGenerationLog });
+    return await this.activityRepository.createActivityRecordGenerationLog(activityGenerationLog);
   }
 
   async getARGLsInThisMonth(yearMonth: string) {
-    const activityGenerationLogs = await this.prisma.activityRecordGenerationLog.findFirst({ where: { generatedActivityYearMonth: yearMonth } });
+    const activityGenerationLogs = await this.activityRepository.getActivityRecordGenerationLogBy({ generatedActivityYearMonth: yearMonth });
     return activityGenerationLogs;
   }
 
   async updateActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
-    const activityRecord = await this.prisma.activityRecord.findUnique({ where: { id: activityRecordId } });
+    const activityRecord = await this.activityRepository.getActivityRecordOrThrow(activityRecordId);
     if (!activityRecord) throw new NotFoundException('Activity record not found');
 
     if (!isNullish(activityRecordDto.attended)) {
@@ -78,7 +79,7 @@ export class ActivityService {
       this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
     }
 
-    return await this.prisma.activityRecord.update({ where: { id: activityRecordId }, data: activityRecord });
+    return await this.activityRepository.updateActivityRecord(activityRecordId, activityRecord);
   }
 
   async generateActivityRecordLog({ activityRecordId, adminId, key, value }: { activityRecordId: number; adminId: number; key: string; value: string }) {
@@ -88,6 +89,6 @@ export class ActivityService {
       key,
       value,
     };
-    return await this.prisma.activityRecordLog.create({ data: activityRecordLog });
+    return await this.activityRepository.createActivityRecordLog(activityRecordLog);
   }
 }

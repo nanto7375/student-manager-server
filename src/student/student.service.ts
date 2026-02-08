@@ -9,6 +9,7 @@ import { STUDENT_SCHEDULE_REGISTERED } from '@src/common/constant/event.const';
 import { StudentScheduleRegisteredEvent } from './student.event';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
 import { SchoolLevel } from '@src/common/constant/common.const';
+import { StudentRepository } from './student.repository';
 
 type UpdatePersonalInfoParams = {
   studentId: number;
@@ -25,11 +26,11 @@ export class StudentService {
     private readonly studentBuilder: StudentBuilder,
     private readonly scheduleService: ScheduleService,
     private readonly eventEmitter: EventEmitter2,
-    private readonly prisma: PrismaService,
+    private readonly studentRepository: StudentRepository,
   ) {}
 
   async getStudentOrThrow(id: number) {
-    const student = await this.prisma.student.findUnique({ where: { id, deletedAt: null } });
+    const student = await this.studentRepository.getStudentOrThrow(id);
     if (!student) throw new NotFoundException('not found student');
     return student;
   }
@@ -59,7 +60,7 @@ export class StudentService {
       .setSchedule(schedule?.id)
       .create();
 
-    const savedStudent = await this.prisma.student.create({ data: newStudent });
+    const savedStudent = await this.studentRepository.createStudent(newStudent);
     if (schedule) {
       this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
     }
@@ -86,14 +87,14 @@ export class StudentService {
       })
       .edit();
 
-    return await this.prisma.student.update({ where: { id: studentId }, data: updatedStudent });
+    return await this.studentRepository.updateStudent(studentId, updatedStudent);
   }
 
   async changeSchedule({ studentId, scheduleId }: ChangeScheduleParams) {
     const student = await this.getStudentOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     student.scheduleId = schedule.id;
-    const savedStudent = await this.prisma.student.update({ where: { id: studentId }, data: student });
+    const savedStudent = await this.studentRepository.updateStudent(studentId, student);
     this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
     return savedStudent;
   }
