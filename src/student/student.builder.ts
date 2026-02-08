@@ -1,8 +1,7 @@
-import { Student } from './entity/student.entity';
 import { SchoolLevel } from '@src/common/constant/common.const';
-import { Schedule } from '@src/schedule/entity/schedule.entity';
 import { isNullish, now } from '@src/common/utils/etc';
 import { BadRequestException } from '@nestjs/common';
+import { Prisma, Student } from '@src/generated/prisma/client';
 
 type SetBirthParams = {
   birthYear: string;
@@ -51,16 +50,14 @@ class StudentValidator {
 }
 
 class StudentCreator {
-  private _student: Student;
+  private _student: Prisma.StudentCreateInput;
   private validate: StudentValidator;
 
   constructor(name: string, registeredAt: Date) {
     this.validate = new StudentValidator();
     this.validate.name(name);
 
-    this._student = new Student();
-    this._student.name = name;
-    this._student.registeredAt = registeredAt;
+    this._student = { name, registeredAt };
   }
 
   setBirth({ birthYear, birthDate }: SetBirthParams) {
@@ -100,9 +97,9 @@ class StudentCreator {
     }
     return this;
   }
-  setSchedule(schedule: Schedule) {
-    if (!isNullish(schedule)) {
-      this._student.schedule = schedule;
+  setSchedule(scheduleId: number) {
+    if (!isNullish(scheduleId)) {
+      this._student.schedule = { connect: { id: scheduleId } };
     }
     return this;
   }

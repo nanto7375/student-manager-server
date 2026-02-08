@@ -2,12 +2,11 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } 
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiOkResponsePaginated } from '@src/common/swagger-paginated-response';
-import { AdminService } from './admin.service';
+import { AdminRoleType, AdminService } from './admin.service';
 
 import { toInstance } from '@src/common/utils/toInstance';
 import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
 import { AdminDto } from './dto/admin-response.dto';
-import { AdminRoleType } from './entity/admin.entity';
 import { PaginationRequestDto } from '@src/common/common.dto';
 import { AdminLevel } from './decorator/admin-level.decorator';
 import { AdminId } from './decorator/admin.decorators';

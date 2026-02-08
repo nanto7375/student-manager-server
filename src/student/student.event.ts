@@ -1,5 +1,4 @@
-import { Schedule } from '@src/schedule/entity/schedule.entity';
-import { Student } from './entity/student.entity';
+import { Student, Schedule } from '@src/generated/prisma/client';
 
 export class StudentScheduleRegisteredEvent {
   constructor(

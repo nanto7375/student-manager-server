@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { type Request } from 'express';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
 
 import { AdminService } from '@src/admin/admin.service';
-import { BannedIp } from './entity/banned-ip.entity';
 import { FailedSigninAttemptCache } from './cache/failed-signin-attempt.cache';
 import { MyBcrypt } from '@src/common/utils/bcrypt';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
-import { Admin, AdminRoleType } from '@src/admin/entity/admin.entity';
+import { AdminRoleType } from '@src/admin/admin.service';
 import { createHash } from 'crypto';
 
 export const TOKEN_EXPIRED_ERROR = 'jwt expired';
@@ -45,8 +41,6 @@ export class AuthService {
     private readonly myBcrypt: MyBcrypt,
     private readonly failedSigninAttemptCache: FailedSigninAttemptCache,
     private readonly discardedTokenCache: DiscardedTokenCache,
-    @InjectRepository(BannedIp)
-    private readonly bannedIpRepository: Repository<BannedIp>,
   ) {
     this._ACCESS_TOKEN_SECRET = this.configService.get('SM_JWT_SECRET');
     this._REFRESH_TOKEN_SECRET = this.configService.get('SM_JWT_REFRESH_SECRET');

@@ -1,32 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
-import { Schedule } from './entity/schedule.entity';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
+import { Schedule as ScheduleModel } from '@src/generated/prisma/client';
+
+export const LessonName = {
+  '101': '논술',
+};
 
 @Injectable()
 export class ScheduleService {
-  constructor(
-    @InjectRepository(Schedule)
-    private readonly scheduleRepository: Repository<Schedule>,
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getScheduleOrThrow(id: number) {
-    const schedule = await this.scheduleRepository.findOne({ where: { id } });
+    const schedule = await this.prisma.schedule.findUnique({ where: { id } });
     if (!schedule) throw new NotFoundException('not found schedule');
     return schedule;
   }
 
-  async getSchedules() {
+  async getSchedules(): Promise<ScheduleModel[]> {
     const schedules = await this.prisma.schedule.findMany();
-    console.log(schedules);
     return schedules;
-    // return await this.scheduleRepository.find({ cache: 1_000 * 60 * 10 });
   }
 
   async getSchedulesWithStudents() {
-    return await this.scheduleRepository.find({ relations: { students: true } });
+    return await this.prisma.schedule.findMany({ include: { students: true } });
   }
 }

@@ -1,8 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
-import { Student } from './entity/student.entity';
 import { StudentBuilder } from './student.builder';
 import { ScheduleService } from '@src/schedule/schedule.service';
 
@@ -10,6 +7,7 @@ import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { STUDENT_SCHEDULE_REGISTERED } from '@src/common/constant/event.const';
 import { StudentScheduleRegisteredEvent } from './student.event';
+import { PrismaService } from '@src/configs/prisma/prisma.service';
 
 type UpdatePersonalInfoParams = {
   studentId: number;
@@ -23,11 +21,10 @@ type ChangeScheduleParams = {
 @Injectable()
 export class StudentService {
   constructor(
-    @InjectRepository(Student)
-    private readonly studentRepository: Repository<Student>,
     private readonly studentBuilder: StudentBuilder,
     private readonly scheduleService: ScheduleService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly prisma: PrismaService,
   ) {}
 
   async register({ ...studentDto }: RegisterStudentRequestDto & { registeredAt: Date }) {
@@ -52,10 +49,10 @@ export class StudentService {
         schoolGrade: studentDto.schoolGrade,
       })
       .setNote(studentDto.note)
-      .setSchedule(schedule)
+      .setSchedule(schedule?.id)
       .create();
 
-    const savedStudent = await this.studentRepository.save(newStudent);
+    const savedStudent = await this.prisma.student.create({ data: newStudent });
     if (schedule) {
       this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
     }
@@ -82,20 +79,20 @@ export class StudentService {
       })
       .edit();
 
-    return await this.studentRepository.save(updatedStudent);
+    return await this.prisma.student.update({ where: { id: studentId }, data: updatedStudent });
   }
 
   async changeSchedule({ studentId, scheduleId }: ChangeScheduleParams) {
     const student = await this.getStudentOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
-    student.schedule = schedule;
-    const savedStudent = await this.studentRepository.save(student);
+    student.scheduleId = schedule.id;
+    const savedStudent = await this.prisma.student.update({ where: { id: studentId }, data: student });
     this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
     return savedStudent;
   }
 
   async getStudentOrThrow(id: number) {
-    const student = await this.studentRepository.findOne({ where: { id } });
+    const student = await this.prisma.student.findUnique({ where: { id } });
     if (!student) throw new NotFoundException('not found student');
     return student;
   }

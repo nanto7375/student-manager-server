@@ -3,7 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ScheduleService } from './schedule.service';
 
-import { AdminRoleType } from '@src/admin/entity/admin.entity';
+import { AdminRoleType } from '@src/admin/admin.service';
 import { AdminLevel } from '@src/admin/decorator/admin-level.decorator';
 
 import { toInstance } from '@src/common/utils/toInstance';

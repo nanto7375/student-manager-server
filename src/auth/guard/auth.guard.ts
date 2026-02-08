@@ -6,7 +6,7 @@ import { MyLogger } from '@src/configs/logger/my-logger';
 import { AuthService, TOKEN_EXPIRED_ERROR } from '../auth.service';
 import { AUTH_SKIP_KEY } from '../decorator/auth-skip.decorator';
 
-import { AdminRoleType } from '@src/admin/entity/admin.entity';
+import { AdminRoleType } from '@src/admin/admin.service';
 
 export type AuthenticatedRequest = Request & { email: string; role: AdminRoleType; adminId: number };
 

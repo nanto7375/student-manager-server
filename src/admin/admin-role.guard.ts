@@ -4,7 +4,7 @@ import { Reflector } from '@nestjs/core';
 import { AuthenticatedRequest } from '../auth/guard/auth.guard';
 import { AUTH_SKIP_KEY } from '@src/auth/decorator/auth-skip.decorator';
 import { ADMIN_LEVEL_KEY } from '@src/admin/decorator/admin-level.decorator';
-import { getAdminRoleLevel } from '@src/admin/entity/admin.entity';
+import { getAdminRoleLevel } from '@src/admin/admin.service';
 
 @Injectable()
 export class RoleGuard implements CanActivate {

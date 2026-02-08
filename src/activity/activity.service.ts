@@ -1,18 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Repository } from 'typeorm';
 
-import { ActivityRecord } from './entity/activity-record.entity';
-import { ActivityRecordGenerationLog } from './entity/activity-record-generation-log.entity';
-import { ActivityRecordLog } from './entity/activity-record-log.entity';
-
-import { Student } from '@src/student/entity/student.entity';
+import { Student } from '@src/generated/prisma/client';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 import { isNullish } from '@src/common/utils/etc';
 import { ActivityRecordUpdatedEvent } from './activity.event';
 import { ACTIVITY_RECORD_UPDATED } from '@src/common/constant/event.const';
 import { DateUtil } from '@src/common/utils/date';
+import { PrismaService } from '@src/configs/prisma/prisma.service';
+import { Prisma } from '@src/generated/prisma/client';
 
 /**
  * @description ARGL: ActivityRecordGenerationLog
@@ -20,79 +16,78 @@ import { DateUtil } from '@src/common/utils/date';
 @Injectable()
 export class ActivityService {
   constructor(
-    @InjectRepository(ActivityRecord)
-    private readonly activityRecordRepository: Repository<ActivityRecord>,
-    @InjectRepository(ActivityRecordGenerationLog)
-    private readonly arglRepository: Repository<ActivityRecordGenerationLog>,
-    @InjectRepository(ActivityRecordLog)
-    private readonly arlRepository: Repository<ActivityRecordLog>,
     private readonly eventEmitter: EventEmitter2,
     private readonly dateUtil: DateUtil,
+    private readonly prisma: PrismaService,
   ) {}
 
   async getDailyActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
-    const activityRecords = await this.activityRecordRepository.find({
+    const activityRecords = await this.prisma.activityRecord.findMany({
       where: { date, student: { scheduleId } },
-      relations: { student: true },
+      include: { student: true },
     });
     return activityRecords;
   }
 
   async generateThisMonthActivityRecords({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: number; yearMonth: string }) {
     const dates = this.dateUtil.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek });
-    const activityRecords: ActivityRecord[] = [];
+    const activityRecords: Prisma.ActivityRecordCreateManyInput[] = [];
 
     for (const student of students) {
       for (const date of dates) {
-        const activityRecord = new ActivityRecord();
-        activityRecord.student = student;
-        activityRecord.date = date;
+        const activityRecord: Prisma.ActivityRecordCreateManyInput = {
+          studentId: student.id,
+          date,
+        };
         activityRecords.push(activityRecord);
       }
     }
-    await this.activityRecordRepository.save(activityRecords);
+    await this.prisma.activityRecord.createMany({ data: activityRecords });
   }
 
   async generateARGLs({ yearMonth }: { yearMonth: string }) {
-    const activityGenerationLog = new ActivityRecordGenerationLog();
+    const activityGenerationLog: Prisma.ActivityRecordGenerationLogCreateInput = {
+      generatedActivityYearMonth: yearMonth,
+    };
     activityGenerationLog.generatedActivityYearMonth = yearMonth;
-    return await this.arglRepository.save(activityGenerationLog);
+    return await this.prisma.activityRecordGenerationLog.create({ data: activityGenerationLog });
   }
 
   async getARGLsInThisMonth(yearMonth: string) {
-    const activityGenerationLogs = await this.arglRepository.findOne({ where: { generatedActivityYearMonth: yearMonth } });
+    const activityGenerationLogs = await this.prisma.activityRecordGenerationLog.findFirst({ where: { generatedActivityYearMonth: yearMonth } });
     return activityGenerationLogs;
   }
 
   async updateActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
-    const activityRecord = await this.activityRecordRepository.findOne({ where: { id: activityRecordId } });
+    const activityRecord = await this.prisma.activityRecord.findUnique({ where: { id: activityRecordId } });
     if (!activityRecord) throw new NotFoundException('Activity record not found');
 
     if (!isNullish(activityRecordDto.attended)) {
-      activityRecord.attended = activityRecordDto.attended;
+      activityRecord.attended = activityRecordDto.attended ? 1 : 0;
       const event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'attended', activityRecordDto.attended.toString());
       this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
     }
     if (!isNullish(activityRecordDto.report1)) {
-      activityRecord.report1 = activityRecordDto.report1;
+      activityRecord.report1 = activityRecordDto.report1 ? 1 : 0;
       const event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'report1', activityRecordDto.report1.toString());
       this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
     }
     if (!isNullish(activityRecordDto.report2)) {
-      activityRecord.report2 = activityRecordDto.report2;
+      activityRecord.report2 = activityRecordDto.report2 ? 1 : 0;
       const event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'report2', activityRecordDto.report2.toString());
       this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
     }
 
-    return await this.activityRecordRepository.save(activityRecord);
+    return await this.prisma.activityRecord.update({ where: { id: activityRecordId }, data: activityRecord });
   }
 
   async generateActivityRecordLog({ activityRecordId, adminId, key, value }: { activityRecordId: number; adminId: number; key: string; value: string }) {
-    const activityRecordLog = new ActivityRecordLog();
-    activityRecordLog.activityRecordId = activityRecordId;
-    activityRecordLog.adminId = adminId;
-    activityRecordLog.key = key;
-    activityRecordLog.value = value;
-    return await this.arlRepository.save(activityRecordLog);
+    const activityRecordLog: Prisma.ActivityRecordLogCreateInput = {
+      activityRecord: { connect: { id: activityRecordId } },
+      admin: { connect: { id: adminId } },
+      key,
+      value,
+    };
+    return await this.prisma.activityRecordLog.create({ data: activityRecordLog });
   }
 }

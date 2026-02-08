@@ -33,7 +33,6 @@
     "@nestjs/schedule": "^6.1.0",
     "@nestjs/swagger": "^11.0.6",
     "@nestjs/throttler": "^6.4.0",
-    "@nestjs/typeorm": "^11.0.0",
     "@prisma/adapter-mariadb": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "app-root-path": "^3.1.0",
@@ -51,9 +50,6 @@
     "nest-winston": "^1.10.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.21",
-    "typeorm-extension": "^3.7.3",
-    "typeorm-naming-strategies": "^4.1.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
   },

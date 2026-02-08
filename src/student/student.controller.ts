@@ -1,7 +1,7 @@
 import { Body, Controller, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { AdminRoleType } from '@src/admin/entity/admin.entity';
+import { AdminRoleType } from '@src/admin/admin.service';
 import { StudentService } from './student.service';
 
 import { toInstance } from '@src/common/utils/toInstance';
