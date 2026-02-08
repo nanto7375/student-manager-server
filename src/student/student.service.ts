@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { StudentBuilder } from './student.builder';
 import { type ScheduleResult, ScheduleService } from '@src/schedule/schedule.service';
@@ -53,7 +53,7 @@ export class StudentService {
       .setSchedule(schedule?.id)
       .create();
 
-    const savedStudent = await this.studentRepository.createStudent(newStudent);
+    const savedStudent = await this.studentRepository.create(newStudent);
     if (schedule) {
       this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
     }
@@ -61,7 +61,7 @@ export class StudentService {
   }
 
   async updatePersonalInfo({ studentId, studentDto }: UpdatePersonalInfoParams) {
-    const student = await this.studentRepository.getStudentOrThrow(studentId);
+    const student = await this.studentRepository.findOrThrow(studentId);
 
     const updatedStudent = this.studentBuilder
       .editor(student)
@@ -80,14 +80,14 @@ export class StudentService {
       })
       .edit();
 
-    return await this.studentRepository.updateStudent(studentId, updatedStudent);
+    return await this.studentRepository.update(studentId, updatedStudent);
   }
 
   async changeSchedule({ studentId, scheduleId }: ChangeScheduleParams) {
-    const student = await this.studentRepository.getStudentOrThrow(studentId);
+    const student = await this.studentRepository.findOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     student.scheduleId = schedule.id;
-    const savedStudent = await this.studentRepository.updateStudent(studentId, student);
+    const savedStudent = await this.studentRepository.update(studentId, student);
     this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
     return savedStudent;
   }

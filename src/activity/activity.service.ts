@@ -8,7 +8,7 @@ import { ActivityRecordUpdatedEvent } from './activity.event';
 import { ACTIVITY_RECORD_UPDATED } from '@src/common/constant/event.const';
 import { DateUtil } from '@src/common/utils/date';
 import { Prisma } from '@src/generated/prisma/client';
-import { ActivityRepository } from './activity.repository';
+import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository } from './activity.repository';
 
 /**
  * @description ARGL: ActivityRecordGenerationLog
@@ -19,10 +19,12 @@ export class ActivityService {
     private readonly eventEmitter: EventEmitter2,
     private readonly dateUtil: DateUtil,
     private readonly activityRepository: ActivityRepository,
+    private readonly activityRecordLogRepository: ActivityRecordLogRepository,
+    private readonly activityRecordGenerationLogRepository: ActivityRecordGenerationLogRepository,
   ) {}
 
   async getDailyActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
-    const activityRecords = await this.activityRepository.getActivityRecordList({
+    const activityRecords = await this.activityRepository.findMany({
       where: { date, student: { scheduleId } },
       include: { student: true },
     });
@@ -40,18 +42,18 @@ export class ActivityService {
   }
 
   async generateARGLs({ yearMonth }: { yearMonth: string }) {
-    return await this.activityRepository.createActivityRecordGenerationLog({
+    return await this.activityRecordGenerationLogRepository.create({
       generatedActivityYearMonth: yearMonth,
     });
   }
 
   async getARGLsInThisMonth(yearMonth: string) {
-    const activityGenerationLogs = await this.activityRepository.getActivityRecordGenerationLogBy({ generatedActivityYearMonth: yearMonth });
+    const activityGenerationLogs = await this.activityRecordGenerationLogRepository.findBy({ generatedActivityYearMonth: yearMonth });
     return activityGenerationLogs;
   }
 
   async updateActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
-    const activityRecord = await this.activityRepository.getActivityRecordOrThrow(activityRecordId);
+    const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
     if (!activityRecord) throw new NotFoundException('Activity record not found');
 
     if (!isNullish(activityRecordDto.attended)) {
@@ -74,6 +76,6 @@ export class ActivityService {
   }
 
   async generateActivityRecordLog({ activityRecordId, adminId, key, value }: { activityRecordId: number; adminId: number; key: string; value: string }) {
-    return await this.activityRepository.createActivityRecordLog({ activityRecordId, adminId, key, value });
+    return await this.activityRecordLogRepository.create({ activityRecordId, adminId, key, value });
   }
 }
