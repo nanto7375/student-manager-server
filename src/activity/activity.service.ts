@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { Student } from '@src/generated/prisma/client';
@@ -38,7 +38,7 @@ export class ActivityService {
         return { studentId: student.id, date };
       });
     });
-    return await this.activityRepository.createManyActivityRecords(activityRecords);
+    return await this.activityRepository.createMany(activityRecords);
   }
 
   async generateARGLs({ yearMonth }: { yearMonth: string }) {
@@ -54,7 +54,6 @@ export class ActivityService {
 
   async updateActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
-    if (!activityRecord) throw new NotFoundException('Activity record not found');
 
     if (!isNullish(activityRecordDto.attended)) {
       activityRecord.attended = activityRecordDto.attended ? 1 : 0;
@@ -72,7 +71,7 @@ export class ActivityService {
       this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
     }
 
-    return await this.activityRepository.updateActivityRecord(activityRecordId, activityRecord);
+    return await this.activityRepository.update(activityRecordId, activityRecord);
   }
 
   async generateActivityRecordLog({ activityRecordId, adminId, key, value }: { activityRecordId: number; adminId: number; key: string; value: string }) {
