@@ -1,13 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { StudentBuilder } from './student.builder';
-import { ScheduleService } from '@src/schedule/schedule.service';
+import { type ScheduleResult, ScheduleService } from '@src/schedule/schedule.service';
 
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { STUDENT_SCHEDULE_REGISTERED } from '@src/common/constant/event.const';
 import { StudentScheduleRegisteredEvent } from './student.event';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
+import { SchoolLevel } from '@src/common/constant/common.const';
 
 type UpdatePersonalInfoParams = {
   studentId: number;
@@ -26,6 +27,12 @@ export class StudentService {
     private readonly eventEmitter: EventEmitter2,
     private readonly prisma: PrismaService,
   ) {}
+
+  async getStudentOrThrow(id: number) {
+    const student = await this.prisma.student.findUnique({ where: { id, deletedAt: null } });
+    if (!student) throw new NotFoundException('not found student');
+    return student;
+  }
 
   async register({ ...studentDto }: RegisterStudentRequestDto & { registeredAt: Date }) {
     const schedule = studentDto.scheduleId ? await this.scheduleService.getScheduleOrThrow(studentDto.scheduleId) : null;
@@ -90,10 +97,20 @@ export class StudentService {
     this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
     return savedStudent;
   }
-
-  async getStudentOrThrow(id: number) {
-    const student = await this.prisma.student.findUnique({ where: { id } });
-    if (!student) throw new NotFoundException('not found student');
-    return student;
-  }
 }
+
+type StudentResult = {
+  id: number;
+  name: string;
+  birthYear: string;
+  birthDate: string;
+  phone: string;
+  parentPhone: string;
+  schoolName: string;
+  schoolLevel: SchoolLevel;
+  schoolGrade: number;
+  note: string;
+  scheduleId: number;
+  registeredAt: Date;
+  schedule: ScheduleResult;
+};

@@ -62,14 +62,14 @@ export class AdminService {
   }
 
   async getAdminOrThrow(id: number) {
-    const admin = await this.prisma.admin.findUnique({ where: { id } });
+    const admin = await this.prisma.admin.findUnique({ where: { id, deletedAt: null } });
     if (!admin) throw new NotFoundException('존재하지 않는 관리자입니다.');
     delete admin.password;
     return admin;
   }
 
   async getAdminByEmailOrThrow(email: string) {
-    const admin = await this.prisma.admin.findUnique({ where: { email, isActive: 1 } });
+    const admin = await this.prisma.admin.findUnique({ where: { email, isActive: 1, deletedAt: null } });
     if (!admin) throw new NotFoundException('존재하지 않는 관리자입니다.');
     return admin;
   }
