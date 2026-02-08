@@ -7,7 +7,6 @@ import { isNullish } from '@src/common/utils/etc';
 import { ActivityRecordUpdatedEvent } from './activity.event';
 import { ACTIVITY_RECORD_UPDATED } from '@src/common/constant/event.const';
 import { DateUtil } from '@src/common/utils/date';
-import { PrismaService } from '@src/configs/prisma/prisma.service';
 import { Prisma } from '@src/generated/prisma/client';
 import { ActivityRepository } from './activity.repository';
 
@@ -32,26 +31,18 @@ export class ActivityService {
 
   async generateThisMonthActivityRecords({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: number; yearMonth: string }) {
     const dates = this.dateUtil.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek });
-    const activityRecords: Prisma.ActivityRecordCreateManyInput[] = [];
-
-    for (const student of students) {
-      for (const date of dates) {
-        const activityRecord: Prisma.ActivityRecordCreateManyInput = {
-          studentId: student.id,
-          date,
-        };
-        activityRecords.push(activityRecord);
-      }
-    }
-    await this.activityRepository.createActivityRecordList(activityRecords);
+    const activityRecords: Prisma.ActivityRecordCreateManyInput[] = students.flatMap((student) => {
+      return dates.map((date) => {
+        return { studentId: student.id, date };
+      });
+    });
+    return await this.activityRepository.createManyActivityRecords(activityRecords);
   }
 
   async generateARGLs({ yearMonth }: { yearMonth: string }) {
-    const activityGenerationLog: Prisma.ActivityRecordGenerationLogCreateInput = {
+    return await this.activityRepository.createActivityRecordGenerationLog({
       generatedActivityYearMonth: yearMonth,
-    };
-    activityGenerationLog.generatedActivityYearMonth = yearMonth;
-    return await this.activityRepository.createActivityRecordGenerationLog(activityGenerationLog);
+    });
   }
 
   async getARGLsInThisMonth(yearMonth: string) {
@@ -83,12 +74,6 @@ export class ActivityService {
   }
 
   async generateActivityRecordLog({ activityRecordId, adminId, key, value }: { activityRecordId: number; adminId: number; key: string; value: string }) {
-    const activityRecordLog: Prisma.ActivityRecordLogCreateInput = {
-      activityRecord: { connect: { id: activityRecordId } },
-      admin: { connect: { id: adminId } },
-      key,
-      value,
-    };
-    return await this.activityRepository.createActivityRecordLog(activityRecordLog);
+    return await this.activityRepository.createActivityRecordLog({ activityRecordId, adminId, key, value });
   }
 }

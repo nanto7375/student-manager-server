@@ -7,7 +7,6 @@ import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { STUDENT_SCHEDULE_REGISTERED } from '@src/common/constant/event.const';
 import { StudentScheduleRegisteredEvent } from './student.event';
-import { PrismaService } from '@src/configs/prisma/prisma.service';
 import { SchoolLevel } from '@src/common/constant/common.const';
 import { StudentRepository } from './student.repository';
 
@@ -28,12 +27,6 @@ export class StudentService {
     private readonly eventEmitter: EventEmitter2,
     private readonly studentRepository: StudentRepository,
   ) {}
-
-  async getStudentOrThrow(id: number) {
-    const student = await this.studentRepository.getStudentOrThrow(id);
-    if (!student) throw new NotFoundException('not found student');
-    return student;
-  }
 
   async register({ ...studentDto }: RegisterStudentRequestDto & { registeredAt: Date }) {
     const schedule = studentDto.scheduleId ? await this.scheduleService.getScheduleOrThrow(studentDto.scheduleId) : null;
@@ -68,7 +61,7 @@ export class StudentService {
   }
 
   async updatePersonalInfo({ studentId, studentDto }: UpdatePersonalInfoParams) {
-    const student = await this.getStudentOrThrow(studentId);
+    const student = await this.studentRepository.getStudentOrThrow(studentId);
 
     const updatedStudent = this.studentBuilder
       .editor(student)
@@ -91,7 +84,7 @@ export class StudentService {
   }
 
   async changeSchedule({ studentId, scheduleId }: ChangeScheduleParams) {
-    const student = await this.getStudentOrThrow(studentId);
+    const student = await this.studentRepository.getStudentOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     student.scheduleId = schedule.id;
     const savedStudent = await this.studentRepository.updateStudent(studentId, student);

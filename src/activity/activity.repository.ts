@@ -20,16 +20,16 @@ export class ActivityRepository {
   async createActivityRecord(activityRecord: Prisma.ActivityRecordCreateInput) {
     return await this.prisma.activityRecord.create({ data: activityRecord });
   }
-  async createActivityRecordList(activityRecords: Prisma.ActivityRecordCreateManyInput[]) {
+  async createManyActivityRecords(activityRecords: Prisma.ActivityRecordCreateManyInput[]) {
     return await this.prisma.activityRecord.createMany({ data: activityRecords });
   }
   async updateActivityRecord(id: number, activityRecord: Prisma.ActivityRecordUpdateInput) {
     return await this.prisma.activityRecord.update({ where: { id }, data: activityRecord });
   }
-  async createActivityRecordLog(activityRecordLog: Prisma.ActivityRecordLogCreateInput) {
-    return await this.prisma.activityRecordLog.create({ data: activityRecordLog });
+  async createActivityRecordLog({ activityRecordId, adminId, key, value }: { activityRecordId: number; adminId: number; key: string; value: string }) {
+    return await this.prisma.activityRecordLog.create({ data: { activityRecordId, adminId, key, value } });
   }
-  async createActivityRecordGenerationLog(activityRecordGenerationLog: Prisma.ActivityRecordGenerationLogCreateInput) {
-    return await this.prisma.activityRecordGenerationLog.create({ data: activityRecordGenerationLog });
+  async createActivityRecordGenerationLog({ generatedActivityYearMonth }: { generatedActivityYearMonth: string }) {
+    return await this.prisma.activityRecordGenerationLog.create({ data: { generatedActivityYearMonth } });
   }
 }
