@@ -19,8 +19,8 @@ export class ActivityRepository {
     if (!activityRecord) throw new NotFoundException('not found activity record');
     return activityRecord;
   }
-  async findMany({ where, include }: { where: Prisma.ActivityRecordWhereInput; include: Prisma.ActivityRecordInclude }) {
-    return await this.prisma.activityRecord.findMany({ where, include });
+  async findMany({ where, include, orderBy }: { where: Prisma.ActivityRecordWhereInput; include: Prisma.ActivityRecordInclude; orderBy: Prisma.ActivityRecordOrderByWithRelationInput }) {
+    return await this.prisma.activityRecord.findMany({ where, include, orderBy });
   }
 }
 

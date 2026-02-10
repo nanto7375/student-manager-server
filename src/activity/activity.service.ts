@@ -27,6 +27,7 @@ export class ActivityService {
     const activityRecords = await this.activityRepository.findMany({
       where: { date, student: { scheduleId } },
       include: { student: true },
+      orderBy: { student: { name: 'asc' } },
     });
     return activityRecords;
   }
