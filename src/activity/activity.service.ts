@@ -56,9 +56,9 @@ export class ActivityService {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
 
     let event: ActivityRecordUpdatedEvent;
-    if (!isNullish(activityRecordDto.attended)) {
-      activityRecord.attended = activityRecordDto.attended ? 1 : 0;
-      event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'attended', activityRecordDto.attended.toString());
+    if (!isNullish(activityRecordDto.attendance)) {
+      activityRecord.attendance = activityRecordDto.attendance ? 1 : 0;
+      event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'attendance', activityRecordDto.attendance.toString());
     }
     if (!isNullish(activityRecordDto.report1)) {
       activityRecord.report1 = activityRecordDto.report1 ? 1 : 0;

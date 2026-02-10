@@ -6,7 +6,7 @@ export class UpdateActivityRecordRequestDto {
   @ApiProperty({ description: '출석 여부', required: false })
   @Optional()
   @IsBoolean()
-  attended: boolean;
+  attendance: boolean;
 
   @ApiProperty({ description: '감상문 제출 여부', required: false })
   @Optional()

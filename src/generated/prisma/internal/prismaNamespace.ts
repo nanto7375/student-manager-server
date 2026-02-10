@@ -1059,7 +1059,7 @@ export const ActivityRecordScalarFieldEnum = {
   studentId: 'studentId',
   date: 'date',
   isMakeup: 'isMakeup',
-  attended: 'attended',
+  attendance: 'attendance',
   report1: 'report1',
   report2: 'report2',
   createdAt: 'createdAt',

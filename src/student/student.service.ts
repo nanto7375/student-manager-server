@@ -55,7 +55,8 @@ export class StudentService {
 
     const savedStudent = await this.studentRepository.create(newStudent);
     if (schedule) {
-      this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
+      const event = new StudentScheduleRegisteredEvent(savedStudent, schedule);
+      this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, event);
     }
     return savedStudent;
   }

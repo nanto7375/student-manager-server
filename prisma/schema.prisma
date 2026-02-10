@@ -23,7 +23,7 @@ model ActivityRecord {
   studentId          Int                 @map("student_id")
   date               String              @db.Char(8)
   isMakeup           Int                 @default(0) @map("is_makeup") @db.TinyInt
-  attended           Int                 @default(0) @db.TinyInt
+  attendance         Int                 @default(0) @db.TinyInt
   report1            Int                 @default(0) @db.TinyInt
   report2            Int                 @default(0) @db.TinyInt
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)

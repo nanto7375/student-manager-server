@@ -20,6 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:generate": "prisma generate",
     "prisma:pull": "prisma db pull",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:push": "prisma db push",
     "prisma:format-case": "prisma-case-format -f prisma/schema.prisma"
   },
   "dependencies": {
