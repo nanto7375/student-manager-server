@@ -55,23 +55,23 @@ export class ActivityService {
   async updateActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
 
+    let event: ActivityRecordUpdatedEvent;
     if (!isNullish(activityRecordDto.attended)) {
       activityRecord.attended = activityRecordDto.attended ? 1 : 0;
-      const event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'attended', activityRecordDto.attended.toString());
-      this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
+      event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'attended', activityRecordDto.attended.toString());
     }
     if (!isNullish(activityRecordDto.report1)) {
       activityRecord.report1 = activityRecordDto.report1 ? 1 : 0;
-      const event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'report1', activityRecordDto.report1.toString());
-      this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
+      event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'report1', activityRecordDto.report1.toString());
     }
     if (!isNullish(activityRecordDto.report2)) {
       activityRecord.report2 = activityRecordDto.report2 ? 1 : 0;
-      const event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'report2', activityRecordDto.report2.toString());
-      this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
+      event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'report2', activityRecordDto.report2.toString());
     }
 
-    return await this.activityRepository.update(activityRecordId, activityRecord);
+    const result = await this.activityRepository.update(activityRecordId, activityRecord);
+    this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
+    return result;
   }
 
   async generateActivityRecordLog({ activityRecordId, adminId, key, value }: { activityRecordId: number; adminId: number; key: string; value: string }) {
