@@ -7,10 +7,11 @@ import { ActivityListener } from './activity.listener';
 
 import { ScheduleModule } from '@src/schedule/schedule.module';
 import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository } from './activity.repository';
+import { ActivityEvent } from './activity.event';
 
 @Module({
   imports: [ScheduleModule],
   controllers: [ActivityController],
-  providers: [ActivityService, ActivityTask, ActivityListener, ActivityRepository, ActivityRecordLogRepository, ActivityRecordGenerationLogRepository],
+  providers: [ActivityService, ActivityTask, ActivityListener, ActivityRepository, ActivityRecordLogRepository, ActivityRecordGenerationLogRepository, ActivityEvent],
 })
 export class ActivityModule {}

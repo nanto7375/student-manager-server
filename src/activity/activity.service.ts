@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { Student } from '@src/generated/prisma/client';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
-import { ACTIVITY_RECORD_UPDATED } from '@src/common/constant/event.const';
 import { DateUtil } from '@src/common/utils/date';
 import { Prisma } from '@src/generated/prisma/client';
 import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository } from './activity.repository';
 import { isNullish } from '@src/common/utils/etc';
-import { ActivityRecordUpdatedEvent } from './activity.event';
+import { ActivityEvent } from './activity.event';
 
 /**
  * @description ARGL: ActivityRecordGenerationLog
@@ -16,11 +14,11 @@ import { ActivityRecordUpdatedEvent } from './activity.event';
 @Injectable()
 export class ActivityService {
   constructor(
-    private readonly eventEmitter: EventEmitter2,
     private readonly dateUtil: DateUtil,
     private readonly activityRepository: ActivityRepository,
     private readonly activityRecordLogRepository: ActivityRecordLogRepository,
     private readonly activityRecordGenerationLogRepository: ActivityRecordGenerationLogRepository,
+    private readonly activityEvent: ActivityEvent,
   ) {}
 
   async getDailyActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
@@ -56,22 +54,22 @@ export class ActivityService {
   async updateActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
 
-    let event: ActivityRecordUpdatedEvent;
+    let updatedEvent: { emit: () => void };
     if (!isNullish(activityRecordDto.attendance)) {
       activityRecord.attendance = activityRecordDto.attendance ? 1 : 0;
-      event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'attendance', activityRecordDto.attendance.toString());
+      updatedEvent = this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: 'attendance', value: activityRecordDto.attendance.toString() });
     }
     if (!isNullish(activityRecordDto.report1)) {
       activityRecord.report1 = activityRecordDto.report1 ? 1 : 0;
-      event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'report1', activityRecordDto.report1.toString());
+      updatedEvent = this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: 'report1', value: activityRecordDto.report1.toString() });
     }
     if (!isNullish(activityRecordDto.report2)) {
       activityRecord.report2 = activityRecordDto.report2 ? 1 : 0;
-      event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, 'report2', activityRecordDto.report2.toString());
+      updatedEvent = this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: 'report2', value: activityRecordDto.report2.toString() });
     }
 
     const result = await this.activityRepository.update(activityRecordId, activityRecord);
-    this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
+    updatedEvent.emit();
     return result;
   }
 
