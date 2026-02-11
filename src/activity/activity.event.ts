@@ -7,7 +7,7 @@ export class ActivityRecordUpdatedEvent {
     public readonly adminId: number,
     public readonly activityRecordId: number,
     public readonly key: string,
-    public readonly value: string,
+    public readonly value: boolean,
   ) {}
 }
 
@@ -15,8 +15,8 @@ export class ActivityRecordUpdatedEvent {
 export class ActivityEvent {
   constructor(private readonly eventEmitter: EventEmitter2) {}
 
-  activityRecordUpdated({ adminId, activityRecordId, key, value }: { adminId: number; activityRecordId: number; key: string; value: string }) {
+  activityRecordUpdated({ adminId, activityRecordId, key, value }: { adminId: number; activityRecordId: number; key: string; value: boolean }) {
     const event = new ActivityRecordUpdatedEvent(adminId, activityRecordId, key, value);
-    return { emit: () => this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event) };
+    this.eventEmitter.emit(ACTIVITY_RECORD_UPDATED, event);
   }
 }

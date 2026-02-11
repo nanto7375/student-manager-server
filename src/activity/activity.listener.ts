@@ -41,7 +41,7 @@ export class ActivityListener {
   @OnEvent(ACTIVITY_RECORD_UPDATED)
   async updateActivityRecordLog({ adminId, activityRecordId, key, value }: ActivityRecordUpdatedEvent) {
     try {
-      await this.activityService.generateActivityRecordLog({ activityRecordId, adminId, key, value });
+      await this.activityService.generateActivityRecordLog({ activityRecordId, adminId, key, value: value.toString() });
     } catch (error) {
       this.logger.error(error);
     }

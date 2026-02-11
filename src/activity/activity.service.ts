@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { Student } from '@src/generated/prisma/client';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
@@ -53,23 +53,16 @@ export class ActivityService {
 
   async updateActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
+    const { activityKey, activityValue } = activityRecordDto;
 
-    let updatedEvent: { emit: () => void };
-    if (!isNullish(activityRecordDto.attendance)) {
-      activityRecord.attendance = activityRecordDto.attendance ? 1 : 0;
-      updatedEvent = this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: 'attendance', value: activityRecordDto.attendance.toString() });
-    }
-    if (!isNullish(activityRecordDto.report1)) {
-      activityRecord.report1 = activityRecordDto.report1 ? 1 : 0;
-      updatedEvent = this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: 'report1', value: activityRecordDto.report1.toString() });
-    }
-    if (!isNullish(activityRecordDto.report2)) {
-      activityRecord.report2 = activityRecordDto.report2 ? 1 : 0;
-      updatedEvent = this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: 'report2', value: activityRecordDto.report2.toString() });
+    if (!Object.keys(activityRecord).includes(activityKey)) {
+      throw new BadRequestException('invalid activity key');
     }
 
-    const result = await this.activityRepository.update(activityRecordId, activityRecord);
-    updatedEvent.emit();
+    const body = { [activityKey]: activityValue ? 1 : 0 };
+    const result = await this.activityRepository.update(activityRecordId, body);
+
+    this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: activityKey, value: activityValue });
     return result;
   }
 
