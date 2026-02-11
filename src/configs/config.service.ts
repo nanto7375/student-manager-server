@@ -1,5 +1,5 @@
 import { plainToInstance, Transform, Type } from 'class-transformer';
-import { IsBoolean, IsIn, IsNumber, IsOptional, validateSync } from 'class-validator';
+import { IsIn, IsNumber, IsOptional, validateSync } from 'class-validator';
 
 export enum DatabaseDialect {
   Mysql = 'mysql',
@@ -13,7 +13,6 @@ export enum Environment {
 }
 
 export class EnvironmentVariables {
-  // Common
   @IsOptional()
   @IsIn([Environment.Development, Environment.Production, Environment.Local, Environment.Test])
   SM_ENV: Environment = Environment.Development;
@@ -28,9 +27,8 @@ export class EnvironmentVariables {
   @IsOptional()
   SM_LOG_LEVEL: 'error' | 'warn' | 'info' | 'verbose' | 'debug' = 'info';
 
-  DATABASE_URL: string;
+  SM_DATABASE_URL: string;
 
-  // Database Information
   SM_MYSQL_DB: string;
 
   SM_MYSQL_DB_USER: string;
@@ -75,17 +73,9 @@ export class EnvironmentVariables {
   // Timezone / Locale -> 서버별로 설정시 변경
   @IsOptional()
   SM_TZ: string = 'Asia/Seoul';
+
   @IsOptional()
   SM_LOCALE: string = 'ko-KR';
-
-  @Type(() => String)
-  @Transform(({ value }) => {
-    if (value === 'true') return true;
-    else return false;
-  })
-  @IsOptional()
-  @IsBoolean()
-  SM_DB_SYNC: boolean = false;
 
   @Type(() => Number)
   @IsNumber({ allowInfinity: false, allowNaN: false })
