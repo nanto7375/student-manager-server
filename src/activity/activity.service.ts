@@ -53,16 +53,16 @@ export class ActivityService {
 
   async updateActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
-    const { activityKey, activityValue } = activityRecordDto;
+    const { activityKey: key, activityValue: value } = activityRecordDto;
 
-    if (!Object.keys(activityRecord).includes(activityKey)) {
+    if (!Object.keys(activityRecord).includes(key)) {
       throw new BadRequestException('invalid activity key');
     }
 
-    const body = { [activityKey]: activityValue ? 1 : 0 };
+    const body = { [key]: value ? 1 : 0 };
     const result = await this.activityRepository.update(activityRecordId, body);
 
-    this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: activityKey, value: activityValue });
+    this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key, value });
     return result;
   }
 
