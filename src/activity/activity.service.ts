@@ -3,7 +3,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Student } from '@src/generated/prisma/client';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 import { DateUtil } from '@src/common/utils/date';
-import { Prisma } from '@src/generated/prisma/client';
 import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository } from './activity.repository';
 import { isNullish } from '@src/common/utils/etc';
 import { ActivityEvent } from './activity.event';
@@ -32,18 +31,12 @@ export class ActivityService {
 
   async generateThisMonthActivityRecords({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: number; yearMonth: string }) {
     const dates = this.dateUtil.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek });
-    const activityRecords: Prisma.ActivityRecordCreateManyInput[] = students.flatMap((student) => {
-      return dates.map((date) => {
-        return { studentId: student.id, date };
-      });
-    });
+    const activityRecords = students.flatMap((student) => dates.map((date) => ({ studentId: student.id, date })));
     return await this.activityRepository.createMany(activityRecords);
   }
 
   async generateARGLs({ yearMonth }: { yearMonth: string }) {
-    return await this.activityRecordGenerationLogRepository.create({
-      generatedActivityYearMonth: yearMonth,
-    });
+    return await this.activityRecordGenerationLogRepository.create({ generatedActivityYearMonth: yearMonth });
   }
 
   async getARGLsInThisMonth(yearMonth: string) {
