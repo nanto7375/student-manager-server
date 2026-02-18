@@ -23,6 +23,7 @@ export class ActivityController {
   @ApiOperation({ summary: '일일 활동 기록 업데이트' })
   @ApiOkResponse({ type: ActivityRecordDto })
   async updateActivityRecord(@Param('activityRecordId', ParseIntPipe) activityRecordId: number, @Body() updateActivityRecordRequestDto: UpdateActivityRecordRequestDto) {
+    console.log(updateActivityRecordRequestDto);
     // TODO: adminId
     const activityRecord = await this.activityService.updateActivityRecord({ activityRecordId, activityRecordDto: updateActivityRecordRequestDto, adminId: 1 });
     return toInstance(ActivityRecordDto, activityRecord);
