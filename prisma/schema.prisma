@@ -23,7 +23,7 @@ model ActivityRecord {
   studentId          Int                 @map("student_id")
   date               String              @db.Char(8)
   isMakeup           Boolean             @default(false) @map("is_makeup")
-  attendance         Boolean             @default(false) @map("attendance") /// 출석 여부
+  attendance         Boolean             @default(false) /// 출석 여부
   monthlyProject     Boolean             @default(false) @map("monthly_project") /// 월간 프로젝트 참여 여부
   monthlyPreview     Boolean             @default(false) @map("monthly_preview") /// 월간 레오 개요 제출 여부
   monthlyReport      Boolean             @default(false) @map("monthly_report") /// 월간 레오 감상문 제출 여부
