@@ -22,13 +22,13 @@ model ActivityRecord {
   id                 Int                 @id @default(autoincrement())
   studentId          Int                 @map("student_id")
   date               String              @db.Char(8)
-  isMakeup           Int                 @default(0) @map("is_makeup") @db.TinyInt
-  attendance         Int                 @default(0) @db.TinyInt
-  monthlyProject     Int                 @default(0) @db.TinyInt /// 월간 프로젝트 참여 여부
-  monthlyPreview     Int                 @default(0) @db.TinyInt /// 월간 레오 개요 제출 여부
-  monthlyReport      Int                 @default(0) @db.TinyInt /// 월간 레오 감상문 제출 여부
-  report1            Int                 @default(0) @db.TinyInt /// 감상문 제출
-  report2            Int                 @default(0) @db.TinyInt  /// 주간 레오 제출
+  isMakeup           Boolean             @default(false) @map("is_makeup")
+  attendance         Boolean             @default(false) @map("attendance") /// 출석 여부
+  monthlyProject     Boolean             @default(false) @map("monthly_project") /// 월간 프로젝트 참여 여부
+  monthlyPreview     Boolean             @default(false) @map("monthly_preview") /// 월간 레오 개요 제출 여부
+  monthlyReport      Boolean             @default(false) @map("monthly_report") /// 월간 레오 감상문 제출 여부
+  report1            Boolean             @default(false) @map("report_1") /// 감상문 제출
+  report2            Boolean             @default(false) @map("report_2") /// 주간 레오 제출
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt          DateTime            @default(now()) @map("updated_at") @db.Timestamp(6)
   student            Student             @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_af5423ecbecaf2606b909307ca8")
@@ -71,7 +71,7 @@ model Admin {
   email              String              @unique(map: "IDX_de87485f6489f5d0995f584195") @db.VarChar(255)
   phone              String?             @db.VarChar(20)
   role               String              @default("staff") @db.VarChar(20)
-  isActive           Int                 @default(1) @map("is_active") @db.TinyInt
+  isActive           Boolean             @default(true) @map("is_active")
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt          DateTime            @default(now()) @map("updated_at") @db.Timestamp(6)
   deletedAt          DateTime?           @map("deleted_at") @db.Timestamp(6)

@@ -4,7 +4,6 @@ import { Student } from '@src/generated/prisma/client';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 import { DateUtil } from '@src/common/utils/date';
 import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository } from './activity.repository';
-import { isNullish } from '@src/common/utils/etc';
 import { ActivityEvent } from './activity.event';
 
 /**
@@ -52,7 +51,7 @@ export class ActivityService {
       throw new BadRequestException('invalid activity key');
     }
 
-    const body = { [key]: value ? 1 : 0 };
+    const body = { [key]: value };
     const result = await this.activityRepository.update(activityRecordId, body);
 
     this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key, value });

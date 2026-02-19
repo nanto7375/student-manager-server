@@ -48,7 +48,7 @@ export class AdminService {
 
   async updateAdmin(id: number, updateAdminDto: AdminUpdateDto) {
     const admin = await this.getAdminOrThrow(id);
-    admin.isActive = updateAdminDto.isActive ? 1 : 0;
+    admin.isActive = updateAdminDto.isActive;
     admin.role = updateAdminDto.role;
     admin.phone = updateAdminDto.phone;
 
@@ -69,7 +69,7 @@ export class AdminService {
   }
 
   async getAdminByEmailOrThrow(email: string) {
-    const admin = await this.prisma.admin.findUnique({ where: { email, isActive: 1, deletedAt: null } });
+    const admin = await this.prisma.admin.findUnique({ where: { email, isActive: true, deletedAt: null } });
     if (!admin) throw new NotFoundException('존재하지 않는 관리자입니다.');
     return admin;
   }

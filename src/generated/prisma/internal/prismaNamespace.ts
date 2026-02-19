@@ -1060,6 +1060,9 @@ export const ActivityRecordScalarFieldEnum = {
   date: 'date',
   isMakeup: 'isMakeup',
   attendance: 'attendance',
+  monthlyProject: 'monthlyProject',
+  monthlyPreview: 'monthlyPreview',
+  monthlyReport: 'monthlyReport',
   report1: 'report1',
   report2: 'report2',
   createdAt: 'createdAt',
@@ -1277,6 +1280,13 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

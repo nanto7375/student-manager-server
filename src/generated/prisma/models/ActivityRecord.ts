@@ -29,29 +29,24 @@ export type AggregateActivityRecord = {
 export type ActivityRecordAvgAggregateOutputType = {
   id: number | null
   studentId: number | null
-  isMakeup: number | null
-  attendance: number | null
-  report1: number | null
-  report2: number | null
 }
 
 export type ActivityRecordSumAggregateOutputType = {
   id: number | null
   studentId: number | null
-  isMakeup: number | null
-  attendance: number | null
-  report1: number | null
-  report2: number | null
 }
 
 export type ActivityRecordMinAggregateOutputType = {
   id: number | null
   studentId: number | null
   date: string | null
-  isMakeup: number | null
-  attendance: number | null
-  report1: number | null
-  report2: number | null
+  isMakeup: boolean | null
+  attendance: boolean | null
+  monthlyProject: boolean | null
+  monthlyPreview: boolean | null
+  monthlyReport: boolean | null
+  report1: boolean | null
+  report2: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,10 +55,13 @@ export type ActivityRecordMaxAggregateOutputType = {
   id: number | null
   studentId: number | null
   date: string | null
-  isMakeup: number | null
-  attendance: number | null
-  report1: number | null
-  report2: number | null
+  isMakeup: boolean | null
+  attendance: boolean | null
+  monthlyProject: boolean | null
+  monthlyPreview: boolean | null
+  monthlyReport: boolean | null
+  report1: boolean | null
+  report2: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,6 +72,9 @@ export type ActivityRecordCountAggregateOutputType = {
   date: number
   isMakeup: number
   attendance: number
+  monthlyProject: number
+  monthlyPreview: number
+  monthlyReport: number
   report1: number
   report2: number
   createdAt: number
@@ -85,19 +86,11 @@ export type ActivityRecordCountAggregateOutputType = {
 export type ActivityRecordAvgAggregateInputType = {
   id?: true
   studentId?: true
-  isMakeup?: true
-  attendance?: true
-  report1?: true
-  report2?: true
 }
 
 export type ActivityRecordSumAggregateInputType = {
   id?: true
   studentId?: true
-  isMakeup?: true
-  attendance?: true
-  report1?: true
-  report2?: true
 }
 
 export type ActivityRecordMinAggregateInputType = {
@@ -106,6 +99,9 @@ export type ActivityRecordMinAggregateInputType = {
   date?: true
   isMakeup?: true
   attendance?: true
+  monthlyProject?: true
+  monthlyPreview?: true
+  monthlyReport?: true
   report1?: true
   report2?: true
   createdAt?: true
@@ -118,6 +114,9 @@ export type ActivityRecordMaxAggregateInputType = {
   date?: true
   isMakeup?: true
   attendance?: true
+  monthlyProject?: true
+  monthlyPreview?: true
+  monthlyReport?: true
   report1?: true
   report2?: true
   createdAt?: true
@@ -130,6 +129,9 @@ export type ActivityRecordCountAggregateInputType = {
   date?: true
   isMakeup?: true
   attendance?: true
+  monthlyProject?: true
+  monthlyPreview?: true
+  monthlyReport?: true
   report1?: true
   report2?: true
   createdAt?: true
@@ -227,10 +229,13 @@ export type ActivityRecordGroupByOutputType = {
   id: number
   studentId: number
   date: string
-  isMakeup: number
-  attendance: number
-  report1: number
-  report2: number
+  isMakeup: boolean
+  attendance: boolean
+  monthlyProject: boolean
+  monthlyPreview: boolean
+  monthlyReport: boolean
+  report1: boolean
+  report2: boolean
   createdAt: Date
   updatedAt: Date
   _count: ActivityRecordCountAggregateOutputType | null
@@ -262,10 +267,13 @@ export type ActivityRecordWhereInput = {
   id?: Prisma.IntFilter<"ActivityRecord"> | number
   studentId?: Prisma.IntFilter<"ActivityRecord"> | number
   date?: Prisma.StringFilter<"ActivityRecord"> | string
-  isMakeup?: Prisma.IntFilter<"ActivityRecord"> | number
-  attendance?: Prisma.IntFilter<"ActivityRecord"> | number
-  report1?: Prisma.IntFilter<"ActivityRecord"> | number
-  report2?: Prisma.IntFilter<"ActivityRecord"> | number
+  isMakeup?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  attendance?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  monthlyProject?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  monthlyPreview?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  monthlyReport?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  report1?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  report2?: Prisma.BoolFilter<"ActivityRecord"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
@@ -278,6 +286,9 @@ export type ActivityRecordOrderByWithRelationInput = {
   date?: Prisma.SortOrder
   isMakeup?: Prisma.SortOrder
   attendance?: Prisma.SortOrder
+  monthlyProject?: Prisma.SortOrder
+  monthlyPreview?: Prisma.SortOrder
+  monthlyReport?: Prisma.SortOrder
   report1?: Prisma.SortOrder
   report2?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -294,10 +305,13 @@ export type ActivityRecordWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ActivityRecordWhereInput | Prisma.ActivityRecordWhereInput[]
   studentId?: Prisma.IntFilter<"ActivityRecord"> | number
   date?: Prisma.StringFilter<"ActivityRecord"> | string
-  isMakeup?: Prisma.IntFilter<"ActivityRecord"> | number
-  attendance?: Prisma.IntFilter<"ActivityRecord"> | number
-  report1?: Prisma.IntFilter<"ActivityRecord"> | number
-  report2?: Prisma.IntFilter<"ActivityRecord"> | number
+  isMakeup?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  attendance?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  monthlyProject?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  monthlyPreview?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  monthlyReport?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  report1?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  report2?: Prisma.BoolFilter<"ActivityRecord"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
@@ -310,6 +324,9 @@ export type ActivityRecordOrderByWithAggregationInput = {
   date?: Prisma.SortOrder
   isMakeup?: Prisma.SortOrder
   attendance?: Prisma.SortOrder
+  monthlyProject?: Prisma.SortOrder
+  monthlyPreview?: Prisma.SortOrder
+  monthlyReport?: Prisma.SortOrder
   report1?: Prisma.SortOrder
   report2?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -328,20 +345,26 @@ export type ActivityRecordScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"ActivityRecord"> | number
   studentId?: Prisma.IntWithAggregatesFilter<"ActivityRecord"> | number
   date?: Prisma.StringWithAggregatesFilter<"ActivityRecord"> | string
-  isMakeup?: Prisma.IntWithAggregatesFilter<"ActivityRecord"> | number
-  attendance?: Prisma.IntWithAggregatesFilter<"ActivityRecord"> | number
-  report1?: Prisma.IntWithAggregatesFilter<"ActivityRecord"> | number
-  report2?: Prisma.IntWithAggregatesFilter<"ActivityRecord"> | number
+  isMakeup?: Prisma.BoolWithAggregatesFilter<"ActivityRecord"> | boolean
+  attendance?: Prisma.BoolWithAggregatesFilter<"ActivityRecord"> | boolean
+  monthlyProject?: Prisma.BoolWithAggregatesFilter<"ActivityRecord"> | boolean
+  monthlyPreview?: Prisma.BoolWithAggregatesFilter<"ActivityRecord"> | boolean
+  monthlyReport?: Prisma.BoolWithAggregatesFilter<"ActivityRecord"> | boolean
+  report1?: Prisma.BoolWithAggregatesFilter<"ActivityRecord"> | boolean
+  report2?: Prisma.BoolWithAggregatesFilter<"ActivityRecord"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ActivityRecord"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ActivityRecord"> | Date | string
 }
 
 export type ActivityRecordCreateInput = {
   date: string
-  isMakeup?: number
-  attendance?: number
-  report1?: number
-  report2?: number
+  isMakeup?: boolean
+  attendance?: boolean
+  monthlyProject?: boolean
+  monthlyPreview?: boolean
+  monthlyReport?: boolean
+  report1?: boolean
+  report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutActivityRecordsInput
@@ -352,10 +375,13 @@ export type ActivityRecordUncheckedCreateInput = {
   id?: number
   studentId: number
   date: string
-  isMakeup?: number
-  attendance?: number
-  report1?: number
-  report2?: number
+  isMakeup?: boolean
+  attendance?: boolean
+  monthlyProject?: boolean
+  monthlyPreview?: boolean
+  monthlyReport?: boolean
+  report1?: boolean
+  report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   activityRecordLogs?: Prisma.ActivityRecordLogUncheckedCreateNestedManyWithoutActivityRecordInput
@@ -363,10 +389,13 @@ export type ActivityRecordUncheckedCreateInput = {
 
 export type ActivityRecordUpdateInput = {
   date?: Prisma.StringFieldUpdateOperationsInput | string
-  isMakeup?: Prisma.IntFieldUpdateOperationsInput | number
-  attendance?: Prisma.IntFieldUpdateOperationsInput | number
-  report1?: Prisma.IntFieldUpdateOperationsInput | number
-  report2?: Prisma.IntFieldUpdateOperationsInput | number
+  isMakeup?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attendance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyProject?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyPreview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyReport?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutActivityRecordsNestedInput
@@ -377,10 +406,13 @@ export type ActivityRecordUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.StringFieldUpdateOperationsInput | string
-  isMakeup?: Prisma.IntFieldUpdateOperationsInput | number
-  attendance?: Prisma.IntFieldUpdateOperationsInput | number
-  report1?: Prisma.IntFieldUpdateOperationsInput | number
-  report2?: Prisma.IntFieldUpdateOperationsInput | number
+  isMakeup?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attendance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyProject?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyPreview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyReport?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activityRecordLogs?: Prisma.ActivityRecordLogUncheckedUpdateManyWithoutActivityRecordNestedInput
@@ -390,20 +422,26 @@ export type ActivityRecordCreateManyInput = {
   id?: number
   studentId: number
   date: string
-  isMakeup?: number
-  attendance?: number
-  report1?: number
-  report2?: number
+  isMakeup?: boolean
+  attendance?: boolean
+  monthlyProject?: boolean
+  monthlyPreview?: boolean
+  monthlyReport?: boolean
+  report1?: boolean
+  report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ActivityRecordUpdateManyMutationInput = {
   date?: Prisma.StringFieldUpdateOperationsInput | string
-  isMakeup?: Prisma.IntFieldUpdateOperationsInput | number
-  attendance?: Prisma.IntFieldUpdateOperationsInput | number
-  report1?: Prisma.IntFieldUpdateOperationsInput | number
-  report2?: Prisma.IntFieldUpdateOperationsInput | number
+  isMakeup?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attendance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyProject?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyPreview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyReport?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -412,10 +450,13 @@ export type ActivityRecordUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.StringFieldUpdateOperationsInput | string
-  isMakeup?: Prisma.IntFieldUpdateOperationsInput | number
-  attendance?: Prisma.IntFieldUpdateOperationsInput | number
-  report1?: Prisma.IntFieldUpdateOperationsInput | number
-  report2?: Prisma.IntFieldUpdateOperationsInput | number
+  isMakeup?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attendance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyProject?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyPreview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyReport?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -432,6 +473,9 @@ export type ActivityRecordCountOrderByAggregateInput = {
   date?: Prisma.SortOrder
   isMakeup?: Prisma.SortOrder
   attendance?: Prisma.SortOrder
+  monthlyProject?: Prisma.SortOrder
+  monthlyPreview?: Prisma.SortOrder
+  monthlyReport?: Prisma.SortOrder
   report1?: Prisma.SortOrder
   report2?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -441,10 +485,6 @@ export type ActivityRecordCountOrderByAggregateInput = {
 export type ActivityRecordAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  isMakeup?: Prisma.SortOrder
-  attendance?: Prisma.SortOrder
-  report1?: Prisma.SortOrder
-  report2?: Prisma.SortOrder
 }
 
 export type ActivityRecordMaxOrderByAggregateInput = {
@@ -453,6 +493,9 @@ export type ActivityRecordMaxOrderByAggregateInput = {
   date?: Prisma.SortOrder
   isMakeup?: Prisma.SortOrder
   attendance?: Prisma.SortOrder
+  monthlyProject?: Prisma.SortOrder
+  monthlyPreview?: Prisma.SortOrder
+  monthlyReport?: Prisma.SortOrder
   report1?: Prisma.SortOrder
   report2?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -465,6 +508,9 @@ export type ActivityRecordMinOrderByAggregateInput = {
   date?: Prisma.SortOrder
   isMakeup?: Prisma.SortOrder
   attendance?: Prisma.SortOrder
+  monthlyProject?: Prisma.SortOrder
+  monthlyPreview?: Prisma.SortOrder
+  monthlyReport?: Prisma.SortOrder
   report1?: Prisma.SortOrder
   report2?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -474,10 +520,6 @@ export type ActivityRecordMinOrderByAggregateInput = {
 export type ActivityRecordSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  isMakeup?: Prisma.SortOrder
-  attendance?: Prisma.SortOrder
-  report1?: Prisma.SortOrder
-  report2?: Prisma.SortOrder
 }
 
 export type ActivityRecordScalarRelationFilter = {
@@ -493,6 +535,10 @@ export type ActivityRecordListRelationFilter = {
 
 export type ActivityRecordOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type ActivityRecordCreateNestedOneWithoutActivityRecordLogsInput = {
@@ -553,10 +599,13 @@ export type ActivityRecordUncheckedUpdateManyWithoutStudentNestedInput = {
 
 export type ActivityRecordCreateWithoutActivityRecordLogsInput = {
   date: string
-  isMakeup?: number
-  attendance?: number
-  report1?: number
-  report2?: number
+  isMakeup?: boolean
+  attendance?: boolean
+  monthlyProject?: boolean
+  monthlyPreview?: boolean
+  monthlyReport?: boolean
+  report1?: boolean
+  report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutActivityRecordsInput
@@ -566,10 +615,13 @@ export type ActivityRecordUncheckedCreateWithoutActivityRecordLogsInput = {
   id?: number
   studentId: number
   date: string
-  isMakeup?: number
-  attendance?: number
-  report1?: number
-  report2?: number
+  isMakeup?: boolean
+  attendance?: boolean
+  monthlyProject?: boolean
+  monthlyPreview?: boolean
+  monthlyReport?: boolean
+  report1?: boolean
+  report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -592,10 +644,13 @@ export type ActivityRecordUpdateToOneWithWhereWithoutActivityRecordLogsInput = {
 
 export type ActivityRecordUpdateWithoutActivityRecordLogsInput = {
   date?: Prisma.StringFieldUpdateOperationsInput | string
-  isMakeup?: Prisma.IntFieldUpdateOperationsInput | number
-  attendance?: Prisma.IntFieldUpdateOperationsInput | number
-  report1?: Prisma.IntFieldUpdateOperationsInput | number
-  report2?: Prisma.IntFieldUpdateOperationsInput | number
+  isMakeup?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attendance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyProject?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyPreview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyReport?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutActivityRecordsNestedInput
@@ -605,20 +660,26 @@ export type ActivityRecordUncheckedUpdateWithoutActivityRecordLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.StringFieldUpdateOperationsInput | string
-  isMakeup?: Prisma.IntFieldUpdateOperationsInput | number
-  attendance?: Prisma.IntFieldUpdateOperationsInput | number
-  report1?: Prisma.IntFieldUpdateOperationsInput | number
-  report2?: Prisma.IntFieldUpdateOperationsInput | number
+  isMakeup?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attendance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyProject?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyPreview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyReport?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ActivityRecordCreateWithoutStudentInput = {
   date: string
-  isMakeup?: number
-  attendance?: number
-  report1?: number
-  report2?: number
+  isMakeup?: boolean
+  attendance?: boolean
+  monthlyProject?: boolean
+  monthlyPreview?: boolean
+  monthlyReport?: boolean
+  report1?: boolean
+  report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   activityRecordLogs?: Prisma.ActivityRecordLogCreateNestedManyWithoutActivityRecordInput
@@ -627,10 +688,13 @@ export type ActivityRecordCreateWithoutStudentInput = {
 export type ActivityRecordUncheckedCreateWithoutStudentInput = {
   id?: number
   date: string
-  isMakeup?: number
-  attendance?: number
-  report1?: number
-  report2?: number
+  isMakeup?: boolean
+  attendance?: boolean
+  monthlyProject?: boolean
+  monthlyPreview?: boolean
+  monthlyReport?: boolean
+  report1?: boolean
+  report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   activityRecordLogs?: Prisma.ActivityRecordLogUncheckedCreateNestedManyWithoutActivityRecordInput
@@ -669,10 +733,13 @@ export type ActivityRecordScalarWhereInput = {
   id?: Prisma.IntFilter<"ActivityRecord"> | number
   studentId?: Prisma.IntFilter<"ActivityRecord"> | number
   date?: Prisma.StringFilter<"ActivityRecord"> | string
-  isMakeup?: Prisma.IntFilter<"ActivityRecord"> | number
-  attendance?: Prisma.IntFilter<"ActivityRecord"> | number
-  report1?: Prisma.IntFilter<"ActivityRecord"> | number
-  report2?: Prisma.IntFilter<"ActivityRecord"> | number
+  isMakeup?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  attendance?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  monthlyProject?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  monthlyPreview?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  monthlyReport?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  report1?: Prisma.BoolFilter<"ActivityRecord"> | boolean
+  report2?: Prisma.BoolFilter<"ActivityRecord"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
 }
@@ -680,20 +747,26 @@ export type ActivityRecordScalarWhereInput = {
 export type ActivityRecordCreateManyStudentInput = {
   id?: number
   date: string
-  isMakeup?: number
-  attendance?: number
-  report1?: number
-  report2?: number
+  isMakeup?: boolean
+  attendance?: boolean
+  monthlyProject?: boolean
+  monthlyPreview?: boolean
+  monthlyReport?: boolean
+  report1?: boolean
+  report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ActivityRecordUpdateWithoutStudentInput = {
   date?: Prisma.StringFieldUpdateOperationsInput | string
-  isMakeup?: Prisma.IntFieldUpdateOperationsInput | number
-  attendance?: Prisma.IntFieldUpdateOperationsInput | number
-  report1?: Prisma.IntFieldUpdateOperationsInput | number
-  report2?: Prisma.IntFieldUpdateOperationsInput | number
+  isMakeup?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attendance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyProject?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyPreview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyReport?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activityRecordLogs?: Prisma.ActivityRecordLogUpdateManyWithoutActivityRecordNestedInput
@@ -702,10 +775,13 @@ export type ActivityRecordUpdateWithoutStudentInput = {
 export type ActivityRecordUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.StringFieldUpdateOperationsInput | string
-  isMakeup?: Prisma.IntFieldUpdateOperationsInput | number
-  attendance?: Prisma.IntFieldUpdateOperationsInput | number
-  report1?: Prisma.IntFieldUpdateOperationsInput | number
-  report2?: Prisma.IntFieldUpdateOperationsInput | number
+  isMakeup?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attendance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyProject?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyPreview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyReport?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activityRecordLogs?: Prisma.ActivityRecordLogUncheckedUpdateManyWithoutActivityRecordNestedInput
@@ -714,10 +790,13 @@ export type ActivityRecordUncheckedUpdateWithoutStudentInput = {
 export type ActivityRecordUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.StringFieldUpdateOperationsInput | string
-  isMakeup?: Prisma.IntFieldUpdateOperationsInput | number
-  attendance?: Prisma.IntFieldUpdateOperationsInput | number
-  report1?: Prisma.IntFieldUpdateOperationsInput | number
-  report2?: Prisma.IntFieldUpdateOperationsInput | number
+  isMakeup?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attendance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyProject?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyPreview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlyReport?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -759,6 +838,9 @@ export type ActivityRecordSelect<ExtArgs extends runtime.Types.Extensions.Intern
   date?: boolean
   isMakeup?: boolean
   attendance?: boolean
+  monthlyProject?: boolean
+  monthlyPreview?: boolean
+  monthlyReport?: boolean
   report1?: boolean
   report2?: boolean
   createdAt?: boolean
@@ -776,13 +858,16 @@ export type ActivityRecordSelectScalar = {
   date?: boolean
   isMakeup?: boolean
   attendance?: boolean
+  monthlyProject?: boolean
+  monthlyPreview?: boolean
+  monthlyReport?: boolean
   report1?: boolean
   report2?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ActivityRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "date" | "isMakeup" | "attendance" | "report1" | "report2" | "createdAt" | "updatedAt", ExtArgs["result"]["activityRecord"]>
+export type ActivityRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "date" | "isMakeup" | "attendance" | "monthlyProject" | "monthlyPreview" | "monthlyReport" | "report1" | "report2" | "createdAt" | "updatedAt", ExtArgs["result"]["activityRecord"]>
 export type ActivityRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   activityRecordLogs?: boolean | Prisma.ActivityRecord$activityRecordLogsArgs<ExtArgs>
@@ -799,10 +884,31 @@ export type $ActivityRecordPayload<ExtArgs extends runtime.Types.Extensions.Inte
     id: number
     studentId: number
     date: string
-    isMakeup: number
-    attendance: number
-    report1: number
-    report2: number
+    isMakeup: boolean
+    /**
+     * 출석 여부
+     */
+    attendance: boolean
+    /**
+     * 월간 프로젝트 참여 여부
+     */
+    monthlyProject: boolean
+    /**
+     * 월간 레오 개요 제출 여부
+     */
+    monthlyPreview: boolean
+    /**
+     * 월간 레오 감상문 제출 여부
+     */
+    monthlyReport: boolean
+    /**
+     * 감상문 제출
+     */
+    report1: boolean
+    /**
+     * 주간 레오 제출
+     */
+    report2: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["activityRecord"]>
@@ -1179,10 +1285,13 @@ export interface ActivityRecordFieldRefs {
   readonly id: Prisma.FieldRef<"ActivityRecord", 'Int'>
   readonly studentId: Prisma.FieldRef<"ActivityRecord", 'Int'>
   readonly date: Prisma.FieldRef<"ActivityRecord", 'String'>
-  readonly isMakeup: Prisma.FieldRef<"ActivityRecord", 'Int'>
-  readonly attendance: Prisma.FieldRef<"ActivityRecord", 'Int'>
-  readonly report1: Prisma.FieldRef<"ActivityRecord", 'Int'>
-  readonly report2: Prisma.FieldRef<"ActivityRecord", 'Int'>
+  readonly isMakeup: Prisma.FieldRef<"ActivityRecord", 'Boolean'>
+  readonly attendance: Prisma.FieldRef<"ActivityRecord", 'Boolean'>
+  readonly monthlyProject: Prisma.FieldRef<"ActivityRecord", 'Boolean'>
+  readonly monthlyPreview: Prisma.FieldRef<"ActivityRecord", 'Boolean'>
+  readonly monthlyReport: Prisma.FieldRef<"ActivityRecord", 'Boolean'>
+  readonly report1: Prisma.FieldRef<"ActivityRecord", 'Boolean'>
+  readonly report2: Prisma.FieldRef<"ActivityRecord", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"ActivityRecord", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ActivityRecord", 'DateTime'>
 }
