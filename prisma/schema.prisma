@@ -24,8 +24,11 @@ model ActivityRecord {
   date               String              @db.Char(8)
   isMakeup           Int                 @default(0) @map("is_makeup") @db.TinyInt
   attendance         Int                 @default(0) @db.TinyInt
-  report1            Int                 @default(0) @db.TinyInt
-  report2            Int                 @default(0) @db.TinyInt
+  monthlyProject     Int                 @default(0) @db.TinyInt /// 월간 프로젝트 참여 여부
+  monthlyPreview     Int                 @default(0) @db.TinyInt /// 월간 레오 개요 제출 여부
+  monthlyReport      Int                 @default(0) @db.TinyInt /// 월간 레오 감상문 제출 여부
+  report1            Int                 @default(0) @db.TinyInt /// 감상문 제출
+  report2            Int                 @default(0) @db.TinyInt  /// 주간 레오 제출
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt          DateTime            @default(now()) @map("updated_at") @db.Timestamp(6)
   student            Student             @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_af5423ecbecaf2606b909307ca8")
