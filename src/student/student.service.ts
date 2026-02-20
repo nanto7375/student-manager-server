@@ -9,6 +9,7 @@ import { STUDENT_SCHEDULE_REGISTERED } from '@src/common/constant/event.const';
 import { StudentScheduleRegisteredEvent } from './student.event';
 import { SchoolLevel } from '@src/common/constant/common.const';
 import { StudentRepository } from './student.repository';
+import { DateService } from '@src/common/utils/date';
 
 type UpdatePersonalInfoParams = {
   studentId: number;
@@ -26,15 +27,16 @@ export class StudentService {
     private readonly scheduleService: ScheduleService,
     private readonly eventEmitter: EventEmitter2,
     private readonly studentRepository: StudentRepository,
+    private readonly date: DateService,
   ) {}
 
-  async register({ ...studentDto }: RegisterStudentRequestDto & { registeredAt: Date }) {
+  async register({ registeredAt = this.date.now(), ...studentDto }: RegisterStudentRequestDto & { registeredAt?: Date }) {
     const schedule = studentDto.scheduleId ? await this.scheduleService.getScheduleOrThrow(studentDto.scheduleId) : null;
 
     const newStudent = this.studentBuilder
       .creator({
         name: studentDto.name,
-        registeredAt: studentDto.registeredAt,
+        registeredAt,
       })
       .setBirth({
         birthYear: studentDto.birthYear,

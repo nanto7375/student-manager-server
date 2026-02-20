@@ -1,5 +1,5 @@
 import { SchoolLevel } from '@src/common/constant/common.const';
-import { isNullish, now } from '@src/common/utils/etc';
+import { isNullish } from '@src/common/utils/etc';
 import { BadRequestException } from '@nestjs/common';
 import { Prisma, Student } from '@src/generated/prisma/client';
 
@@ -18,7 +18,7 @@ type SetSchoolParams = {
 };
 
 class StudentValidator {
-  constructor(private readonly currentYear: number = now().getFullYear()) {}
+  constructor(private readonly currentYear: number) {}
 
   name(name: string) {
     if (name.length < 1 || name.length > 30) throw new BadRequestException('wrong name');
@@ -54,7 +54,7 @@ class StudentCreator {
   private validate: StudentValidator;
 
   constructor(name: string, registeredAt: Date) {
-    this.validate = new StudentValidator();
+    this.validate = new StudentValidator(registeredAt.getFullYear());
     this.validate.name(name);
 
     this._student = { name, registeredAt };
@@ -116,11 +116,9 @@ class StudentCreator {
 
 class StudentEditor {
   private validate: StudentValidator;
-  private _student: Student;
 
-  constructor(student: Student) {
-    this.validate = new StudentValidator();
-    this._student = student;
+  constructor(private _student: Student) {
+    this.validate = new StudentValidator(this._student.registeredAt.getFullYear());
   }
 
   setBirth({ birthYear, birthDate }: SetBirthParams) {

@@ -5,7 +5,6 @@ import { AdminRoleType } from '@src/admin/admin.service';
 import { StudentService } from './student.service';
 
 import { toInstance } from '@src/common/utils/toInstance';
-import { now } from '@src/common/utils/etc';
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
 import { StudentDto } from './dto/student-response.dto';
 import { AdminLevel } from '@src/admin/decorator/admin-level.decorator';
@@ -19,10 +18,7 @@ export class StudentController {
   @ApiOperation({ summary: '학생 등록' })
   @ApiOkResponse({ type: StudentDto })
   async register(@Body() registerStudentRequestDto: RegisterStudentRequestDto) {
-    const student = await this.studentService.register({
-      ...registerStudentRequestDto,
-      registeredAt: now(),
-    });
+    const student = await this.studentService.register(registerStudentRequestDto);
     return toInstance(StudentDto, student);
   }
 

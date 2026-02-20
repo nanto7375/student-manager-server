@@ -1,3 +1,4 @@
+import { now } from './etc';
 import { Injectable } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
@@ -8,6 +9,10 @@ export class DateService {
   constructor() {
     dayjs.extend(utc);
     dayjs.extend(timezone);
+  }
+
+  now() {
+    return dayjs().toDate();
   }
 
   currentYearMonth() {
