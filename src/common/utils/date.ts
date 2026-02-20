@@ -1,4 +1,3 @@
-import { now } from './etc';
 import { Injectable } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
@@ -6,21 +5,24 @@ import * as timezone from 'dayjs/plugin/timezone';
 
 @Injectable()
 export class DateService {
+  private readonly dayjs: typeof dayjs;
+
   constructor() {
     dayjs.extend(utc);
     dayjs.extend(timezone);
+    this.dayjs = dayjs;
   }
 
   now() {
-    return dayjs().toDate();
+    return this.dayjs().toDate();
   }
 
   currentYearMonth() {
-    return dayjs().format('YYYYMM');
+    return this.dayjs().format('YYYYMM');
   }
 
   startOfMonth(yearMonth: string) {
-    return dayjs(yearMonth, 'YYYYMM').startOf('month');
+    return this.dayjs(yearMonth, 'YYYYMM').startOf('month');
   }
 
   getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek }: { yearMonth: string; dayOfWeek: number }) {
