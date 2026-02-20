@@ -3,20 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { BadRequestException, ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { type NestExpressApplication } from '@nestjs/platform-express';
-
-import * as dayjs from 'dayjs';
-import * as utc from 'dayjs/plugin/utc';
-import * as timezone from 'dayjs/plugin/timezone';
 import * as cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 import { logger } from './configs/logger/winston-logger';
 import { Environment } from './configs/config.service';
 import { ValidationError } from 'class-validator';
-
-// TODO: dayjs 커스텀 클래스 작성
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const initSwagger = (app: NestExpressApplication, version: string) => {
   const swaggerConfig = new DocumentBuilder()

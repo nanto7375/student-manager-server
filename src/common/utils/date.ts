@@ -1,8 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import * as dayjs from 'dayjs';
+import * as utc from 'dayjs/plugin/utc';
+import * as timezone from 'dayjs/plugin/timezone';
 
 @Injectable()
-export class DateUtil {
+export class DateService {
+  constructor() {
+    dayjs.extend(utc);
+    dayjs.extend(timezone);
+  }
+
   currentYearMonth() {
     return dayjs().format('YYYYMM');
   }

@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { Student } from '@src/generated/prisma/client';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
-import { DateUtil } from '@src/common/utils/date';
+import { DateService } from '@src/common/utils/date';
 import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository } from './activity.repository';
 import { ActivityEvent } from './activity.event';
 
@@ -12,7 +12,7 @@ import { ActivityEvent } from './activity.event';
 @Injectable()
 export class ActivityService {
   constructor(
-    private readonly dateUtil: DateUtil,
+    private readonly date: DateService,
     private readonly activityRepository: ActivityRepository,
     private readonly activityRecordLogRepository: ActivityRecordLogRepository,
     private readonly activityRecordGenerationLogRepository: ActivityRecordGenerationLogRepository,
@@ -29,7 +29,7 @@ export class ActivityService {
   }
 
   async generateThisMonthActivityRecords({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: number; yearMonth: string }) {
-    const dates = this.dateUtil.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek });
+    const dates = this.date.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek });
     const activityRecords = students.flatMap((student) => dates.map((date) => ({ studentId: student.id, date })));
     return await this.activityRepository.createMany(activityRecords);
   }

@@ -4,7 +4,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { ActivityService } from './activity.service';
 import { ScheduleService } from '@src/schedule/schedule.service';
-import { DateUtil } from '@src/common/utils/date';
+import { DateService } from '@src/common/utils/date';
 
 @Injectable()
 export class ActivityTask {
@@ -12,7 +12,7 @@ export class ActivityTask {
     private readonly activityService: ActivityService,
     private readonly scheduleService: ScheduleService,
     private readonly logger: MyLogger,
-    private readonly dateUtil: DateUtil,
+    private readonly date: DateService,
   ) {
     this.logger.setContext('ActivityTask');
   }
@@ -22,7 +22,7 @@ export class ActivityTask {
   @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
   async generateActivityRecordsForAllStudents() {
     try {
-      const currentYearMonth = this.dateUtil.currentYearMonth();
+      const currentYearMonth = this.date.currentYearMonth();
       const thisMonthARGL = await this.activityService.getARGLsInThisMonth(currentYearMonth);
       if (thisMonthARGL) return;
 
