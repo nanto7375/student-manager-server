@@ -86,10 +86,18 @@ export class StudentService {
   }
 
   async changeSchedule({ studentId, scheduleId }: ChangeScheduleParams) {
-    await this.studentRepository.findOrThrow(studentId);
+    const student = await this.studentRepository.findOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
+    if (student.scheduleId === scheduleId) return student;
+
     const savedStudent = await this.studentRepository.update(studentId, { schedule: { connect: { id: schedule.id } } });
-    this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
+    if (!student.scheduleId) {
+      this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
+    } else {
+      // TODO
+      // const previousSchedule = await this.scheduleService.getScheduleOrThrow(student.scheduleId);
+      // this.studentEvent.studentScheduleChanged(savedStudent, previousSchedule, schedule);
+    }
     return savedStudent;
   }
 }
