@@ -98,12 +98,12 @@ export class ActivityService {
   }
 
   async borrowBook({ studentId, bookTitle }: { studentId: number; bookTitle: string }) {
-    const student = await this.studentService.getStudentOrThrow(studentId);
-    const activeBorrow = await this.bookRentalRepository.findActiveByStudentId(student.id);
+    await this.studentService.getStudentOrThrow(studentId);
+    const activeBorrow = await this.bookRentalRepository.findActiveByStudentId(studentId);
     if (activeBorrow) throw new BadRequestException('이미 대여 중인 책이 있습니다');
 
     return await this.bookRentalRepository.create({
-      student: { connect: { id: student.id } },
+      student: { connect: { id: studentId } },
       bookTitle,
     });
   }

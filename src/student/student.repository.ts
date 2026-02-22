@@ -16,7 +16,7 @@ export class StudentRepository {
     return await this.prisma.student.create({ data: student });
   }
 
-  async update(id: number, student: Prisma.StudentUpdateInput) {
-    return await this.prisma.student.update({ where: { id }, data: student });
+  async update(id: number, data: Prisma.StudentUpdateInput) {
+    return await this.prisma.student.update({ where: { id }, data });
   }
 }

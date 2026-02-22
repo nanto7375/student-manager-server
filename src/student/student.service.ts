@@ -58,9 +58,7 @@ export class StudentService {
       .create();
 
     const savedStudent = await this.studentRepository.create(newStudent);
-    if (schedule) {
-      this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
-    }
+    if (schedule) this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
     return savedStudent;
   }
 
@@ -88,10 +86,9 @@ export class StudentService {
   }
 
   async changeSchedule({ studentId, scheduleId }: ChangeScheduleParams) {
-    const student = await this.studentRepository.findOrThrow(studentId);
+    await this.studentRepository.findOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
-    student.scheduleId = schedule.id;
-    const savedStudent = await this.studentRepository.update(studentId, student);
+    const savedStudent = await this.studentRepository.update(studentId, { schedule: { connect: { id: schedule.id } } });
     this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
     return savedStudent;
   }
