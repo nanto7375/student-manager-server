@@ -390,6 +390,7 @@ export const ModelName = {
   ActivityRecordLog: 'ActivityRecordLog',
   Admin: 'Admin',
   BannedIp: 'BannedIp',
+  BookRental: 'BookRental',
   Lesson: 'Lesson',
   Schedule: 'Schedule',
   Student: 'Student'
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "activityGenerationLog" | "activityRecord" | "activityRecordGenerationLog" | "activityRecordLog" | "admin" | "bannedIp" | "lesson" | "schedule" | "student"
+    modelProps: "activityGenerationLog" | "activityRecord" | "activityRecordGenerationLog" | "activityRecordLog" | "admin" | "bannedIp" | "bookRental" | "lesson" | "schedule" | "student"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -808,6 +809,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BookRental: {
+      payload: Prisma.$BookRentalPayload<ExtArgs>
+      fields: Prisma.BookRentalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BookRentalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookRentalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BookRentalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookRentalPayload>
+        }
+        findFirst: {
+          args: Prisma.BookRentalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookRentalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BookRentalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookRentalPayload>
+        }
+        findMany: {
+          args: Prisma.BookRentalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookRentalPayload>[]
+        }
+        create: {
+          args: Prisma.BookRentalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookRentalPayload>
+        }
+        createMany: {
+          args: Prisma.BookRentalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.BookRentalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookRentalPayload>
+        }
+        update: {
+          args: Prisma.BookRentalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookRentalPayload>
+        }
+        deleteMany: {
+          args: Prisma.BookRentalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BookRentalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.BookRentalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BookRentalPayload>
+        }
+        aggregate: {
+          args: Prisma.BookRentalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBookRental>
+        }
+        groupBy: {
+          args: Prisma.BookRentalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BookRentalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BookRentalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BookRentalCountAggregateOutputType> | number
+        }
+      }
+    }
     Lesson: {
       payload: Prisma.$LessonPayload<ExtArgs>
       fields: Prisma.LessonFieldRefs
@@ -1118,6 +1185,20 @@ export const BannedIpScalarFieldEnum = {
 export type BannedIpScalarFieldEnum = (typeof BannedIpScalarFieldEnum)[keyof typeof BannedIpScalarFieldEnum]
 
 
+export const BookRentalScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  bookTitle: 'bookTitle',
+  borrowedAt: 'borrowedAt',
+  returnedAt: 'returnedAt',
+  dueDate: 'dueDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BookRentalScalarFieldEnum = (typeof BookRentalScalarFieldEnum)[keyof typeof BookRentalScalarFieldEnum]
+
+
 export const LessonScalarFieldEnum = {
   id: 'id',
   code: 'code',
@@ -1225,6 +1306,13 @@ export const BannedIpOrderByRelevanceFieldEnum = {
 } as const
 
 export type BannedIpOrderByRelevanceFieldEnum = (typeof BannedIpOrderByRelevanceFieldEnum)[keyof typeof BannedIpOrderByRelevanceFieldEnum]
+
+
+export const BookRentalOrderByRelevanceFieldEnum = {
+  bookTitle: 'bookTitle'
+} as const
+
+export type BookRentalOrderByRelevanceFieldEnum = (typeof BookRentalOrderByRelevanceFieldEnum)[keyof typeof BookRentalOrderByRelevanceFieldEnum]
 
 
 export const LessonOrderByRelevanceFieldEnum = {
@@ -1397,6 +1485,7 @@ export type GlobalOmitConfig = {
   activityRecordLog?: Prisma.ActivityRecordLogOmit
   admin?: Prisma.AdminOmit
   bannedIp?: Prisma.BannedIpOmit
+  bookRental?: Prisma.BookRentalOmit
   lesson?: Prisma.LessonOmit
   schedule?: Prisma.ScheduleOmit
   student?: Prisma.StudentOmit

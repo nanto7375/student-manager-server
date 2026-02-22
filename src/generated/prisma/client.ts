@@ -68,6 +68,11 @@ export type Admin = Prisma.AdminModel
  */
 export type BannedIp = Prisma.BannedIpModel
 /**
+ * Model BookRental
+ * This model represents book rental records for students
+ */
+export type BookRental = Prisma.BookRentalModel
+/**
  * Model Lesson
  * 
  */

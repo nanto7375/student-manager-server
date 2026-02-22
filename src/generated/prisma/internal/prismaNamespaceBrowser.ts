@@ -57,6 +57,7 @@ export const ModelName = {
   ActivityRecordLog: 'ActivityRecordLog',
   Admin: 'Admin',
   BannedIp: 'BannedIp',
+  BookRental: 'BookRental',
   Lesson: 'Lesson',
   Schedule: 'Schedule',
   Student: 'Student'
@@ -149,6 +150,20 @@ export const BannedIpScalarFieldEnum = {
 } as const
 
 export type BannedIpScalarFieldEnum = (typeof BannedIpScalarFieldEnum)[keyof typeof BannedIpScalarFieldEnum]
+
+
+export const BookRentalScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  bookTitle: 'bookTitle',
+  borrowedAt: 'borrowedAt',
+  returnedAt: 'returnedAt',
+  dueDate: 'dueDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BookRentalScalarFieldEnum = (typeof BookRentalScalarFieldEnum)[keyof typeof BookRentalScalarFieldEnum]
 
 
 export const LessonScalarFieldEnum = {
@@ -258,6 +273,13 @@ export const BannedIpOrderByRelevanceFieldEnum = {
 } as const
 
 export type BannedIpOrderByRelevanceFieldEnum = (typeof BannedIpOrderByRelevanceFieldEnum)[keyof typeof BannedIpOrderByRelevanceFieldEnum]
+
+
+export const BookRentalOrderByRelevanceFieldEnum = {
+  bookTitle: 'bookTitle'
+} as const
+
+export type BookRentalOrderByRelevanceFieldEnum = (typeof BookRentalOrderByRelevanceFieldEnum)[keyof typeof BookRentalOrderByRelevanceFieldEnum]
 
 
 export const LessonOrderByRelevanceFieldEnum = {

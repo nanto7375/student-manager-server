@@ -22,7 +22,7 @@ export class ActivityRepository {
     if (!activityRecord) throw new NotFoundException('not found activity record');
     return activityRecord;
   }
-  async findMany({ where, include, orderBy }: { where: Prisma.ActivityRecordWhereInput; include: Prisma.ActivityRecordInclude; orderBy: Prisma.ActivityRecordOrderByWithRelationInput }) {
+  async findMany({ where, include, orderBy }: Prisma.ActivityRecordFindManyArgs) {
     return await this.prisma.activityRecord.findMany({ where, include, orderBy });
   }
 }
