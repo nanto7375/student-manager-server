@@ -61,4 +61,19 @@ export class ActivityService {
   async generateActivityRecordLog({ activityRecordId, adminId, key, value }: { activityRecordId: number; adminId: number; key: string; value: string }) {
     return await this.activityRecordLogRepository.create({ activityRecordId, adminId, key, value });
   }
+
+  async participateMonthlyProject({ activityRecordId, adminId }: { activityRecordId: number; adminId: number }) {
+    const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
+    if (activityRecord.monthlyProject) throw new BadRequestException('already participated');
+
+    const updatedActivityRecord = await this.activityRepository.updateMany(
+      {
+        studentId: activityRecord.studentId,
+        date: { startsWith: activityRecord.date.substring(0, 7), gte: activityRecord.date },
+      },
+      { monthlyProject: true },
+    );
+    this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: 'monthlyProject', value: true });
+    return updatedActivityRecord;
+  }
 }

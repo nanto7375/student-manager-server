@@ -34,4 +34,16 @@ export class ActivityController {
     });
     return toInstance(ActivityRecordDto, activityRecord);
   }
+
+  @Patch(':activityRecordId/monthly-project')
+  @ApiOperation({ summary: '월간 프로젝트 참여' })
+  @ApiOkResponse({ type: ActivityRecordDto })
+  async participateMonthlyProject(@Param('activityRecordId', ParseIntPipe) activityRecordId: number) {
+    // TODO: adminId
+    const activityRecord = await this.activityService.participateMonthlyProject({
+      activityRecordId,
+      adminId: 1,
+    });
+    return toInstance(ActivityRecordDto, activityRecord);
+  }
 }
