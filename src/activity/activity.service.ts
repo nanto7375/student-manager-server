@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { Student } from '@src/generated/prisma/client';
+import { ActivityRecord, Student, BookRental } from '@src/generated/prisma/client';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 import { DateService } from '@src/common/utils/date';
-import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository } from './activity.repository';
+import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository, BookRentalRepository } from './activity.repository';
 import { ActivityEvent } from './activity.event';
+import { StudentService } from '@src/student/student.service';
 
 /**
  * @description ARGL: ActivityRecordGenerationLog
@@ -17,15 +18,31 @@ export class ActivityService {
     private readonly activityRecordLogRepository: ActivityRecordLogRepository,
     private readonly activityRecordGenerationLogRepository: ActivityRecordGenerationLogRepository,
     private readonly activityEvent: ActivityEvent,
+    private readonly bookRentalRepository: BookRentalRepository,
+    private readonly studentService: StudentService,
   ) {}
 
   async getDailyActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
-    const activityRecords = await this.activityRepository.findMany({
+    const activityRecords: ActivityRecordWithBorrowedBook[] = await this.activityRepository.findMany({
       where: { date, student: { scheduleId } },
-      include: { student: true },
+      include: {
+        student: {
+          include: {
+            bookRentals: {
+              where: { returnedAt: null },
+              take: 1,
+              orderBy: { borrowedAt: 'desc' },
+            },
+          },
+        },
+      },
       orderBy: { student: { name: 'asc' } },
     });
-    return activityRecords;
+
+    return activityRecords.map((record) => ({
+      ...record,
+      borrowedBook: record.student.bookRentals?.[0] ? { ...record.student.bookRentals[0] } : null,
+    }));
   }
 
   async generateThisMonthActivityRecords({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: number; yearMonth: string }) {
@@ -77,4 +94,24 @@ export class ActivityService {
     this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: 'monthlyProject', value: true });
     return updatedActivityRecord;
   }
+
+  async borrowBook({ studentId, bookTitle }: { studentId: number; bookTitle: string }) {
+    const student = await this.studentService.getStudentOrThrow(studentId);
+    const activeBorrow = await this.bookRentalRepository.findActiveByStudentId(student.id);
+    if (activeBorrow) throw new BadRequestException('이미 대여 중인 책이 있습니다');
+
+    return await this.bookRentalRepository.create({
+      student: { connect: { id: student.id } },
+      bookTitle,
+    });
+  }
+
+  async returnBook(bookRentalId: number) {
+    const bookRental = await this.bookRentalRepository.findOrThrow(bookRentalId);
+    if (bookRental.returnedAt) throw new BadRequestException('이미 반납된 책입니다');
+
+    return await this.bookRentalRepository.returnBook(bookRentalId);
+  }
 }
+
+type ActivityRecordWithBorrowedBook = ActivityRecord & { student: Student & { bookRentals: BookRental[] } };

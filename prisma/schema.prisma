@@ -95,8 +95,6 @@ model BookRental {
   bookTitle  String    @db.VarChar(255)
   borrowedAt DateTime  @default(now()) @map("borrowed_at") @db.Timestamp(0)
   returnedAt DateTime? @map("returned_at") @db.Timestamp(0)
-  dueDate    DateTime? @map("due_date") @db.Timestamp(0)
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt  DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
   student    Student   @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_book_rental_student")
 

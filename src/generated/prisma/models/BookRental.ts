@@ -42,8 +42,6 @@ export type BookRentalMinAggregateOutputType = {
   bookTitle: string | null
   borrowedAt: Date | null
   returnedAt: Date | null
-  dueDate: Date | null
-  createdAt: Date | null
   updatedAt: Date | null
 }
 
@@ -53,8 +51,6 @@ export type BookRentalMaxAggregateOutputType = {
   bookTitle: string | null
   borrowedAt: Date | null
   returnedAt: Date | null
-  dueDate: Date | null
-  createdAt: Date | null
   updatedAt: Date | null
 }
 
@@ -64,8 +60,6 @@ export type BookRentalCountAggregateOutputType = {
   bookTitle: number
   borrowedAt: number
   returnedAt: number
-  dueDate: number
-  createdAt: number
   updatedAt: number
   _all: number
 }
@@ -87,8 +81,6 @@ export type BookRentalMinAggregateInputType = {
   bookTitle?: true
   borrowedAt?: true
   returnedAt?: true
-  dueDate?: true
-  createdAt?: true
   updatedAt?: true
 }
 
@@ -98,8 +90,6 @@ export type BookRentalMaxAggregateInputType = {
   bookTitle?: true
   borrowedAt?: true
   returnedAt?: true
-  dueDate?: true
-  createdAt?: true
   updatedAt?: true
 }
 
@@ -109,8 +99,6 @@ export type BookRentalCountAggregateInputType = {
   bookTitle?: true
   borrowedAt?: true
   returnedAt?: true
-  dueDate?: true
-  createdAt?: true
   updatedAt?: true
   _all?: true
 }
@@ -207,8 +195,6 @@ export type BookRentalGroupByOutputType = {
   bookTitle: string
   borrowedAt: Date
   returnedAt: Date | null
-  dueDate: Date | null
-  createdAt: Date
   updatedAt: Date
   _count: BookRentalCountAggregateOutputType | null
   _avg: BookRentalAvgAggregateOutputType | null
@@ -241,8 +227,6 @@ export type BookRentalWhereInput = {
   bookTitle?: Prisma.StringFilter<"BookRental"> | string
   borrowedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   returnedAt?: Prisma.DateTimeNullableFilter<"BookRental"> | Date | string | null
-  dueDate?: Prisma.DateTimeNullableFilter<"BookRental"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
 }
@@ -253,8 +237,6 @@ export type BookRentalOrderByWithRelationInput = {
   bookTitle?: Prisma.SortOrder
   borrowedAt?: Prisma.SortOrder
   returnedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   _relevance?: Prisma.BookRentalOrderByRelevanceInput
@@ -269,8 +251,6 @@ export type BookRentalWhereUniqueInput = Prisma.AtLeast<{
   bookTitle?: Prisma.StringFilter<"BookRental"> | string
   borrowedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   returnedAt?: Prisma.DateTimeNullableFilter<"BookRental"> | Date | string | null
-  dueDate?: Prisma.DateTimeNullableFilter<"BookRental"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
 }, "id">
@@ -281,8 +261,6 @@ export type BookRentalOrderByWithAggregationInput = {
   bookTitle?: Prisma.SortOrder
   borrowedAt?: Prisma.SortOrder
   returnedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.BookRentalCountOrderByAggregateInput
   _avg?: Prisma.BookRentalAvgOrderByAggregateInput
@@ -300,8 +278,6 @@ export type BookRentalScalarWhereWithAggregatesInput = {
   bookTitle?: Prisma.StringWithAggregatesFilter<"BookRental"> | string
   borrowedAt?: Prisma.DateTimeWithAggregatesFilter<"BookRental"> | Date | string
   returnedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"BookRental"> | Date | string | null
-  dueDate?: Prisma.DateTimeNullableWithAggregatesFilter<"BookRental"> | Date | string | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"BookRental"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"BookRental"> | Date | string
 }
 
@@ -309,8 +285,6 @@ export type BookRentalCreateInput = {
   bookTitle: string
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
-  dueDate?: Date | string | null
-  createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutBookRentalsInput
 }
@@ -321,8 +295,6 @@ export type BookRentalUncheckedCreateInput = {
   bookTitle: string
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
-  dueDate?: Date | string | null
-  createdAt?: Date | string
   updatedAt?: Date | string
 }
 
@@ -330,8 +302,6 @@ export type BookRentalUpdateInput = {
   bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutBookRentalsNestedInput
 }
@@ -342,8 +312,6 @@ export type BookRentalUncheckedUpdateInput = {
   bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -353,8 +321,6 @@ export type BookRentalCreateManyInput = {
   bookTitle: string
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
-  dueDate?: Date | string | null
-  createdAt?: Date | string
   updatedAt?: Date | string
 }
 
@@ -362,8 +328,6 @@ export type BookRentalUpdateManyMutationInput = {
   bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -373,8 +337,6 @@ export type BookRentalUncheckedUpdateManyInput = {
   bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -390,8 +352,6 @@ export type BookRentalCountOrderByAggregateInput = {
   bookTitle?: Prisma.SortOrder
   borrowedAt?: Prisma.SortOrder
   returnedAt?: Prisma.SortOrder
-  dueDate?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -406,8 +366,6 @@ export type BookRentalMaxOrderByAggregateInput = {
   bookTitle?: Prisma.SortOrder
   borrowedAt?: Prisma.SortOrder
   returnedAt?: Prisma.SortOrder
-  dueDate?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -417,8 +375,6 @@ export type BookRentalMinOrderByAggregateInput = {
   bookTitle?: Prisma.SortOrder
   borrowedAt?: Prisma.SortOrder
   returnedAt?: Prisma.SortOrder
-  dueDate?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -483,8 +439,6 @@ export type BookRentalCreateWithoutStudentInput = {
   bookTitle: string
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
-  dueDate?: Date | string | null
-  createdAt?: Date | string
   updatedAt?: Date | string
 }
 
@@ -493,8 +447,6 @@ export type BookRentalUncheckedCreateWithoutStudentInput = {
   bookTitle: string
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
-  dueDate?: Date | string | null
-  createdAt?: Date | string
   updatedAt?: Date | string
 }
 
@@ -533,8 +485,6 @@ export type BookRentalScalarWhereInput = {
   bookTitle?: Prisma.StringFilter<"BookRental"> | string
   borrowedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   returnedAt?: Prisma.DateTimeNullableFilter<"BookRental"> | Date | string | null
-  dueDate?: Prisma.DateTimeNullableFilter<"BookRental"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
 }
 
@@ -543,8 +493,6 @@ export type BookRentalCreateManyStudentInput = {
   bookTitle: string
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
-  dueDate?: Date | string | null
-  createdAt?: Date | string
   updatedAt?: Date | string
 }
 
@@ -552,8 +500,6 @@ export type BookRentalUpdateWithoutStudentInput = {
   bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -562,8 +508,6 @@ export type BookRentalUncheckedUpdateWithoutStudentInput = {
   bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -572,8 +516,6 @@ export type BookRentalUncheckedUpdateManyWithoutStudentInput = {
   bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -585,8 +527,6 @@ export type BookRentalSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   bookTitle?: boolean
   borrowedAt?: boolean
   returnedAt?: boolean
-  dueDate?: boolean
-  createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookRental"]>
@@ -599,12 +539,10 @@ export type BookRentalSelectScalar = {
   bookTitle?: boolean
   borrowedAt?: boolean
   returnedAt?: boolean
-  dueDate?: boolean
-  createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BookRentalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "bookTitle" | "borrowedAt" | "returnedAt" | "dueDate" | "createdAt" | "updatedAt", ExtArgs["result"]["bookRental"]>
+export type BookRentalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "bookTitle" | "borrowedAt" | "returnedAt" | "updatedAt", ExtArgs["result"]["bookRental"]>
 export type BookRentalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }
@@ -620,8 +558,6 @@ export type $BookRentalPayload<ExtArgs extends runtime.Types.Extensions.Internal
     bookTitle: string
     borrowedAt: Date
     returnedAt: Date | null
-    dueDate: Date | null
-    createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["bookRental"]>
   composites: {}
@@ -998,8 +934,6 @@ export interface BookRentalFieldRefs {
   readonly bookTitle: Prisma.FieldRef<"BookRental", 'String'>
   readonly borrowedAt: Prisma.FieldRef<"BookRental", 'DateTime'>
   readonly returnedAt: Prisma.FieldRef<"BookRental", 'DateTime'>
-  readonly dueDate: Prisma.FieldRef<"BookRental", 'DateTime'>
-  readonly createdAt: Prisma.FieldRef<"BookRental", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"BookRental", 'DateTime'>
 }
     

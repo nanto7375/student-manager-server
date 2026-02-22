@@ -158,8 +158,6 @@ export const BookRentalScalarFieldEnum = {
   bookTitle: 'bookTitle',
   borrowedAt: 'borrowedAt',
   returnedAt: 'returnedAt',
-  dueDate: 'dueDate',
-  createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 

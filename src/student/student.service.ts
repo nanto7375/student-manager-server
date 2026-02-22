@@ -30,6 +30,10 @@ export class StudentService {
     private readonly date: DateService,
   ) {}
 
+  async getStudentOrThrow(id: number) {
+    return await this.studentRepository.findOrThrow(id);
+  }
+
   async register({ registeredAt = this.date.now(), ...studentDto }: RegisterStudentRequestDto & { registeredAt?: Date }) {
     const schedule = studentDto.scheduleId ? await this.scheduleService.getScheduleOrThrow(studentDto.scheduleId) : null;
 
