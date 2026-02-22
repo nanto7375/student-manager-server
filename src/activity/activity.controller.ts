@@ -40,10 +40,7 @@ export class ActivityController {
   @ApiOkResponse({ type: ActivityRecordDto })
   async participateMonthlyProject(@Param('activityRecordId', ParseIntPipe) activityRecordId: number) {
     // TODO: adminId
-    const activityRecord = await this.activityService.participateMonthlyProject({
-      activityRecordId,
-      adminId: 1,
-    });
+    const activityRecord = await this.activityService.participateMonthlyProject(activityRecordId, { adminId: 1 });
     return toInstance(ActivityRecordDto, activityRecord);
   }
 }
