@@ -4,7 +4,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { toInstance } from '@src/common/utils/toInstance';
 import { ActivityService } from './activity.service';
 import { ActivityRecordDto, BookRentalDto } from './dto/activity.response.dto';
-import { BorrowBookRequestDto, UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
+import { BorrowBookRequestDto, UpdateActivityRecordRequestDto, UpdateBookRentalRequestDto } from './dto/activity.request.dto';
 
 @ApiTags('activity')
 @Controller('activities')
@@ -49,6 +49,17 @@ export class ActivityController {
   async participateMonthlyProject(@Param('activityRecordId', ParseIntPipe) activityRecordId: number) {
     // TODO: adminId
     const activityRecord = await this.activityService.participateMonthlyProject(activityRecordId, { adminId: 1 });
+    return toInstance(ActivityRecordDto, activityRecord);
+  }
+
+  @Patch('book-rentals/:bookRentalId')
+  @ApiOperation({ summary: '대출 도서 정보 업데이트' })
+  @ApiOkResponse({ type: ActivityRecordDto })
+  async updateBookRentalActivityRecord(
+    @Param('bookRentalId', ParseIntPipe) bookRentalId: number, //
+    @Body() { bookTitle }: UpdateBookRentalRequestDto,
+  ) {
+    const activityRecord = await this.activityService.recordBorrowedBookTitle(bookRentalId, bookTitle);
     return toInstance(ActivityRecordDto, activityRecord);
   }
 

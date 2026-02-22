@@ -112,6 +112,13 @@ export class ActivityService {
 
     return await this.bookRentalRepository.returnBook(bookRentalId);
   }
+
+  async recordBorrowedBookTitle(bookRentalId: number, bookTitle: string) {
+    const bookRental = await this.bookRentalRepository.findOrThrow(bookRentalId);
+    if (bookRental.returnedAt) throw new BadRequestException('이미 반납된 책입니다');
+
+    return await this.bookRentalRepository.update(bookRentalId, { bookTitle });
+  }
 }
 
 type ActivityRecordWithBorrowedBook = ActivityRecord & { student: Student & { bookRentals: BookRental[] } };

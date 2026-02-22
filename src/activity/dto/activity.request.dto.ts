@@ -21,3 +21,9 @@ export class BorrowBookRequestDto {
   @IsString()
   bookTitle?: string;
 }
+
+export class UpdateBookRentalRequestDto {
+  @ApiProperty({ description: '책 제목' })
+  @IsString()
+  bookTitle: string;
+}
