@@ -9,15 +9,6 @@ import { StudentEvent } from './student.event';
 import { SchoolLevel } from '@src/common/constant/common.const';
 import { DateService } from '@src/common/utils/date';
 
-type UpdatePersonalInfoParams = {
-  studentId: number;
-  studentDto: PatchStudentRequestDto;
-};
-type ChangeScheduleParams = {
-  studentId: number;
-  scheduleId: number;
-};
-
 @Injectable()
 export class StudentService {
   constructor(
@@ -102,6 +93,14 @@ export class StudentService {
   }
 }
 
+type UpdatePersonalInfoParams = {
+  studentId: number;
+  studentDto: PatchStudentRequestDto;
+};
+type ChangeScheduleParams = {
+  studentId: number;
+  scheduleId: number;
+};
 type StudentResult = {
   id: number;
   name: string;
