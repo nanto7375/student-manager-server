@@ -13,13 +13,13 @@ import { StudentService } from '@src/student/student.service';
 @Injectable()
 export class ActivityService {
   constructor(
-    private readonly date: DateService,
+    private readonly activityEvent: ActivityEvent,
     private readonly activityRepository: ActivityRepository,
     private readonly activityRecordLogRepository: ActivityRecordLogRepository,
     private readonly activityRecordGenerationLogRepository: ActivityRecordGenerationLogRepository,
-    private readonly activityEvent: ActivityEvent,
     private readonly bookRentalRepository: BookRentalRepository,
     private readonly studentService: StudentService,
+    private readonly date: DateService,
   ) {}
 
   async getDailyActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
