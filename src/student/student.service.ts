@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
+import { StudentRepository } from './student.repository';
 import { StudentBuilder } from './student.builder';
 import { type ScheduleResult, ScheduleService } from '@src/schedule/schedule.service';
 
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { STUDENT_SCHEDULE_REGISTERED } from '@src/common/constant/event.const';
-import { StudentScheduleRegisteredEvent } from './student.event';
+import { StudentEvent } from './student.event';
 import { SchoolLevel } from '@src/common/constant/common.const';
-import { StudentRepository } from './student.repository';
 import { DateService } from '@src/common/utils/date';
 
 type UpdatePersonalInfoParams = {
@@ -25,7 +23,7 @@ export class StudentService {
   constructor(
     private readonly studentBuilder: StudentBuilder,
     private readonly scheduleService: ScheduleService,
-    private readonly eventEmitter: EventEmitter2,
+    private readonly studentEvent: StudentEvent,
     private readonly studentRepository: StudentRepository,
     private readonly date: DateService,
   ) {}
@@ -61,8 +59,7 @@ export class StudentService {
 
     const savedStudent = await this.studentRepository.create(newStudent);
     if (schedule) {
-      const event = new StudentScheduleRegisteredEvent(savedStudent, schedule);
-      this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, event);
+      this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
     }
     return savedStudent;
   }
@@ -95,7 +92,7 @@ export class StudentService {
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     student.scheduleId = schedule.id;
     const savedStudent = await this.studentRepository.update(studentId, student);
-    this.eventEmitter.emit(STUDENT_SCHEDULE_REGISTERED, new StudentScheduleRegisteredEvent(savedStudent, schedule));
+    this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
     return savedStudent;
   }
 }

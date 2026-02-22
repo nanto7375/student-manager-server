@@ -1,11 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { ActivityRecord, Student, BookRental } from '@src/generated/prisma/client';
-import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
-import { DateService } from '@src/common/utils/date';
 import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository, BookRentalRepository } from './activity.repository';
+
 import { ActivityEvent } from './activity.event';
 import { StudentService } from '@src/student/student.service';
+import { DateService } from '@src/common/utils/date';
+
+import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 
 /**
  * @description ARGL: ActivityRecordGenerationLog
