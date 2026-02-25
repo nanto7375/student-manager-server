@@ -11,7 +11,7 @@ export class BookRentalDto {
   @Expose()
   studentId: number;
 
-  @ApiProperty({ description: '책 제목' })
+  @ApiProperty({ description: '책 제목', nullable: true })
   @Expose()
   bookTitle: string;
 
