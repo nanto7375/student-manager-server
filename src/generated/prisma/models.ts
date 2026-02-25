@@ -8,7 +8,6 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/ActivityGenerationLog'
 export type * from './models/ActivityRecord'
 export type * from './models/ActivityRecordGenerationLog'
 export type * from './models/ActivityRecordLog'

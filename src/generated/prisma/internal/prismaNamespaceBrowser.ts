@@ -51,7 +51,6 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  ActivityGenerationLog: 'ActivityGenerationLog',
   ActivityRecord: 'ActivityRecord',
   ActivityRecordGenerationLog: 'ActivityRecordGenerationLog',
   ActivityRecordLog: 'ActivityRecordLog',
@@ -77,15 +76,6 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
-
-
-export const ActivityGenerationLogScalarFieldEnum = {
-  id: 'id',
-  generatedActivityMonth: 'generatedActivityMonth',
-  createdAt: 'createdAt'
-} as const
-
-export type ActivityGenerationLogScalarFieldEnum = (typeof ActivityGenerationLogScalarFieldEnum)[keyof typeof ActivityGenerationLogScalarFieldEnum]
 
 
 export const ActivityRecordScalarFieldEnum = {
@@ -216,13 +206,6 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
-
-
-export const ActivityGenerationLogOrderByRelevanceFieldEnum = {
-  generatedActivityMonth: 'generatedActivityMonth'
-} as const
-
-export type ActivityGenerationLogOrderByRelevanceFieldEnum = (typeof ActivityGenerationLogOrderByRelevanceFieldEnum)[keyof typeof ActivityGenerationLogOrderByRelevanceFieldEnum]
 
 
 export const ActivityRecordOrderByRelevanceFieldEnum = {

@@ -384,7 +384,6 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  ActivityGenerationLog: 'ActivityGenerationLog',
   ActivityRecord: 'ActivityRecord',
   ActivityRecordGenerationLog: 'ActivityRecordGenerationLog',
   ActivityRecordLog: 'ActivityRecordLog',
@@ -409,76 +408,10 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "activityGenerationLog" | "activityRecord" | "activityRecordGenerationLog" | "activityRecordLog" | "admin" | "bannedIp" | "bookRental" | "lesson" | "schedule" | "student"
+    modelProps: "activityRecord" | "activityRecordGenerationLog" | "activityRecordLog" | "admin" | "bannedIp" | "bookRental" | "lesson" | "schedule" | "student"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    ActivityGenerationLog: {
-      payload: Prisma.$ActivityGenerationLogPayload<ExtArgs>
-      fields: Prisma.ActivityGenerationLogFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ActivityGenerationLogFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActivityGenerationLogPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ActivityGenerationLogFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActivityGenerationLogPayload>
-        }
-        findFirst: {
-          args: Prisma.ActivityGenerationLogFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActivityGenerationLogPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ActivityGenerationLogFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActivityGenerationLogPayload>
-        }
-        findMany: {
-          args: Prisma.ActivityGenerationLogFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActivityGenerationLogPayload>[]
-        }
-        create: {
-          args: Prisma.ActivityGenerationLogCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActivityGenerationLogPayload>
-        }
-        createMany: {
-          args: Prisma.ActivityGenerationLogCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        delete: {
-          args: Prisma.ActivityGenerationLogDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActivityGenerationLogPayload>
-        }
-        update: {
-          args: Prisma.ActivityGenerationLogUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActivityGenerationLogPayload>
-        }
-        deleteMany: {
-          args: Prisma.ActivityGenerationLogDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ActivityGenerationLogUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        upsert: {
-          args: Prisma.ActivityGenerationLogUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActivityGenerationLogPayload>
-        }
-        aggregate: {
-          args: Prisma.ActivityGenerationLogAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateActivityGenerationLog>
-        }
-        groupBy: {
-          args: Prisma.ActivityGenerationLogGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ActivityGenerationLogGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ActivityGenerationLogCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ActivityGenerationLogCountAggregateOutputType> | number
-        }
-      }
-    }
     ActivityRecord: {
       payload: Prisma.$ActivityRecordPayload<ExtArgs>
       fields: Prisma.ActivityRecordFieldRefs
@@ -1112,15 +1045,6 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const ActivityGenerationLogScalarFieldEnum = {
-  id: 'id',
-  generatedActivityMonth: 'generatedActivityMonth',
-  createdAt: 'createdAt'
-} as const
-
-export type ActivityGenerationLogScalarFieldEnum = (typeof ActivityGenerationLogScalarFieldEnum)[keyof typeof ActivityGenerationLogScalarFieldEnum]
-
-
 export const ActivityRecordScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
@@ -1251,13 +1175,6 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const ActivityGenerationLogOrderByRelevanceFieldEnum = {
-  generatedActivityMonth: 'generatedActivityMonth'
-} as const
-
-export type ActivityGenerationLogOrderByRelevanceFieldEnum = (typeof ActivityGenerationLogOrderByRelevanceFieldEnum)[keyof typeof ActivityGenerationLogOrderByRelevanceFieldEnum]
-
-
 export const ActivityRecordOrderByRelevanceFieldEnum = {
   date: 'date'
 } as const
@@ -1363,16 +1280,16 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 
 
 /**
- * Reference to a field of type 'DateTime'
+ * Reference to a field of type 'Boolean'
  */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'DateTime'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
     
 
 
@@ -1477,7 +1394,6 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
-  activityGenerationLog?: Prisma.ActivityGenerationLogOmit
   activityRecord?: Prisma.ActivityRecordOmit
   activityRecordGenerationLog?: Prisma.ActivityRecordGenerationLogOmit
   activityRecordLog?: Prisma.ActivityRecordLogOmit

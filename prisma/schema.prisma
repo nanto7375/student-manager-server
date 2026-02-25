@@ -9,15 +9,6 @@ datasource db {
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model ActivityGenerationLog {
-  id                     Int      @id @default(autoincrement())
-  generatedActivityMonth String   @map("generated_activity_month") @db.Char(6)
-  createdAt              DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-
-  @@map("activity_generation_log")
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model ActivityRecord {
   id                 Int                 @id @default(autoincrement())
   studentId          Int                 @map("student_id")
