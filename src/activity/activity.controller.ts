@@ -13,20 +13,20 @@ export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}
 
   @Get()
-  @ApiOperation({ summary: '일일 활동 기록 조회' })
+  @ApiOperation({ summary: '활동 기록 조회' })
   @ApiOkResponse({ type: [ActivityRecordDto] })
   async getActivityRecords(@Query('scheduleId', ParseIntPipe) scheduleId: number, @Query('date') date: string) {
-    const activityRecords = await this.activityService.getDailyActivityRecords({ scheduleId, date });
+    const activityRecords = await this.activityService.getActivityRecords({ scheduleId, date });
     return toInstance(ActivityRecordDto, activityRecords);
   }
 
   @Patch(':activityRecordId')
-  @ApiOperation({ summary: '일일 활동 기록 업데이트' })
+  @ApiOperation({ summary: '활동 기록 업데이트' })
   @ApiOkResponse({ type: Boolean })
   async updateActivityRecord(
     @Param('activityRecordId', ParseIntPipe) activityRecordId: number, //
-    @Body() updateActivityRecordRequestDto: UpdateActivityRecordRequestDto,
     @Query('monthly', ParseBoolPipe) monthly: boolean,
+    @Body() updateActivityRecordRequestDto: UpdateActivityRecordRequestDto,
   ) {
     // TODO: adminId
     const params = {
@@ -37,17 +37,6 @@ export class ActivityController {
     const result = !monthly //
       ? await this.activityService.updateActivityRecord(params)
       : await this.activityService.updateMonthlyActivityRecord(params);
-    return result;
-  }
-
-  @Patch(':activityRecordId/monthly-project')
-  @ApiOperation({ summary: '월간 프로젝트 참여' })
-  @ApiOkResponse({ type: Boolean })
-  async participateMonthlyProject(@Param('activityRecordId', ParseIntPipe) activityRecordId: number, @Body() { participate }: { participate: boolean }) {
-    // TODO: adminId
-    const result = participate //
-      ? await this.activityService.participateMonthlyProject(activityRecordId, { adminId: 1 })
-      : await this.activityService.outMonthlyProject(activityRecordId, { adminId: 1 });
     return result;
   }
 }
