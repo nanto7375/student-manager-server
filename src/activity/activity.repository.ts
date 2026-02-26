@@ -14,7 +14,7 @@ export class ActivityRepository {
   async update(id: number, body: Prisma.ActivityRecordUpdateInput) {
     return await this.prisma.activityRecord.update({ where: { id }, data: body });
   }
-  async updateMany(where: Prisma.ActivityRecordWhereInput, body: Prisma.ActivityRecordUpdateInput) {
+  async updateMany({ where, body }: { where: Prisma.ActivityRecordWhereInput; body: Prisma.ActivityRecordUpdateInput }) {
     return await this.prisma.activityRecord.updateMany({ where, data: body });
   }
   async findOrThrow(id: number) {

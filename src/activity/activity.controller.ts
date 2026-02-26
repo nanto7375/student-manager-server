@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseBoolPipe, ParseIntPipe, Patch, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
@@ -22,18 +22,22 @@ export class ActivityController {
 
   @Patch(':activityRecordId')
   @ApiOperation({ summary: '일일 활동 기록 업데이트' })
-  @ApiOkResponse({ type: ActivityRecordDto })
+  @ApiOkResponse({ type: Boolean })
   async updateActivityRecord(
     @Param('activityRecordId', ParseIntPipe) activityRecordId: number, //
     @Body() updateActivityRecordRequestDto: UpdateActivityRecordRequestDto,
+    @Query('monthly', ParseBoolPipe) monthly: boolean,
   ) {
     // TODO: adminId
-    const activityRecord = await this.activityService.updateActivityRecord({
+    const params = {
       activityRecordId,
       activityRecordDto: updateActivityRecordRequestDto,
       adminId: 1,
-    });
-    return toInstance(ActivityRecordDto, activityRecord);
+    };
+    const result = !monthly //
+      ? await this.activityService.updateActivityRecord(params)
+      : await this.activityService.updateMonthlyActivityRecord(params);
+    return result;
   }
 
   @Patch(':activityRecordId/monthly-project')

@@ -58,33 +58,57 @@ export class ActivityService {
 
   async updateActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
-    const { activityKey: key, activityValue: value } = activityRecordDto;
+    const { activityKey, activityValue } = activityRecordDto;
 
-    if (!Object.keys(activityRecord).includes(key)) {
+    if (!['attendance', 'report1', 'report2'].includes(activityKey)) {
       throw new BadRequestException('invalid activity key');
     }
 
-    const body = { [key]: value };
-    const result = await this.activityRepository.update(activityRecordId, body);
-    return result;
+    const body = { [activityKey]: activityValue };
+    await this.activityRepository.update(activityRecord.id, body);
+    return true;
+  }
+
+  async updateMonthlyActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
+    const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
+    const { activityKey, activityValue } = activityRecordDto;
+
+    if (!['monthlyPreview', 'monthlyReport'].includes(activityKey)) {
+      throw new BadRequestException('invalid activity key');
+    }
+
+    const body = { [activityKey]: activityValue };
+    const yearMonth = activityRecord.date.substring(0, 7);
+    await this.activityRepository.updateMany({
+      body,
+      where: { studentId: activityRecord.studentId, date: { startsWith: yearMonth } },
+    });
+    return true;
   }
 
   async participateMonthlyProject(activityRecordId: number, { adminId }: { adminId: number }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
-    if (activityRecord.monthlyProject) throw new BadRequestException('already participated');
+    if (activityRecord.monthlyProject) return true;
 
     const yearMonth = activityRecord.date.substring(0, 7);
-    await this.activityRepository.updateMany(
-      {
-        studentId: activityRecord.studentId,
-        date: { startsWith: yearMonth, gte: activityRecord.date },
-      },
-      { monthlyProject: true },
-    );
+    await this.activityRepository.updateMany({
+      body: { monthlyProject: true },
+      where: { studentId: activityRecord.studentId, date: { startsWith: yearMonth } },
+    });
     return true;
   }
 
-  async outMonthlyProject(activityRecordId: number, { adminId }: { adminId: number }) {}
+  async outMonthlyProject(activityRecordId: number, { adminId }: { adminId: number }) {
+    const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
+    if (!activityRecord.monthlyProject) return true;
+
+    const yearMonth = activityRecord.date.substring(0, 7);
+    await this.activityRepository.updateMany({
+      body: { monthlyProject: false, monthlyPreview: false, monthlyReport: false },
+      where: { studentId: activityRecord.studentId, date: { startsWith: yearMonth } },
+    });
+    return true;
+  }
 }
 
 type ActivityRecordWithBorrowedBook = ActivityRecord & { student: Student & { bookRentals: BookRental[] } };
