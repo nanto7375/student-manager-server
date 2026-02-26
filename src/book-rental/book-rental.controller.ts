@@ -3,8 +3,9 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
 import { BorrowBookRequestDto, UpdateBookRentalRequestDto } from './dto/book-rental.request.dto';
-import { BookRentalService } from './book-rental.service';
 import { BookRentalDto } from './dto/book-rental.response.dto';
+
+import { BookRentalService } from './book-rental.service';
 
 @ApiTags('book-rental')
 @Controller('book-rentals')

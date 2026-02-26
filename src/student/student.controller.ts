@@ -1,13 +1,14 @@
 import { Body, Controller, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { AdminRoleType } from '@src/admin/admin.service';
-import { StudentService } from './student.service';
-
 import { toInstance } from '@src/common/utils/toInstance';
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
 import { StudentDto } from './dto/student-response.dto';
+
+import { AdminRoleType } from '@src/admin/admin.service';
 import { AdminLevel } from '@src/admin/decorator/admin-level.decorator';
+
+import { StudentService } from './student.service';
 
 @Controller('students')
 @ApiTags('student')

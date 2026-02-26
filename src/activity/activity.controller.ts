@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
-import { ActivityService } from './activity.service';
-import { ActivityRecordDto } from './dto/activity.response.dto';
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
+import { ActivityRecordDto } from './dto/activity.response.dto';
+
+import { ActivityService } from './activity.service';
 
 @ApiTags('activity')
 @Controller('activities')
