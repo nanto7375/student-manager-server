@@ -93,8 +93,11 @@ export class ActivityService {
       throw new BadRequestException('monthly project is not participated');
     }
 
-    const body = { [activityKey]: activityValue };
-    const yearMonth = activityRecord.date.substring(0, 7);
+    const outOfMonthlyProject = activityKey === monthlyActivityKeys.MONTHLY_PROJECT && activityValue === false;
+    const body = !outOfMonthlyProject //
+      ? { [activityKey]: activityValue }
+      : { monthlyProject: false, monthlyPreview: false, monthlyReport: false };
+    const yearMonth = activityRecord.date.substring(0, 6);
     await this.activityRepository.updateMany({
       body,
       where: { studentId: activityRecord.studentId, date: { startsWith: yearMonth } },
