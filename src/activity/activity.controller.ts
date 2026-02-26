@@ -43,15 +43,6 @@ export class ActivityController {
     return toInstance(ActivityRecordDto, activityRecord);
   }
 
-  @Patch(':activityRecordId/monthly-project')
-  @ApiOperation({ summary: '월간 프로젝트 참여' })
-  @ApiOkResponse({ type: ActivityRecordDto })
-  async participateMonthlyProject(@Param('activityRecordId', ParseIntPipe) activityRecordId: number) {
-    // TODO: adminId
-    const activityRecord = await this.activityService.participateMonthlyProject(activityRecordId, { adminId: 1 });
-    return toInstance(ActivityRecordDto, activityRecord);
-  }
-
   @Patch('book-rentals/:bookRentalId')
   @ApiOperation({ summary: '대출 도서 정보 업데이트' })
   @ApiOkResponse({ type: ActivityRecordDto })
@@ -69,5 +60,16 @@ export class ActivityController {
   async returnBook(@Param('bookRentalId', ParseIntPipe) bookRentalId: number) {
     const bookRental = await this.activityService.returnBook(bookRentalId);
     return toInstance(BookRentalDto, bookRental);
+  }
+
+  @Patch(':activityRecordId/monthly-project')
+  @ApiOperation({ summary: '월간 프로젝트 참여' })
+  @ApiOkResponse({ type: Boolean })
+  async participateMonthlyProject(@Param('activityRecordId', ParseIntPipe) activityRecordId: number, @Body() { participate }: { participate: boolean }) {
+    // TODO: adminId
+    const result = participate //
+      ? await this.activityService.participateMonthlyProject(activityRecordId, { adminId: 1 })
+      : await this.activityService.outMonthlyProject(activityRecordId, { adminId: 1 });
+    return result;
   }
 }

@@ -77,15 +77,17 @@ export class ActivityService {
     if (activityRecord.monthlyProject) throw new BadRequestException('already participated');
 
     const yearMonth = activityRecord.date.substring(0, 7);
-    const updatedActivityRecord = await this.activityRepository.updateMany(
+    await this.activityRepository.updateMany(
       {
         studentId: activityRecord.studentId,
         date: { startsWith: yearMonth, gte: activityRecord.date },
       },
       { monthlyProject: true },
     );
-    return updatedActivityRecord;
+    return true;
   }
+
+  async outMonthlyProject(activityRecordId: number, { adminId }: { adminId: number }) {}
 
   async borrowBook({ studentId, bookTitle }: { studentId: number; bookTitle: string }) {
     await this.studentService.getStudentOrThrow(studentId);
