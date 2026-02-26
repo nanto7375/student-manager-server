@@ -24,6 +24,7 @@ import { ActivityModule } from './activity/activity.module';
 import { AppBootstrapService } from './app-bootstrap.service';
 import { UtilsModule } from './common/utils/utils.module';
 import { PrismaModule } from './configs/prisma/prisma.module';
+import { BookRentalModule } from './book-rental/book-rental.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { PrismaModule } from './configs/prisma/prisma.module';
     ActivityModule,
     UtilsModule,
     PrismaModule,
+    BookRentalModule,
   ],
   controllers: [AppController],
   providers: [

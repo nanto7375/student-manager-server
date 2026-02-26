@@ -1,32 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { StudentInActivityDto } from '@src/student/dto/student-response.dto';
 import { Expose, Type } from 'class-transformer';
-
-export class BookRentalDto {
-  @ApiProperty({ description: 'id' })
-  @Expose()
-  id: number;
-
-  @ApiProperty({ description: '학생 ID' })
-  @Expose()
-  studentId: number;
-
-  @ApiProperty({ description: '책 제목', nullable: true })
-  @Expose()
-  bookTitle: string;
-
-  @ApiProperty({ description: '대여일' })
-  @Expose()
-  borrowedAt: Date;
-
-  @ApiProperty({ description: '반납일', required: false })
-  @Expose()
-  returnedAt: Date | null;
-
-  @ApiProperty({ description: '수정일' })
-  @Expose()
-  updatedAt: Date;
-}
+import { BookRentalDto } from '@src/book-rental/dto/book-rental.response.dto';
+import { StudentInActivityDto } from '@src/student/dto/student-response.dto';
 
 export class ActivityRecordDto {
   @ApiProperty({ description: 'id' })

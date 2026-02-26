@@ -39,33 +39,3 @@ export class ActivityRecordGenerationLogRepository {
     return await this.prisma.activityRecordGenerationLog.findFirst({ where });
   }
 }
-
-@Injectable()
-export class BookRentalRepository {
-  constructor(private readonly prisma: PrismaService) {}
-
-  async create(data: Prisma.BookRentalCreateInput) {
-    return await this.prisma.bookRental.create({ data });
-  }
-
-  async findOrThrow(id: number) {
-    const bookRental = await this.prisma.bookRental.findUnique({ where: { id } });
-    if (!bookRental) throw new NotFoundException('책 대여 기록을 찾을 수 없습니다');
-    return bookRental;
-  }
-
-  async findActiveByStudentId(studentId: number) {
-    return await this.prisma.bookRental.findFirst({
-      where: { studentId, returnedAt: null },
-      orderBy: { borrowedAt: 'desc' },
-    });
-  }
-
-  async update(id: number, data: Prisma.BookRentalUpdateInput) {
-    return await this.prisma.bookRental.update({ where: { id }, data });
-  }
-
-  async returnBook(id: number) {
-    return await this.update(id, { returnedAt: new Date() });
-  }
-}

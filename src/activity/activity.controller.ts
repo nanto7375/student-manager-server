@@ -3,8 +3,8 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
 import { ActivityService } from './activity.service';
-import { ActivityRecordDto, BookRentalDto } from './dto/activity.response.dto';
-import { BorrowBookRequestDto, UpdateActivityRecordRequestDto, UpdateBookRentalRequestDto } from './dto/activity.request.dto';
+import { ActivityRecordDto } from './dto/activity.response.dto';
+import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 
 @ApiTags('activity')
 @Controller('activities')
@@ -17,14 +17,6 @@ export class ActivityController {
   async getActivityRecords(@Query('scheduleId', ParseIntPipe) scheduleId: number, @Query('date') date: string) {
     const activityRecords = await this.activityService.getDailyActivityRecords({ scheduleId, date });
     return toInstance(ActivityRecordDto, activityRecords);
-  }
-
-  @Post('book-rentals')
-  @ApiOperation({ summary: '도서 대출 기록 생성' })
-  @ApiOkResponse({ type: ActivityRecordDto })
-  async createBookRentalActivityRecord(@Body() { studentId, bookTitle }: BorrowBookRequestDto) {
-    const activityRecord = await this.activityService.borrowBook({ studentId, bookTitle });
-    return toInstance(ActivityRecordDto, activityRecord);
   }
 
   @Patch(':activityRecordId')
@@ -41,25 +33,6 @@ export class ActivityController {
       adminId: 1,
     });
     return toInstance(ActivityRecordDto, activityRecord);
-  }
-
-  @Patch('book-rentals/:bookRentalId')
-  @ApiOperation({ summary: '대출 도서 정보 업데이트' })
-  @ApiOkResponse({ type: ActivityRecordDto })
-  async updateBookRentalActivityRecord(
-    @Param('bookRentalId', ParseIntPipe) bookRentalId: number, //
-    @Body() { bookTitle }: UpdateBookRentalRequestDto,
-  ) {
-    const activityRecord = await this.activityService.recordBorrowedBookTitle(bookRentalId, bookTitle);
-    return toInstance(ActivityRecordDto, activityRecord);
-  }
-
-  @Patch('book-rentals/:bookRentalId/return')
-  @ApiOperation({ summary: '도서 반납 처리' })
-  @ApiOkResponse({ type: BookRentalDto })
-  async returnBook(@Param('bookRentalId', ParseIntPipe) bookRentalId: number) {
-    const bookRental = await this.activityService.returnBook(bookRentalId);
-    return toInstance(BookRentalDto, bookRental);
   }
 
   @Patch(':activityRecordId/monthly-project')

@@ -6,12 +6,11 @@ import { ActivityTask } from './activity.task';
 import { ActivityListener } from './activity.listener';
 
 import { ScheduleModule } from '@src/schedule/schedule.module';
-import { ActivityRecordGenerationLogRepository, ActivityRepository, BookRentalRepository } from './activity.repository';
-import { StudentModule } from '@src/student/student.module';
+import { ActivityRecordGenerationLogRepository, ActivityRepository } from './activity.repository';
 
 @Module({
-  imports: [ScheduleModule, StudentModule],
+  imports: [ScheduleModule],
   controllers: [ActivityController],
-  providers: [ActivityService, ActivityTask, ActivityListener, ActivityRepository, ActivityRecordGenerationLogRepository, BookRentalRepository],
+  providers: [ActivityService, ActivityTask, ActivityListener, ActivityRepository, ActivityRecordGenerationLogRepository],
 })
 export class ActivityModule {}

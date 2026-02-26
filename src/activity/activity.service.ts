@@ -1,9 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { ActivityRecord, Student, BookRental } from '@src/generated/prisma/client';
-import { ActivityRecordGenerationLogRepository, ActivityRepository, BookRentalRepository } from './activity.repository';
+import { ActivityRecordGenerationLogRepository, ActivityRepository } from './activity.repository';
 
-import { StudentService } from '@src/student/student.service';
 import { DateService } from '@src/common/utils/date';
 
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
@@ -16,8 +15,6 @@ export class ActivityService {
   constructor(
     private readonly activityRepository: ActivityRepository,
     private readonly activityRecordGenerationLogRepository: ActivityRecordGenerationLogRepository,
-    private readonly bookRentalRepository: BookRentalRepository,
-    private readonly studentService: StudentService,
     private readonly date: DateService,
   ) {}
 
@@ -88,31 +85,6 @@ export class ActivityService {
   }
 
   async outMonthlyProject(activityRecordId: number, { adminId }: { adminId: number }) {}
-
-  async borrowBook({ studentId, bookTitle }: { studentId: number; bookTitle: string }) {
-    await this.studentService.getStudentOrThrow(studentId);
-    const activeBorrow = await this.bookRentalRepository.findActiveByStudentId(studentId);
-    if (activeBorrow) throw new BadRequestException('이미 대여 중인 책이 있습니다');
-
-    return await this.bookRentalRepository.create({
-      student: { connect: { id: studentId } },
-      bookTitle,
-    });
-  }
-
-  async returnBook(bookRentalId: number) {
-    const bookRental = await this.bookRentalRepository.findOrThrow(bookRentalId);
-    if (bookRental.returnedAt) throw new BadRequestException('이미 반납된 책입니다');
-
-    return await this.bookRentalRepository.returnBook(bookRentalId);
-  }
-
-  async recordBorrowedBookTitle(bookRentalId: number, bookTitle: string) {
-    const bookRental = await this.bookRentalRepository.findOrThrow(bookRentalId);
-    if (bookRental.returnedAt) throw new BadRequestException('이미 반납된 책입니다');
-
-    return await this.bookRentalRepository.update(bookRentalId, { bookTitle });
-  }
 }
 
 type ActivityRecordWithBorrowedBook = ActivityRecord & { student: Student & { bookRentals: BookRental[] } };
