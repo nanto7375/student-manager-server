@@ -1,9 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { ActivityRecord, Student, BookRental } from '@src/generated/prisma/client';
-import { ActivityRecordGenerationLogRepository, ActivityRecordLogRepository, ActivityRepository, BookRentalRepository } from './activity.repository';
+import { ActivityRecordGenerationLogRepository, ActivityRepository, BookRentalRepository } from './activity.repository';
 
-import { ActivityEvent } from './activity.event';
 import { StudentService } from '@src/student/student.service';
 import { DateService } from '@src/common/utils/date';
 
@@ -15,9 +14,7 @@ import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 @Injectable()
 export class ActivityService {
   constructor(
-    private readonly activityEvent: ActivityEvent,
     private readonly activityRepository: ActivityRepository,
-    private readonly activityRecordLogRepository: ActivityRecordLogRepository,
     private readonly activityRecordGenerationLogRepository: ActivityRecordGenerationLogRepository,
     private readonly bookRentalRepository: BookRentalRepository,
     private readonly studentService: StudentService,
@@ -72,13 +69,7 @@ export class ActivityService {
 
     const body = { [key]: value };
     const result = await this.activityRepository.update(activityRecordId, body);
-
-    this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key, value });
     return result;
-  }
-
-  async generateActivityRecordLog({ activityRecordId, adminId, key, value }: { activityRecordId: number; adminId: number; key: string; value: string }) {
-    return await this.activityRecordLogRepository.create({ activityRecordId, adminId, key, value });
   }
 
   async participateMonthlyProject(activityRecordId: number, { adminId }: { adminId: number }) {
@@ -93,7 +84,6 @@ export class ActivityService {
       },
       { monthlyProject: true },
     );
-    this.activityEvent.activityRecordUpdated({ adminId, activityRecordId, key: 'monthlyProject', value: true });
     return updatedActivityRecord;
   }
 

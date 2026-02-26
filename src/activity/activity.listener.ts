@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { ACTIVITY_RECORD_UPDATED, APP_BOOTSTRAP_COMPLETED, STUDENT_SCHEDULE_REGISTERED } from '../common/constant/event.const';
+import { APP_BOOTSTRAP_COMPLETED, STUDENT_SCHEDULE_REGISTERED } from '../common/constant/event.const';
 import { ActivityTask } from './activity.task';
-import { ActivityRecordUpdatedEvent } from './activity.event';
 import { ActivityService } from './activity.service';
 import { StudentScheduleRegisteredEvent } from '@src/student/student.event';
 import { MyLogger } from '@src/configs/logger/my-logger';
@@ -33,15 +32,6 @@ export class ActivityListener {
     try {
       const yearMonth = this.date.currentYearMonth();
       await this.activityService.generateThisMonthActivityRecords({ students: [student], dayOfWeek: schedule.dayOfWeek, yearMonth });
-    } catch (error) {
-      this.logger.error(error);
-    }
-  }
-
-  @OnEvent(ACTIVITY_RECORD_UPDATED)
-  async updateActivityRecordLog({ adminId, activityRecordId, key, value }: ActivityRecordUpdatedEvent) {
-    try {
-      await this.activityService.generateActivityRecordLog({ activityRecordId, adminId, key, value: value.toString() });
     } catch (error) {
       this.logger.error(error);
     }

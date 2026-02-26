@@ -28,15 +28,6 @@ export class ActivityRepository {
 }
 
 @Injectable()
-export class ActivityRecordLogRepository {
-  constructor(private readonly prisma: PrismaService) {}
-
-  async create({ activityRecordId, adminId, key, value }: { activityRecordId: number; adminId: number; key: string; value: string }) {
-    return await this.prisma.activityRecordLog.create({ data: { activityRecordId, adminId, key, value } });
-  }
-}
-
-@Injectable()
 export class ActivityRecordGenerationLogRepository {
   constructor(private readonly prisma: PrismaService) {}
 
