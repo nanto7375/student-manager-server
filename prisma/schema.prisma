@@ -83,7 +83,7 @@ model BannedIp {
 model BookRental {
   id         Int       @id @default(autoincrement())
   studentId  Int       @map("student_id")
-  bookTitle  String    @db.VarChar(255)
+  bookTitle  String?    @db.VarChar(255)
   borrowedAt DateTime  @default(now()) @map("borrowed_at") @db.Timestamp(0)
   returnedAt DateTime? @map("returned_at") @db.Timestamp(0)
   updatedAt  DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)

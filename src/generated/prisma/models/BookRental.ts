@@ -192,7 +192,7 @@ export type BookRentalGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 export type BookRentalGroupByOutputType = {
   id: number
   studentId: number
-  bookTitle: string
+  bookTitle: string | null
   borrowedAt: Date
   returnedAt: Date | null
   updatedAt: Date
@@ -224,7 +224,7 @@ export type BookRentalWhereInput = {
   NOT?: Prisma.BookRentalWhereInput | Prisma.BookRentalWhereInput[]
   id?: Prisma.IntFilter<"BookRental"> | number
   studentId?: Prisma.IntFilter<"BookRental"> | number
-  bookTitle?: Prisma.StringFilter<"BookRental"> | string
+  bookTitle?: Prisma.StringNullableFilter<"BookRental"> | string | null
   borrowedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   returnedAt?: Prisma.DateTimeNullableFilter<"BookRental"> | Date | string | null
   updatedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
@@ -234,7 +234,7 @@ export type BookRentalWhereInput = {
 export type BookRentalOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  bookTitle?: Prisma.SortOrder
+  bookTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   borrowedAt?: Prisma.SortOrder
   returnedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -248,7 +248,7 @@ export type BookRentalWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.BookRentalWhereInput[]
   NOT?: Prisma.BookRentalWhereInput | Prisma.BookRentalWhereInput[]
   studentId?: Prisma.IntFilter<"BookRental"> | number
-  bookTitle?: Prisma.StringFilter<"BookRental"> | string
+  bookTitle?: Prisma.StringNullableFilter<"BookRental"> | string | null
   borrowedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   returnedAt?: Prisma.DateTimeNullableFilter<"BookRental"> | Date | string | null
   updatedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
@@ -258,7 +258,7 @@ export type BookRentalWhereUniqueInput = Prisma.AtLeast<{
 export type BookRentalOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  bookTitle?: Prisma.SortOrder
+  bookTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   borrowedAt?: Prisma.SortOrder
   returnedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -275,14 +275,14 @@ export type BookRentalScalarWhereWithAggregatesInput = {
   NOT?: Prisma.BookRentalScalarWhereWithAggregatesInput | Prisma.BookRentalScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"BookRental"> | number
   studentId?: Prisma.IntWithAggregatesFilter<"BookRental"> | number
-  bookTitle?: Prisma.StringWithAggregatesFilter<"BookRental"> | string
+  bookTitle?: Prisma.StringNullableWithAggregatesFilter<"BookRental"> | string | null
   borrowedAt?: Prisma.DateTimeWithAggregatesFilter<"BookRental"> | Date | string
   returnedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"BookRental"> | Date | string | null
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"BookRental"> | Date | string
 }
 
 export type BookRentalCreateInput = {
-  bookTitle: string
+  bookTitle?: string | null
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
   updatedAt?: Date | string
@@ -292,14 +292,14 @@ export type BookRentalCreateInput = {
 export type BookRentalUncheckedCreateInput = {
   id?: number
   studentId: number
-  bookTitle: string
+  bookTitle?: string | null
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
   updatedAt?: Date | string
 }
 
 export type BookRentalUpdateInput = {
-  bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  bookTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -309,7 +309,7 @@ export type BookRentalUpdateInput = {
 export type BookRentalUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
-  bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  bookTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -318,14 +318,14 @@ export type BookRentalUncheckedUpdateInput = {
 export type BookRentalCreateManyInput = {
   id?: number
   studentId: number
-  bookTitle: string
+  bookTitle?: string | null
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
   updatedAt?: Date | string
 }
 
 export type BookRentalUpdateManyMutationInput = {
-  bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  bookTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -334,7 +334,7 @@ export type BookRentalUpdateManyMutationInput = {
 export type BookRentalUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
-  bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  bookTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -436,7 +436,7 @@ export type BookRentalUncheckedUpdateManyWithoutStudentNestedInput = {
 }
 
 export type BookRentalCreateWithoutStudentInput = {
-  bookTitle: string
+  bookTitle?: string | null
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
   updatedAt?: Date | string
@@ -444,7 +444,7 @@ export type BookRentalCreateWithoutStudentInput = {
 
 export type BookRentalUncheckedCreateWithoutStudentInput = {
   id?: number
-  bookTitle: string
+  bookTitle?: string | null
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
   updatedAt?: Date | string
@@ -482,7 +482,7 @@ export type BookRentalScalarWhereInput = {
   NOT?: Prisma.BookRentalScalarWhereInput | Prisma.BookRentalScalarWhereInput[]
   id?: Prisma.IntFilter<"BookRental"> | number
   studentId?: Prisma.IntFilter<"BookRental"> | number
-  bookTitle?: Prisma.StringFilter<"BookRental"> | string
+  bookTitle?: Prisma.StringNullableFilter<"BookRental"> | string | null
   borrowedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
   returnedAt?: Prisma.DateTimeNullableFilter<"BookRental"> | Date | string | null
   updatedAt?: Prisma.DateTimeFilter<"BookRental"> | Date | string
@@ -490,14 +490,14 @@ export type BookRentalScalarWhereInput = {
 
 export type BookRentalCreateManyStudentInput = {
   id?: number
-  bookTitle: string
+  bookTitle?: string | null
   borrowedAt?: Date | string
   returnedAt?: Date | string | null
   updatedAt?: Date | string
 }
 
 export type BookRentalUpdateWithoutStudentInput = {
-  bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  bookTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -505,7 +505,7 @@ export type BookRentalUpdateWithoutStudentInput = {
 
 export type BookRentalUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  bookTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -513,7 +513,7 @@ export type BookRentalUncheckedUpdateWithoutStudentInput = {
 
 export type BookRentalUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  bookTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  bookTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   borrowedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -555,7 +555,7 @@ export type $BookRentalPayload<ExtArgs extends runtime.Types.Extensions.Internal
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     studentId: number
-    bookTitle: string
+    bookTitle: string | null
     borrowedAt: Date
     returnedAt: Date | null
     updatedAt: Date
