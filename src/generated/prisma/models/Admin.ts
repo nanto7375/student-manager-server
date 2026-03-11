@@ -257,6 +257,7 @@ export type AdminWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Admin"> | Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogListRelationFilter
+  assessments?: Prisma.AssessmentListRelationFilter
 }
 
 export type AdminOrderByWithRelationInput = {
@@ -271,6 +272,7 @@ export type AdminOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   activityRecordLogs?: Prisma.ActivityRecordLogOrderByRelationAggregateInput
+  assessments?: Prisma.AssessmentOrderByRelationAggregateInput
   _relevance?: Prisma.AdminOrderByRelevanceInput
 }
 
@@ -289,6 +291,7 @@ export type AdminWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Admin"> | Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogListRelationFilter
+  assessments?: Prisma.AssessmentListRelationFilter
 }, "id" | "email">
 
 export type AdminOrderByWithAggregationInput = {
@@ -336,6 +339,7 @@ export type AdminCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogCreateNestedManyWithoutAdminInput
+  assessments?: Prisma.AssessmentCreateNestedManyWithoutLastCommenterInput
 }
 
 export type AdminUncheckedCreateInput = {
@@ -350,6 +354,7 @@ export type AdminUncheckedCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogUncheckedCreateNestedManyWithoutAdminInput
+  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutLastCommenterInput
 }
 
 export type AdminUpdateInput = {
@@ -363,6 +368,7 @@ export type AdminUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogUpdateManyWithoutAdminNestedInput
+  assessments?: Prisma.AssessmentUpdateManyWithoutLastCommenterNestedInput
 }
 
 export type AdminUncheckedUpdateInput = {
@@ -377,6 +383,7 @@ export type AdminUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogUncheckedUpdateManyWithoutAdminNestedInput
+  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutLastCommenterNestedInput
 }
 
 export type AdminCreateManyInput = {
@@ -475,6 +482,11 @@ export type AdminSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
+export type AdminNullableScalarRelationFilter = {
+  is?: Prisma.AdminWhereInput | null
+  isNot?: Prisma.AdminWhereInput | null
+}
+
 export type AdminCreateNestedOneWithoutActivityRecordLogsInput = {
   create?: Prisma.XOR<Prisma.AdminCreateWithoutActivityRecordLogsInput, Prisma.AdminUncheckedCreateWithoutActivityRecordLogsInput>
   connectOrCreate?: Prisma.AdminCreateOrConnectWithoutActivityRecordLogsInput
@@ -497,6 +509,22 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type AdminCreateNestedOneWithoutAssessmentsInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutAssessmentsInput, Prisma.AdminUncheckedCreateWithoutAssessmentsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAssessmentsInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneWithoutAssessmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutAssessmentsInput, Prisma.AdminUncheckedCreateWithoutAssessmentsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAssessmentsInput
+  upsert?: Prisma.AdminUpsertWithoutAssessmentsInput
+  disconnect?: Prisma.AdminWhereInput | boolean
+  delete?: Prisma.AdminWhereInput | boolean
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutAssessmentsInput, Prisma.AdminUpdateWithoutAssessmentsInput>, Prisma.AdminUncheckedUpdateWithoutAssessmentsInput>
+}
+
 export type AdminCreateWithoutActivityRecordLogsInput = {
   password: string
   name: string
@@ -507,6 +535,7 @@ export type AdminCreateWithoutActivityRecordLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  assessments?: Prisma.AssessmentCreateNestedManyWithoutLastCommenterInput
 }
 
 export type AdminUncheckedCreateWithoutActivityRecordLogsInput = {
@@ -520,6 +549,7 @@ export type AdminUncheckedCreateWithoutActivityRecordLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutLastCommenterInput
 }
 
 export type AdminCreateOrConnectWithoutActivityRecordLogsInput = {
@@ -548,6 +578,7 @@ export type AdminUpdateWithoutActivityRecordLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assessments?: Prisma.AssessmentUpdateManyWithoutLastCommenterNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutActivityRecordLogsInput = {
@@ -561,6 +592,77 @@ export type AdminUncheckedUpdateWithoutActivityRecordLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutLastCommenterNestedInput
+}
+
+export type AdminCreateWithoutAssessmentsInput = {
+  password: string
+  name: string
+  email: string
+  phone?: string | null
+  role?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  activityRecordLogs?: Prisma.ActivityRecordLogCreateNestedManyWithoutAdminInput
+}
+
+export type AdminUncheckedCreateWithoutAssessmentsInput = {
+  id?: number
+  password: string
+  name: string
+  email: string
+  phone?: string | null
+  role?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  activityRecordLogs?: Prisma.ActivityRecordLogUncheckedCreateNestedManyWithoutAdminInput
+}
+
+export type AdminCreateOrConnectWithoutAssessmentsInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutAssessmentsInput, Prisma.AdminUncheckedCreateWithoutAssessmentsInput>
+}
+
+export type AdminUpsertWithoutAssessmentsInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutAssessmentsInput, Prisma.AdminUncheckedUpdateWithoutAssessmentsInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutAssessmentsInput, Prisma.AdminUncheckedCreateWithoutAssessmentsInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutAssessmentsInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutAssessmentsInput, Prisma.AdminUncheckedUpdateWithoutAssessmentsInput>
+}
+
+export type AdminUpdateWithoutAssessmentsInput = {
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activityRecordLogs?: Prisma.ActivityRecordLogUpdateManyWithoutAdminNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutAssessmentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activityRecordLogs?: Prisma.ActivityRecordLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 
@@ -570,10 +672,12 @@ export type AdminUncheckedUpdateWithoutActivityRecordLogsInput = {
 
 export type AdminCountOutputType = {
   activityRecordLogs: number
+  assessments: number
 }
 
 export type AdminCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activityRecordLogs?: boolean | AdminCountOutputTypeCountActivityRecordLogsArgs
+  assessments?: boolean | AdminCountOutputTypeCountAssessmentsArgs
 }
 
 /**
@@ -593,6 +697,13 @@ export type AdminCountOutputTypeCountActivityRecordLogsArgs<ExtArgs extends runt
   where?: Prisma.ActivityRecordLogWhereInput
 }
 
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountAssessmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssessmentWhereInput
+}
+
 
 export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -606,6 +717,7 @@ export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   updatedAt?: boolean
   deletedAt?: boolean
   activityRecordLogs?: boolean | Prisma.Admin$activityRecordLogsArgs<ExtArgs>
+  assessments?: boolean | Prisma.Admin$assessmentsArgs<ExtArgs>
   _count?: boolean | Prisma.AdminCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["admin"]>
 
@@ -627,6 +739,7 @@ export type AdminSelectScalar = {
 export type AdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "password" | "name" | "email" | "phone" | "role" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["admin"]>
 export type AdminInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activityRecordLogs?: boolean | Prisma.Admin$activityRecordLogsArgs<ExtArgs>
+  assessments?: boolean | Prisma.Admin$assessmentsArgs<ExtArgs>
   _count?: boolean | Prisma.AdminCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -634,6 +747,7 @@ export type $AdminPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Admin"
   objects: {
     activityRecordLogs: Prisma.$ActivityRecordLogPayload<ExtArgs>[]
+    assessments: Prisma.$AssessmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -987,6 +1101,7 @@ readonly fields: AdminFieldRefs;
 export interface Prisma__AdminClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   activityRecordLogs<T extends Prisma.Admin$activityRecordLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$activityRecordLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityRecordLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assessments<T extends Prisma.Admin$assessmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$assessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1390,6 +1505,30 @@ export type Admin$activityRecordLogsArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.ActivityRecordLogScalarFieldEnum | Prisma.ActivityRecordLogScalarFieldEnum[]
+}
+
+/**
+ * Admin.assessments
+ */
+export type Admin$assessmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Assessment
+   */
+  select?: Prisma.AssessmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Assessment
+   */
+  omit?: Prisma.AssessmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AssessmentInclude<ExtArgs> | null
+  where?: Prisma.AssessmentWhereInput
+  orderBy?: Prisma.AssessmentOrderByWithRelationInput | Prisma.AssessmentOrderByWithRelationInput[]
+  cursor?: Prisma.AssessmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AssessmentScalarFieldEnum | Prisma.AssessmentScalarFieldEnum[]
 }
 
 /**

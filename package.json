@@ -22,6 +22,7 @@
     "prisma:pull": "prisma db pull",
     "prisma:migrate": "prisma migrate dev",
     "prisma:push": "prisma db push",
+    "prisma:format": "prisma format",
     "prisma:format-case": "prisma-case-format -f prisma/schema.prisma"
   },
   "dependencies": {

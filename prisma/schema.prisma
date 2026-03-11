@@ -68,6 +68,7 @@ model Admin {
   updatedAt          DateTime            @default(now()) @map("updated_at") @db.Timestamp(6)
   deletedAt          DateTime?           @map("deleted_at") @db.Timestamp(6)
   activityRecordLogs ActivityRecordLog[]
+  assessments        Assessment[]
 
   @@map("admin")
 }
@@ -149,13 +150,15 @@ model Student {
 }
 
 model Assessment {
-  id        Int       @id @default(autoincrement())
-  studentId Int       @map("student_id")
-  value     String    @default("")
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
-  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
-  student   Student?  @relation(fields: [studentId], references: [id])
+  id              Int       @id @default(autoincrement())
+  studentId       Int       @map("student_id")
+  lastCommenterId Int       @map("last_commenter_id")
+  value           String    @default("")
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
+  student         Student?  @relation(fields: [studentId], references: [id])
+  lastCommenter   Admin?    @relation(fields: [lastCommenterId], references: [id])
 
   @@index([studentId])
   @@map("assessment")

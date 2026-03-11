@@ -29,16 +29,19 @@ export type AggregateAssessment = {
 export type AssessmentAvgAggregateOutputType = {
   id: number | null
   studentId: number | null
+  lastCommenterId: number | null
 }
 
 export type AssessmentSumAggregateOutputType = {
   id: number | null
   studentId: number | null
+  lastCommenterId: number | null
 }
 
 export type AssessmentMinAggregateOutputType = {
   id: number | null
   studentId: number | null
+  lastCommenterId: number | null
   value: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -48,6 +51,7 @@ export type AssessmentMinAggregateOutputType = {
 export type AssessmentMaxAggregateOutputType = {
   id: number | null
   studentId: number | null
+  lastCommenterId: number | null
   value: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -57,6 +61,7 @@ export type AssessmentMaxAggregateOutputType = {
 export type AssessmentCountAggregateOutputType = {
   id: number
   studentId: number
+  lastCommenterId: number
   value: number
   createdAt: number
   updatedAt: number
@@ -68,16 +73,19 @@ export type AssessmentCountAggregateOutputType = {
 export type AssessmentAvgAggregateInputType = {
   id?: true
   studentId?: true
+  lastCommenterId?: true
 }
 
 export type AssessmentSumAggregateInputType = {
   id?: true
   studentId?: true
+  lastCommenterId?: true
 }
 
 export type AssessmentMinAggregateInputType = {
   id?: true
   studentId?: true
+  lastCommenterId?: true
   value?: true
   createdAt?: true
   updatedAt?: true
@@ -87,6 +95,7 @@ export type AssessmentMinAggregateInputType = {
 export type AssessmentMaxAggregateInputType = {
   id?: true
   studentId?: true
+  lastCommenterId?: true
   value?: true
   createdAt?: true
   updatedAt?: true
@@ -96,6 +105,7 @@ export type AssessmentMaxAggregateInputType = {
 export type AssessmentCountAggregateInputType = {
   id?: true
   studentId?: true
+  lastCommenterId?: true
   value?: true
   createdAt?: true
   updatedAt?: true
@@ -192,6 +202,7 @@ export type AssessmentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 export type AssessmentGroupByOutputType = {
   id: number
   studentId: number
+  lastCommenterId: number
   value: string
   createdAt: Date
   updatedAt: Date
@@ -224,21 +235,25 @@ export type AssessmentWhereInput = {
   NOT?: Prisma.AssessmentWhereInput | Prisma.AssessmentWhereInput[]
   id?: Prisma.IntFilter<"Assessment"> | number
   studentId?: Prisma.IntFilter<"Assessment"> | number
+  lastCommenterId?: Prisma.IntFilter<"Assessment"> | number
   value?: Prisma.StringFilter<"Assessment"> | string
   createdAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Assessment"> | Date | string | null
   student?: Prisma.XOR<Prisma.StudentNullableScalarRelationFilter, Prisma.StudentWhereInput> | null
+  lastCommenter?: Prisma.XOR<Prisma.AdminNullableScalarRelationFilter, Prisma.AdminWhereInput> | null
 }
 
 export type AssessmentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  lastCommenterId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
+  lastCommenter?: Prisma.AdminOrderByWithRelationInput
   _relevance?: Prisma.AssessmentOrderByRelevanceInput
 }
 
@@ -248,16 +263,19 @@ export type AssessmentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.AssessmentWhereInput[]
   NOT?: Prisma.AssessmentWhereInput | Prisma.AssessmentWhereInput[]
   studentId?: Prisma.IntFilter<"Assessment"> | number
+  lastCommenterId?: Prisma.IntFilter<"Assessment"> | number
   value?: Prisma.StringFilter<"Assessment"> | string
   createdAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Assessment"> | Date | string | null
   student?: Prisma.XOR<Prisma.StudentNullableScalarRelationFilter, Prisma.StudentWhereInput> | null
+  lastCommenter?: Prisma.XOR<Prisma.AdminNullableScalarRelationFilter, Prisma.AdminWhereInput> | null
 }, "id">
 
 export type AssessmentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  lastCommenterId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -275,6 +293,7 @@ export type AssessmentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.AssessmentScalarWhereWithAggregatesInput | Prisma.AssessmentScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Assessment"> | number
   studentId?: Prisma.IntWithAggregatesFilter<"Assessment"> | number
+  lastCommenterId?: Prisma.IntWithAggregatesFilter<"Assessment"> | number
   value?: Prisma.StringWithAggregatesFilter<"Assessment"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Assessment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Assessment"> | Date | string
@@ -287,11 +306,13 @@ export type AssessmentCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   student?: Prisma.StudentCreateNestedOneWithoutAssessmentsInput
+  lastCommenter?: Prisma.AdminCreateNestedOneWithoutAssessmentsInput
 }
 
 export type AssessmentUncheckedCreateInput = {
   id?: number
   studentId: number
+  lastCommenterId: number
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -304,11 +325,13 @@ export type AssessmentUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.StudentUpdateOneWithoutAssessmentsNestedInput
+  lastCommenter?: Prisma.AdminUpdateOneWithoutAssessmentsNestedInput
 }
 
 export type AssessmentUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
+  lastCommenterId?: Prisma.IntFieldUpdateOperationsInput | number
   value?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -318,6 +341,7 @@ export type AssessmentUncheckedUpdateInput = {
 export type AssessmentCreateManyInput = {
   id?: number
   studentId: number
+  lastCommenterId: number
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -334,6 +358,7 @@ export type AssessmentUpdateManyMutationInput = {
 export type AssessmentUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
+  lastCommenterId?: Prisma.IntFieldUpdateOperationsInput | number
   value?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -359,6 +384,7 @@ export type AssessmentOrderByRelevanceInput = {
 export type AssessmentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  lastCommenterId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -368,11 +394,13 @@ export type AssessmentCountOrderByAggregateInput = {
 export type AssessmentAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  lastCommenterId?: Prisma.SortOrder
 }
 
 export type AssessmentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  lastCommenterId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -382,6 +410,7 @@ export type AssessmentMaxOrderByAggregateInput = {
 export type AssessmentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  lastCommenterId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -391,6 +420,49 @@ export type AssessmentMinOrderByAggregateInput = {
 export type AssessmentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  lastCommenterId?: Prisma.SortOrder
+}
+
+export type AssessmentCreateNestedManyWithoutLastCommenterInput = {
+  create?: Prisma.XOR<Prisma.AssessmentCreateWithoutLastCommenterInput, Prisma.AssessmentUncheckedCreateWithoutLastCommenterInput> | Prisma.AssessmentCreateWithoutLastCommenterInput[] | Prisma.AssessmentUncheckedCreateWithoutLastCommenterInput[]
+  connectOrCreate?: Prisma.AssessmentCreateOrConnectWithoutLastCommenterInput | Prisma.AssessmentCreateOrConnectWithoutLastCommenterInput[]
+  createMany?: Prisma.AssessmentCreateManyLastCommenterInputEnvelope
+  connect?: Prisma.AssessmentWhereUniqueInput | Prisma.AssessmentWhereUniqueInput[]
+}
+
+export type AssessmentUncheckedCreateNestedManyWithoutLastCommenterInput = {
+  create?: Prisma.XOR<Prisma.AssessmentCreateWithoutLastCommenterInput, Prisma.AssessmentUncheckedCreateWithoutLastCommenterInput> | Prisma.AssessmentCreateWithoutLastCommenterInput[] | Prisma.AssessmentUncheckedCreateWithoutLastCommenterInput[]
+  connectOrCreate?: Prisma.AssessmentCreateOrConnectWithoutLastCommenterInput | Prisma.AssessmentCreateOrConnectWithoutLastCommenterInput[]
+  createMany?: Prisma.AssessmentCreateManyLastCommenterInputEnvelope
+  connect?: Prisma.AssessmentWhereUniqueInput | Prisma.AssessmentWhereUniqueInput[]
+}
+
+export type AssessmentUpdateManyWithoutLastCommenterNestedInput = {
+  create?: Prisma.XOR<Prisma.AssessmentCreateWithoutLastCommenterInput, Prisma.AssessmentUncheckedCreateWithoutLastCommenterInput> | Prisma.AssessmentCreateWithoutLastCommenterInput[] | Prisma.AssessmentUncheckedCreateWithoutLastCommenterInput[]
+  connectOrCreate?: Prisma.AssessmentCreateOrConnectWithoutLastCommenterInput | Prisma.AssessmentCreateOrConnectWithoutLastCommenterInput[]
+  upsert?: Prisma.AssessmentUpsertWithWhereUniqueWithoutLastCommenterInput | Prisma.AssessmentUpsertWithWhereUniqueWithoutLastCommenterInput[]
+  createMany?: Prisma.AssessmentCreateManyLastCommenterInputEnvelope
+  set?: Prisma.AssessmentWhereUniqueInput | Prisma.AssessmentWhereUniqueInput[]
+  disconnect?: Prisma.AssessmentWhereUniqueInput | Prisma.AssessmentWhereUniqueInput[]
+  delete?: Prisma.AssessmentWhereUniqueInput | Prisma.AssessmentWhereUniqueInput[]
+  connect?: Prisma.AssessmentWhereUniqueInput | Prisma.AssessmentWhereUniqueInput[]
+  update?: Prisma.AssessmentUpdateWithWhereUniqueWithoutLastCommenterInput | Prisma.AssessmentUpdateWithWhereUniqueWithoutLastCommenterInput[]
+  updateMany?: Prisma.AssessmentUpdateManyWithWhereWithoutLastCommenterInput | Prisma.AssessmentUpdateManyWithWhereWithoutLastCommenterInput[]
+  deleteMany?: Prisma.AssessmentScalarWhereInput | Prisma.AssessmentScalarWhereInput[]
+}
+
+export type AssessmentUncheckedUpdateManyWithoutLastCommenterNestedInput = {
+  create?: Prisma.XOR<Prisma.AssessmentCreateWithoutLastCommenterInput, Prisma.AssessmentUncheckedCreateWithoutLastCommenterInput> | Prisma.AssessmentCreateWithoutLastCommenterInput[] | Prisma.AssessmentUncheckedCreateWithoutLastCommenterInput[]
+  connectOrCreate?: Prisma.AssessmentCreateOrConnectWithoutLastCommenterInput | Prisma.AssessmentCreateOrConnectWithoutLastCommenterInput[]
+  upsert?: Prisma.AssessmentUpsertWithWhereUniqueWithoutLastCommenterInput | Prisma.AssessmentUpsertWithWhereUniqueWithoutLastCommenterInput[]
+  createMany?: Prisma.AssessmentCreateManyLastCommenterInputEnvelope
+  set?: Prisma.AssessmentWhereUniqueInput | Prisma.AssessmentWhereUniqueInput[]
+  disconnect?: Prisma.AssessmentWhereUniqueInput | Prisma.AssessmentWhereUniqueInput[]
+  delete?: Prisma.AssessmentWhereUniqueInput | Prisma.AssessmentWhereUniqueInput[]
+  connect?: Prisma.AssessmentWhereUniqueInput | Prisma.AssessmentWhereUniqueInput[]
+  update?: Prisma.AssessmentUpdateWithWhereUniqueWithoutLastCommenterInput | Prisma.AssessmentUpdateWithWhereUniqueWithoutLastCommenterInput[]
+  updateMany?: Prisma.AssessmentUpdateManyWithWhereWithoutLastCommenterInput | Prisma.AssessmentUpdateManyWithWhereWithoutLastCommenterInput[]
+  deleteMany?: Prisma.AssessmentScalarWhereInput | Prisma.AssessmentScalarWhereInput[]
 }
 
 export type AssessmentCreateNestedManyWithoutStudentInput = {
@@ -435,15 +507,73 @@ export type AssessmentUncheckedUpdateManyWithoutStudentNestedInput = {
   deleteMany?: Prisma.AssessmentScalarWhereInput | Prisma.AssessmentScalarWhereInput[]
 }
 
-export type AssessmentCreateWithoutStudentInput = {
+export type AssessmentCreateWithoutLastCommenterInput = {
+  value?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  student?: Prisma.StudentCreateNestedOneWithoutAssessmentsInput
+}
+
+export type AssessmentUncheckedCreateWithoutLastCommenterInput = {
+  id?: number
+  studentId: number
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
 }
 
+export type AssessmentCreateOrConnectWithoutLastCommenterInput = {
+  where: Prisma.AssessmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AssessmentCreateWithoutLastCommenterInput, Prisma.AssessmentUncheckedCreateWithoutLastCommenterInput>
+}
+
+export type AssessmentCreateManyLastCommenterInputEnvelope = {
+  data: Prisma.AssessmentCreateManyLastCommenterInput | Prisma.AssessmentCreateManyLastCommenterInput[]
+  skipDuplicates?: boolean
+}
+
+export type AssessmentUpsertWithWhereUniqueWithoutLastCommenterInput = {
+  where: Prisma.AssessmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.AssessmentUpdateWithoutLastCommenterInput, Prisma.AssessmentUncheckedUpdateWithoutLastCommenterInput>
+  create: Prisma.XOR<Prisma.AssessmentCreateWithoutLastCommenterInput, Prisma.AssessmentUncheckedCreateWithoutLastCommenterInput>
+}
+
+export type AssessmentUpdateWithWhereUniqueWithoutLastCommenterInput = {
+  where: Prisma.AssessmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.AssessmentUpdateWithoutLastCommenterInput, Prisma.AssessmentUncheckedUpdateWithoutLastCommenterInput>
+}
+
+export type AssessmentUpdateManyWithWhereWithoutLastCommenterInput = {
+  where: Prisma.AssessmentScalarWhereInput
+  data: Prisma.XOR<Prisma.AssessmentUpdateManyMutationInput, Prisma.AssessmentUncheckedUpdateManyWithoutLastCommenterInput>
+}
+
+export type AssessmentScalarWhereInput = {
+  AND?: Prisma.AssessmentScalarWhereInput | Prisma.AssessmentScalarWhereInput[]
+  OR?: Prisma.AssessmentScalarWhereInput[]
+  NOT?: Prisma.AssessmentScalarWhereInput | Prisma.AssessmentScalarWhereInput[]
+  id?: Prisma.IntFilter<"Assessment"> | number
+  studentId?: Prisma.IntFilter<"Assessment"> | number
+  lastCommenterId?: Prisma.IntFilter<"Assessment"> | number
+  value?: Prisma.StringFilter<"Assessment"> | string
+  createdAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Assessment"> | Date | string | null
+}
+
+export type AssessmentCreateWithoutStudentInput = {
+  value?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  lastCommenter?: Prisma.AdminCreateNestedOneWithoutAssessmentsInput
+}
+
 export type AssessmentUncheckedCreateWithoutStudentInput = {
   id?: number
+  lastCommenterId: number
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -476,20 +606,44 @@ export type AssessmentUpdateManyWithWhereWithoutStudentInput = {
   data: Prisma.XOR<Prisma.AssessmentUpdateManyMutationInput, Prisma.AssessmentUncheckedUpdateManyWithoutStudentInput>
 }
 
-export type AssessmentScalarWhereInput = {
-  AND?: Prisma.AssessmentScalarWhereInput | Prisma.AssessmentScalarWhereInput[]
-  OR?: Prisma.AssessmentScalarWhereInput[]
-  NOT?: Prisma.AssessmentScalarWhereInput | Prisma.AssessmentScalarWhereInput[]
-  id?: Prisma.IntFilter<"Assessment"> | number
-  studentId?: Prisma.IntFilter<"Assessment"> | number
-  value?: Prisma.StringFilter<"Assessment"> | string
-  createdAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"Assessment"> | Date | string | null
+export type AssessmentCreateManyLastCommenterInput = {
+  id?: number
+  studentId: number
+  value?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type AssessmentUpdateWithoutLastCommenterInput = {
+  value?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  student?: Prisma.StudentUpdateOneWithoutAssessmentsNestedInput
+}
+
+export type AssessmentUncheckedUpdateWithoutLastCommenterInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  studentId?: Prisma.IntFieldUpdateOperationsInput | number
+  value?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type AssessmentUncheckedUpdateManyWithoutLastCommenterInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  studentId?: Prisma.IntFieldUpdateOperationsInput | number
+  value?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type AssessmentCreateManyStudentInput = {
   id?: number
+  lastCommenterId: number
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -501,10 +655,12 @@ export type AssessmentUpdateWithoutStudentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastCommenter?: Prisma.AdminUpdateOneWithoutAssessmentsNestedInput
 }
 
 export type AssessmentUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  lastCommenterId?: Prisma.IntFieldUpdateOperationsInput | number
   value?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -513,6 +669,7 @@ export type AssessmentUncheckedUpdateWithoutStudentInput = {
 
 export type AssessmentUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  lastCommenterId?: Prisma.IntFieldUpdateOperationsInput | number
   value?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -524,11 +681,13 @@ export type AssessmentUncheckedUpdateManyWithoutStudentInput = {
 export type AssessmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   studentId?: boolean
+  lastCommenterId?: boolean
   value?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   student?: boolean | Prisma.Assessment$studentArgs<ExtArgs>
+  lastCommenter?: boolean | Prisma.Assessment$lastCommenterArgs<ExtArgs>
 }, ExtArgs["result"]["assessment"]>
 
 
@@ -536,25 +695,29 @@ export type AssessmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type AssessmentSelectScalar = {
   id?: boolean
   studentId?: boolean
+  lastCommenterId?: boolean
   value?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type AssessmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "value" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["assessment"]>
+export type AssessmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "lastCommenterId" | "value" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["assessment"]>
 export type AssessmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.Assessment$studentArgs<ExtArgs>
+  lastCommenter?: boolean | Prisma.Assessment$lastCommenterArgs<ExtArgs>
 }
 
 export type $AssessmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Assessment"
   objects: {
     student: Prisma.$StudentPayload<ExtArgs> | null
+    lastCommenter: Prisma.$AdminPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     studentId: number
+    lastCommenterId: number
     value: string
     createdAt: Date
     updatedAt: Date
@@ -900,6 +1063,7 @@ readonly fields: AssessmentFieldRefs;
 export interface Prisma__AssessmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   student<T extends Prisma.Assessment$studentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Assessment$studentArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  lastCommenter<T extends Prisma.Assessment$lastCommenterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Assessment$lastCommenterArgs<ExtArgs>>): Prisma.Prisma__AdminClient<runtime.Types.Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -931,6 +1095,7 @@ export interface Prisma__AssessmentClient<T, Null = never, ExtArgs extends runti
 export interface AssessmentFieldRefs {
   readonly id: Prisma.FieldRef<"Assessment", 'Int'>
   readonly studentId: Prisma.FieldRef<"Assessment", 'Int'>
+  readonly lastCommenterId: Prisma.FieldRef<"Assessment", 'Int'>
   readonly value: Prisma.FieldRef<"Assessment", 'String'>
   readonly createdAt: Prisma.FieldRef<"Assessment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Assessment", 'DateTime'>
@@ -1294,6 +1459,25 @@ export type Assessment$studentArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.StudentInclude<ExtArgs> | null
   where?: Prisma.StudentWhereInput
+}
+
+/**
+ * Assessment.lastCommenter
+ */
+export type Assessment$lastCommenterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Admin
+   */
+  select?: Prisma.AdminSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Admin
+   */
+  omit?: Prisma.AdminOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminInclude<ExtArgs> | null
+  where?: Prisma.AdminWhereInput
 }
 
 /**
