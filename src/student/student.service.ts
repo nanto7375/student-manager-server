@@ -8,6 +8,7 @@ import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student
 import { StudentEvent } from './student.event';
 import { SchoolLevel } from '@src/common/constant/common.const';
 import { DateService } from '@src/common/utils/date';
+import { PaginationDto } from '@src/common/common.dto';
 
 @Injectable()
 export class StudentService {
@@ -22,6 +23,10 @@ export class StudentService {
 
   async getStudentOrThrow(id: number) {
     return await this.studentRepository.findOrThrow(id);
+  }
+
+  async getStudents({ limit, offset }: PaginationDto) {
+    return await this.studentRepository._.findMany({ take: limit, skip: offset });
   }
 
   async register({ registeredAt = this.date.now(), ...studentDto }: RegisterStudentRequestDto & { registeredAt?: Date }) {
@@ -49,7 +54,7 @@ export class StudentService {
       .setSchedule(schedule?.id)
       .create();
 
-    const savedStudent = await this.studentRepository.create(newStudent);
+    const savedStudent = await this.studentRepository._.create({ data: newStudent });
     if (schedule) this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
     return savedStudent;
   }
@@ -74,7 +79,7 @@ export class StudentService {
       })
       .edit();
 
-    return await this.studentRepository.update(studentId, updatedStudent);
+    return await this.studentRepository._.update({ where: { id: studentId }, data: updatedStudent });
   }
 
   async changeSchedule({ studentId, scheduleId }: ChangeScheduleParams) {
@@ -82,7 +87,7 @@ export class StudentService {
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     if (student.scheduleId === scheduleId) return student;
 
-    const savedStudent = await this.studentRepository.update(studentId, { schedule: { connect: { id: schedule.id } } });
+    const savedStudent = await this.studentRepository._.update({ where: { id: studentId }, data: { schedule: { connect: { id: schedule.id } } } });
     if (!student.scheduleId) {
       this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
     } else {

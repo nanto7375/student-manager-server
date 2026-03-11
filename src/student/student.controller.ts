@@ -1,19 +1,29 @@
-import { Body, Controller, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
 import { PatchStudentRequestDto, RegisterStudentRequestDto, UpdateAssessmentRequestDto } from './dto/student-request.dto';
-import { StudentAssessMentDto, StudentDto } from './dto/student-response.dto';
+import { ShortStudentDto, StudentAssessMentDto, StudentDto } from './dto/student-response.dto';
 
 import { AdminRoleType } from '@src/admin/admin.service';
 import { AdminLevel } from '@src/admin/decorator/admin-level.decorator';
 
 import { StudentService } from './student.service';
+import { PaginationRequestDto } from '@src/common/common.dto';
 
 @Controller('students')
 @ApiTags('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
+
+  @Get()
+  @ApiOperation({ summary: '학생 등록' })
+  @ApiOkResponse({ type: ShortStudentDto })
+  async getStudents(@Query() { limit, offset }: PaginationRequestDto) {
+    // 조회 쿼리스트링 더 추가
+    const students = await this.studentService.getStudents({ limit, offset });
+    return toInstance(ShortStudentDto, students);
+  }
 
   @Post()
   @ApiOperation({ summary: '학생 등록' })

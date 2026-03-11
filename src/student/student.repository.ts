@@ -4,20 +4,19 @@ import { Prisma } from '@src/generated/prisma/client';
 
 @Injectable()
 export class StudentRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly prismaStudent;
+  constructor(private readonly prisma: PrismaService) {
+    this.prismaStudent = prisma.student;
+  }
+
+  get _() {
+    return this.prismaStudent;
+  }
 
   async findOrThrow(id: number) {
     const student = await this.prisma.student.findUnique({ where: { id, deletedAt: null } });
     if (!student) throw new NotFoundException('not found student');
     return student;
-  }
-
-  async create(body: Prisma.StudentCreateInput) {
-    return await this.prisma.student.create({ data: body });
-  }
-
-  async update(id: number, data: Prisma.StudentUpdateInput) {
-    return await this.prisma.student.update({ where: { id }, data });
   }
 }
 

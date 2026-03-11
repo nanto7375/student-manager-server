@@ -54,7 +54,7 @@ export class StudentDto {
   deletedAt: Date;
 }
 
-export class StudentInActivityDto {
+export class ShortStudentDto {
   @ApiProperty({ description: '학생 id' })
   @Expose()
   id: number;
