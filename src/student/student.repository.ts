@@ -12,11 +12,29 @@ export class StudentRepository {
     return student;
   }
 
-  async create(student: Prisma.StudentCreateInput) {
-    return await this.prisma.student.create({ data: student });
+  async create(body: Prisma.StudentCreateInput) {
+    return await this.prisma.student.create({ data: body });
   }
 
   async update(id: number, data: Prisma.StudentUpdateInput) {
     return await this.prisma.student.update({ where: { id }, data });
+  }
+}
+
+@Injectable()
+export class AssessmentRepository {
+  private readonly prismaAssessment;
+  constructor(private readonly prisma: PrismaService) {
+    this.prismaAssessment = this.prisma.assessment;
+  }
+
+  get _() {
+    return this.prismaAssessment;
+  }
+
+  async findOrThrow(id: number) {
+    const assessment = await this.prismaAssessment.findUnique({ where: { id } });
+    if (!assessment) throw new NotFoundException();
+    return assessment;
   }
 }

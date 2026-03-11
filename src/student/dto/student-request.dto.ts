@@ -92,3 +92,9 @@ export class PatchStudentRequestDto {
   @Max(6)
   schoolGrade: number;
 }
+
+export class UpdateAssessmentRequestDto {
+  @ApiProperty()
+  @IsString()
+  value: string;
+}

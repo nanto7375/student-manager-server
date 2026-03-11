@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ShortAdminDto } from '@src/admin/dto/admin-response.dto';
 import { SchoolLevel } from '@src/common/constant/common.const';
 import { ScheduleDto } from '@src/schedule/dto/schedule-response.dto';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 
 export class StudentDto {
   @ApiProperty({ description: '이름' })
@@ -85,4 +86,31 @@ export class StudentInActivityDto {
   @ApiProperty({ description: '수업 시간 id' })
   @Expose()
   scheduleId: number;
+}
+
+export class StudentAssessMentDto {
+  @ApiProperty({ description: '평가 id' })
+  @Expose()
+  id: number;
+
+  @ApiProperty()
+  @Expose()
+  studentId: number;
+
+  @ApiProperty()
+  @Type(() => ShortAdminDto)
+  @Expose()
+  lastCommentor: ShortAdminDto;
+
+  @ApiProperty()
+  @Expose()
+  value: string;
+
+  @ApiProperty()
+  @Expose()
+  createdAt: Date;
+
+  @ApiProperty()
+  @Expose()
+  updatedAt: Date;
 }

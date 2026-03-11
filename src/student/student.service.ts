@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { StudentRepository } from './student.repository';
+import { AssessmentRepository, StudentRepository } from './student.repository';
 import { StudentBuilder } from './student.builder';
 import { type ScheduleResult, ScheduleService } from '@src/schedule/schedule.service';
 
@@ -16,6 +16,7 @@ export class StudentService {
     private readonly scheduleService: ScheduleService,
     private readonly studentEvent: StudentEvent,
     private readonly studentRepository: StudentRepository,
+    private readonly assessmentRepository: AssessmentRepository,
     private readonly date: DateService,
   ) {}
 
@@ -91,6 +92,20 @@ export class StudentService {
     }
     return savedStudent;
   }
+
+  async createAssessmentRecord(adminId: number) {
+    return await this.assessmentRepository._.create({ data: { lastCommenter: { connect: { id: adminId } } } });
+  }
+
+  async updateAssessment({ assessmentId, adminId, studentId, value }: UpdateAssessmentParams) {
+    const assessment = await this.assessmentRepository.findOrThrow(assessmentId);
+    if (assessment.studentId !== studentId) throw new BadRequestException(); // 필요한가
+    const updated = await this.assessmentRepository._.update({
+      where: { id: assessment.id },
+      data: { value, lastCommenter: { connect: { id: adminId } } },
+    });
+    return updated;
+  }
 }
 
 type UpdatePersonalInfoParams = {
@@ -115,4 +130,10 @@ type StudentResult = {
   scheduleId: number;
   registeredAt: Date;
   schedule: ScheduleResult;
+};
+type UpdateAssessmentParams = {
+  assessmentId: number;
+  adminId: number;
+  studentId: number;
+  value: string;
 };

@@ -31,3 +31,21 @@ export class AdminDto {
   @ApiProperty({ description: '생성일' })
   createdAt: Date;
 }
+
+export class ShortAdminDto {
+  @ApiProperty()
+  @Expose()
+  id: number;
+
+  @ApiProperty()
+  @Expose()
+  name: string;
+
+  @ApiProperty()
+  @Expose()
+  email: string;
+
+  @ApiProperty()
+  @Expose()
+  isActive: boolean;
+}

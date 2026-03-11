@@ -2,8 +2,8 @@ import { Body, Controller, Param, ParseIntPipe, Patch, Post } from '@nestjs/comm
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
-import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
-import { StudentDto } from './dto/student-response.dto';
+import { PatchStudentRequestDto, RegisterStudentRequestDto, UpdateAssessmentRequestDto } from './dto/student-request.dto';
+import { StudentAssessMentDto, StudentDto } from './dto/student-response.dto';
 
 import { AdminRoleType } from '@src/admin/admin.service';
 import { AdminLevel } from '@src/admin/decorator/admin-level.decorator';
@@ -23,11 +23,33 @@ export class StudentController {
     return toInstance(StudentDto, student);
   }
 
+  @Post(':studentId/assessments')
+  @ApiOperation({ summary: '학생 평가 레코드 생성' })
+  @ApiOkResponse({ type: StudentAssessMentDto })
+  async createAssessmentRecord() {
+    // TODO: adminId
+    const assessment = await this.studentService.createAssessmentRecord(1);
+    return toInstance(StudentAssessMentDto, assessment);
+  }
+
   @Patch(':studentId')
   @ApiOperation({ summary: '학생 정보 수정' })
   @ApiOkResponse({ type: StudentDto })
   async updatePersonalInfo(@Param('studentId', ParseIntPipe) studentId: number, @Body() patchStudentRequestDto: PatchStudentRequestDto) {
     const student = await this.studentService.updatePersonalInfo({ studentId, studentDto: patchStudentRequestDto });
     return toInstance(StudentDto, student);
+  }
+
+  @Patch(':studentId/assessments/:assessmentId')
+  @ApiOperation({ summary: '학생 평가 레코드 업데이트' })
+  @ApiOkResponse({ type: StudentAssessMentDto })
+  async updateAssessment(
+    @Param('studentId', ParseIntPipe) studentId: number, //
+    @Param('assessmentId', ParseIntPipe) assessmentId: number,
+    @Body() { value }: UpdateAssessmentRequestDto,
+  ) {
+    // TODO: adminId
+    const assessment = await this.studentService.updateAssessment({ assessmentId, adminId: 1, studentId, value });
+    return toInstance(StudentAssessMentDto, assessment);
   }
 }
