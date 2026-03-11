@@ -18,8 +18,8 @@ model ActivityRecord {
   monthlyProject     Boolean             @default(false) @map("monthly_project") /// 월간 프로젝트 참여 여부
   monthlyPreview     Boolean             @default(false) @map("monthly_preview") /// 월간 레오 개요 제출 여부
   monthlyReport      Boolean             @default(false) @map("monthly_report") /// 월간 레오 감상문 제출 여부
-  report1            Boolean             @default(false) @map("report1") /// 감상문 제출
-  report2            Boolean             @default(false) @map("report2") /// 주간 레오 제출
+  report1            Boolean             @default(false) /// 감상문 제출
+  report2            Boolean             @default(false) /// 주간 레오 제출
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt          DateTime            @default(now()) @map("updated_at") @db.Timestamp(6)
   student            Student             @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_af5423ecbecaf2606b909307ca8")
@@ -39,6 +39,7 @@ model ActivityRecordGenerationLog {
   @@map("activity_record_generation_log")
 }
 
+// TODO: 제거할지 말지 고민
 model ActivityRecordLog {
   id               Int            @id @default(autoincrement())
   activityRecordId Int            @map("activity_record_id")
@@ -83,7 +84,7 @@ model BannedIp {
 model BookRental {
   id         Int       @id @default(autoincrement())
   studentId  Int       @map("student_id")
-  bookTitle  String?    @db.VarChar(255)
+  bookTitle  String?   @db.VarChar(255)
   borrowedAt DateTime  @default(now()) @map("borrowed_at") @db.Timestamp(0)
   returnedAt DateTime? @map("returned_at") @db.Timestamp(0)
   updatedAt  DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
@@ -141,7 +142,21 @@ model Student {
   activityRecords ActivityRecord[]
   bookRentals     BookRental[]
   schedule        Schedule?        @relation(fields: [scheduleId], references: [id], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
+  assessments     Assessment[]
 
   @@index([scheduleId], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
   @@map("student")
+}
+
+model Assessment {
+  id        Int       @id @default(autoincrement())
+  studentId Int       @map("student_id")
+  value     String    @default("")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
+  student   Student?  @relation(fields: [studentId], references: [id])
+
+  @@index([studentId])
+  @@map("assessment")
 }
