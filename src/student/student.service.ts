@@ -25,8 +25,9 @@ export class StudentService {
     return await this.studentRepository.findOrThrow(id);
   }
 
-  async getStudents({ limit, offset }: PaginationDto) {
-    return await this.studentRepository._.findMany({ take: limit, skip: offset });
+  async getStudents({ name, limit, offset }: { name: string } & PaginationDto) {
+    const where = name ? { name: { contains: name } } : {};
+    return await this.studentRepository._.findMany({ where, take: limit, skip: offset, orderBy: { name: 'asc' } });
   }
 
   async register({ registeredAt = this.date.now(), ...studentDto }: RegisterStudentRequestDto & { registeredAt?: Date }) {
