@@ -25,6 +25,14 @@ export class StudentController {
     return toInstance(ShortStudentDto, students);
   }
 
+  @Get(':studentId/assessments')
+  @ApiOperation({ summary: '학생 평가 목록 조회' })
+  @ApiOkResponse({ type: StudentAssessMentDto })
+  async getAssessment(@Param('studentId', ParseIntPipe) studentId: number) {
+    const accessments = await this.studentService.getAssessments(studentId);
+    return toInstance(StudentAssessMentDto, accessments);
+  }
+
   @Post()
   @ApiOperation({ summary: '학생 등록' })
   @ApiOkResponse({ type: StudentDto })

@@ -106,11 +106,18 @@ export class StudentService {
   async updateAssessment({ assessmentId, adminId, studentId, value }: UpdateAssessmentParams) {
     const assessment = await this.assessmentRepository.findOrThrow(assessmentId);
     if (assessment.studentId !== studentId) throw new BadRequestException(); // 필요한가
+
+    // TODO: 다른 admin에 의해 수정중이면 접근 못함
+
     const updated = await this.assessmentRepository._.update({
       where: { id: assessment.id },
       data: { value, lastCommenter: { connect: { id: adminId } } },
     });
     return updated;
+  }
+
+  async getAssessments(studentId: number) {
+    return await this.assessmentRepository._.findMany({ where: { studentId } });
   }
 }
 
