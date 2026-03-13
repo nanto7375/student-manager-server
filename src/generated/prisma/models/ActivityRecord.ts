@@ -49,6 +49,7 @@ export type ActivityRecordMinAggregateOutputType = {
   report2: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  movedAt: Date | null
 }
 
 export type ActivityRecordMaxAggregateOutputType = {
@@ -64,6 +65,7 @@ export type ActivityRecordMaxAggregateOutputType = {
   report2: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  movedAt: Date | null
 }
 
 export type ActivityRecordCountAggregateOutputType = {
@@ -79,6 +81,7 @@ export type ActivityRecordCountAggregateOutputType = {
   report2: number
   createdAt: number
   updatedAt: number
+  movedAt: number
   _all: number
 }
 
@@ -106,6 +109,7 @@ export type ActivityRecordMinAggregateInputType = {
   report2?: true
   createdAt?: true
   updatedAt?: true
+  movedAt?: true
 }
 
 export type ActivityRecordMaxAggregateInputType = {
@@ -121,6 +125,7 @@ export type ActivityRecordMaxAggregateInputType = {
   report2?: true
   createdAt?: true
   updatedAt?: true
+  movedAt?: true
 }
 
 export type ActivityRecordCountAggregateInputType = {
@@ -136,6 +141,7 @@ export type ActivityRecordCountAggregateInputType = {
   report2?: true
   createdAt?: true
   updatedAt?: true
+  movedAt?: true
   _all?: true
 }
 
@@ -238,6 +244,7 @@ export type ActivityRecordGroupByOutputType = {
   report2: boolean
   createdAt: Date
   updatedAt: Date
+  movedAt: Date | null
   _count: ActivityRecordCountAggregateOutputType | null
   _avg: ActivityRecordAvgAggregateOutputType | null
   _sum: ActivityRecordSumAggregateOutputType | null
@@ -276,6 +283,7 @@ export type ActivityRecordWhereInput = {
   report2?: Prisma.BoolFilter<"ActivityRecord"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
+  movedAt?: Prisma.DateTimeNullableFilter<"ActivityRecord"> | Date | string | null
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   activityRecordLogs?: Prisma.ActivityRecordLogListRelationFilter
 }
@@ -293,6 +301,7 @@ export type ActivityRecordOrderByWithRelationInput = {
   report2?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  movedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   activityRecordLogs?: Prisma.ActivityRecordLogOrderByRelationAggregateInput
   _relevance?: Prisma.ActivityRecordOrderByRelevanceInput
@@ -314,6 +323,7 @@ export type ActivityRecordWhereUniqueInput = Prisma.AtLeast<{
   report2?: Prisma.BoolFilter<"ActivityRecord"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
+  movedAt?: Prisma.DateTimeNullableFilter<"ActivityRecord"> | Date | string | null
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   activityRecordLogs?: Prisma.ActivityRecordLogListRelationFilter
 }, "id">
@@ -331,6 +341,7 @@ export type ActivityRecordOrderByWithAggregationInput = {
   report2?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  movedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ActivityRecordCountOrderByAggregateInput
   _avg?: Prisma.ActivityRecordAvgOrderByAggregateInput
   _max?: Prisma.ActivityRecordMaxOrderByAggregateInput
@@ -354,6 +365,7 @@ export type ActivityRecordScalarWhereWithAggregatesInput = {
   report2?: Prisma.BoolWithAggregatesFilter<"ActivityRecord"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ActivityRecord"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ActivityRecord"> | Date | string
+  movedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ActivityRecord"> | Date | string | null
 }
 
 export type ActivityRecordCreateInput = {
@@ -367,6 +379,7 @@ export type ActivityRecordCreateInput = {
   report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  movedAt?: Date | string | null
   student: Prisma.StudentCreateNestedOneWithoutActivityRecordsInput
   activityRecordLogs?: Prisma.ActivityRecordLogCreateNestedManyWithoutActivityRecordInput
 }
@@ -384,6 +397,7 @@ export type ActivityRecordUncheckedCreateInput = {
   report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  movedAt?: Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogUncheckedCreateNestedManyWithoutActivityRecordInput
 }
 
@@ -398,6 +412,7 @@ export type ActivityRecordUpdateInput = {
   report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  movedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.StudentUpdateOneRequiredWithoutActivityRecordsNestedInput
   activityRecordLogs?: Prisma.ActivityRecordLogUpdateManyWithoutActivityRecordNestedInput
 }
@@ -415,6 +430,7 @@ export type ActivityRecordUncheckedUpdateInput = {
   report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  movedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogUncheckedUpdateManyWithoutActivityRecordNestedInput
 }
 
@@ -431,6 +447,7 @@ export type ActivityRecordCreateManyInput = {
   report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  movedAt?: Date | string | null
 }
 
 export type ActivityRecordUpdateManyMutationInput = {
@@ -444,6 +461,7 @@ export type ActivityRecordUpdateManyMutationInput = {
   report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  movedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ActivityRecordUncheckedUpdateManyInput = {
@@ -459,6 +477,7 @@ export type ActivityRecordUncheckedUpdateManyInput = {
   report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  movedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ActivityRecordOrderByRelevanceInput = {
@@ -480,6 +499,7 @@ export type ActivityRecordCountOrderByAggregateInput = {
   report2?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  movedAt?: Prisma.SortOrder
 }
 
 export type ActivityRecordAvgOrderByAggregateInput = {
@@ -500,6 +520,7 @@ export type ActivityRecordMaxOrderByAggregateInput = {
   report2?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  movedAt?: Prisma.SortOrder
 }
 
 export type ActivityRecordMinOrderByAggregateInput = {
@@ -515,6 +536,7 @@ export type ActivityRecordMinOrderByAggregateInput = {
   report2?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  movedAt?: Prisma.SortOrder
 }
 
 export type ActivityRecordSumOrderByAggregateInput = {
@@ -547,6 +569,10 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -624,6 +650,7 @@ export type ActivityRecordCreateWithoutActivityRecordLogsInput = {
   report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  movedAt?: Date | string | null
   student: Prisma.StudentCreateNestedOneWithoutActivityRecordsInput
 }
 
@@ -640,6 +667,7 @@ export type ActivityRecordUncheckedCreateWithoutActivityRecordLogsInput = {
   report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  movedAt?: Date | string | null
 }
 
 export type ActivityRecordCreateOrConnectWithoutActivityRecordLogsInput = {
@@ -669,6 +697,7 @@ export type ActivityRecordUpdateWithoutActivityRecordLogsInput = {
   report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  movedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.StudentUpdateOneRequiredWithoutActivityRecordsNestedInput
 }
 
@@ -685,6 +714,7 @@ export type ActivityRecordUncheckedUpdateWithoutActivityRecordLogsInput = {
   report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  movedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ActivityRecordCreateWithoutStudentInput = {
@@ -698,6 +728,7 @@ export type ActivityRecordCreateWithoutStudentInput = {
   report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  movedAt?: Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogCreateNestedManyWithoutActivityRecordInput
 }
 
@@ -713,6 +744,7 @@ export type ActivityRecordUncheckedCreateWithoutStudentInput = {
   report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  movedAt?: Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogUncheckedCreateNestedManyWithoutActivityRecordInput
 }
 
@@ -758,6 +790,7 @@ export type ActivityRecordScalarWhereInput = {
   report2?: Prisma.BoolFilter<"ActivityRecord"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ActivityRecord"> | Date | string
+  movedAt?: Prisma.DateTimeNullableFilter<"ActivityRecord"> | Date | string | null
 }
 
 export type ActivityRecordCreateManyStudentInput = {
@@ -772,6 +805,7 @@ export type ActivityRecordCreateManyStudentInput = {
   report2?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  movedAt?: Date | string | null
 }
 
 export type ActivityRecordUpdateWithoutStudentInput = {
@@ -785,6 +819,7 @@ export type ActivityRecordUpdateWithoutStudentInput = {
   report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  movedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogUpdateManyWithoutActivityRecordNestedInput
 }
 
@@ -800,6 +835,7 @@ export type ActivityRecordUncheckedUpdateWithoutStudentInput = {
   report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  movedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecordLogs?: Prisma.ActivityRecordLogUncheckedUpdateManyWithoutActivityRecordNestedInput
 }
 
@@ -815,6 +851,7 @@ export type ActivityRecordUncheckedUpdateManyWithoutStudentInput = {
   report2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  movedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -861,6 +898,7 @@ export type ActivityRecordSelect<ExtArgs extends runtime.Types.Extensions.Intern
   report2?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  movedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   activityRecordLogs?: boolean | Prisma.ActivityRecord$activityRecordLogsArgs<ExtArgs>
   _count?: boolean | Prisma.ActivityRecordCountOutputTypeDefaultArgs<ExtArgs>
@@ -881,9 +919,10 @@ export type ActivityRecordSelectScalar = {
   report2?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  movedAt?: boolean
 }
 
-export type ActivityRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "date" | "isMakeup" | "attendance" | "monthlyProject" | "monthlyPreview" | "monthlyReport" | "report1" | "report2" | "createdAt" | "updatedAt", ExtArgs["result"]["activityRecord"]>
+export type ActivityRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "date" | "isMakeup" | "attendance" | "monthlyProject" | "monthlyPreview" | "monthlyReport" | "report1" | "report2" | "createdAt" | "updatedAt" | "movedAt", ExtArgs["result"]["activityRecord"]>
 export type ActivityRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   activityRecordLogs?: boolean | Prisma.ActivityRecord$activityRecordLogsArgs<ExtArgs>
@@ -927,6 +966,7 @@ export type $ActivityRecordPayload<ExtArgs extends runtime.Types.Extensions.Inte
     report2: boolean
     createdAt: Date
     updatedAt: Date
+    movedAt: Date | null
   }, ExtArgs["result"]["activityRecord"]>
   composites: {}
 }
@@ -1310,6 +1350,7 @@ export interface ActivityRecordFieldRefs {
   readonly report2: Prisma.FieldRef<"ActivityRecord", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"ActivityRecord", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ActivityRecord", 'DateTime'>
+  readonly movedAt: Prisma.FieldRef<"ActivityRecord", 'DateTime'>
 }
     
 

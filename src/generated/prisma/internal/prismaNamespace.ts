@@ -1124,7 +1124,8 @@ export const ActivityRecordScalarFieldEnum = {
   report1: 'report1',
   report2: 'report2',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  movedAt: 'movedAt'
 } as const
 
 export type ActivityRecordScalarFieldEnum = (typeof ActivityRecordScalarFieldEnum)[keyof typeof ActivityRecordScalarFieldEnum]
@@ -1255,6 +1256,14 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const ActivityRecordOrderByRelevanceFieldEnum = {
   date: 'date'
 } as const
@@ -1275,14 +1284,6 @@ export const ActivityRecordLogOrderByRelevanceFieldEnum = {
 } as const
 
 export type ActivityRecordLogOrderByRelevanceFieldEnum = (typeof ActivityRecordLogOrderByRelevanceFieldEnum)[keyof typeof ActivityRecordLogOrderByRelevanceFieldEnum]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 export const AdminOrderByRelevanceFieldEnum = {

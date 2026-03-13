@@ -12,7 +12,7 @@ datasource db {
 model ActivityRecord {
   id                 Int                 @id @default(autoincrement())
   studentId          Int                 @map("student_id")
-  date               String              @db.Char(8)
+  date               String              @db.Char(8)  //YYYYMMDD
   isMakeup           Boolean             @default(false) @map("is_makeup")
   attendance         Boolean             @default(false) /// 출석 여부
   monthlyProject     Boolean             @default(false) @map("monthly_project") /// 월간 프로젝트 참여 여부
@@ -34,7 +34,7 @@ model ActivityRecord {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model ActivityRecordGenerationLog {
   id                         Int      @id @default(autoincrement())
-  generatedActivityYearMonth String   @map("generated_activity_year_month") @db.Char(6)
+  generatedActivityYearMonth String   @map("generated_activity_year_month") @db.Char(6) //YYYYMM
   createdAt                  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   @@map("activity_record_generation_log")

@@ -505,10 +505,6 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type AdminCreateNestedOneWithoutAssessmentsInput = {
   create?: Prisma.XOR<Prisma.AdminCreateWithoutAssessmentsInput, Prisma.AdminUncheckedCreateWithoutAssessmentsInput>
   connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAssessmentsInput
