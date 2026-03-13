@@ -22,6 +22,7 @@ model ActivityRecord {
   report2            Boolean             @default(false) /// 주간 레오 제출
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt          DateTime            @default(now()) @map("updated_at") @db.Timestamp(6)
+  movedAt            DateTime?           @map("moved_at")  @db.Timestamp(6)
   student            Student             @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_af5423ecbecaf2606b909307ca8")
   activityRecordLogs ActivityRecordLog[]
 
