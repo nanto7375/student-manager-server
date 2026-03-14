@@ -25,8 +25,12 @@ export class StudentService {
     return await this.studentRepository.findOrThrow(id);
   }
 
-  async getStudents({ name, limit, offset }: { name: string } & PaginationDto) {
-    const where = name ? { name: { contains: name } } : {};
+  async getStudents(whereQuery: { name: string; schoolLevel: number }, { limit, offset }: PaginationDto) {
+    const { name, schoolLevel } = whereQuery;
+    const where = {
+      ...(name && { name: { contains: name } }),
+      ...(schoolLevel && { schoolLevel }),
+    };
     return await this.studentRepository._.findMany({ where, take: limit, skip: offset, orderBy: { name: 'asc' } });
   }
 

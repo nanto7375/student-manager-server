@@ -19,9 +19,12 @@ export class StudentController {
   @Get()
   @ApiOperation({ summary: '학생 등록' })
   @ApiOkResponse({ type: ShortStudentDto })
-  async getStudents(@Query() { limit, offset, name }: PaginationRequestDto & { name: string }) {
+  async getStudents(@Query() { limit, offset, name, schoolLevel }: PaginationRequestDto & { name: string; schoolLevel: number }) {
     // 조회 쿼리스트링 더 추가
-    const students = await this.studentService.getStudents({ name, limit, offset });
+    const students = await this.studentService.getStudents(
+      { name, schoolLevel: +schoolLevel }, //
+      { limit: +limit, offset },
+    );
     return toInstance(ShortStudentDto, students);
   }
 
