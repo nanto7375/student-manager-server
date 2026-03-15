@@ -27,10 +27,11 @@ export class StudentService {
 
   async getStudents(whereQuery: { name: string; schoolLevel: number; dayOfWeek: number }, { limit, offset }: PaginationDto) {
     const { name, schoolLevel, dayOfWeek } = whereQuery;
+
     const where = {
       ...(name && { name: { contains: name } }),
-      ...(schoolLevel && { schoolLevel }),
-      ...(dayOfWeek && { schedule: { dayOfWeek } }),
+      ...(!Number.isNaN(schoolLevel) && { schoolLevel }),
+      ...(!Number.isNaN(dayOfWeek) && { schedule: { dayOfWeek } }),
     };
     return await this.studentRepository._.findMany({ where, take: limit, skip: offset, orderBy: { name: 'asc' } });
   }
