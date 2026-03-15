@@ -17,12 +17,12 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Get()
-  @ApiOperation({ summary: '학생 등록' })
+  @ApiOperation({ summary: '학생 목록 조회' })
   @ApiOkResponse({ type: ShortStudentDto })
-  async getStudents(@Query() { limit, offset, name, schoolLevel }: PaginationRequestDto & { name: string; schoolLevel: number }) {
+  async getStudents(@Query() { limit, offset, name, schoolLevel, dayOfWeek }: PaginationRequestDto & { name: string; schoolLevel: number; dayOfWeek: number }) {
     // 조회 쿼리스트링 더 추가
     const students = await this.studentService.getStudents(
-      { name, schoolLevel: +schoolLevel }, //
+      { name, schoolLevel: +schoolLevel, dayOfWeek: +dayOfWeek }, //
       { limit: +limit, offset },
     );
     return toInstance(ShortStudentDto, students);

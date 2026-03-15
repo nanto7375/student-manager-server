@@ -25,11 +25,12 @@ export class StudentService {
     return await this.studentRepository.findOrThrow(id);
   }
 
-  async getStudents(whereQuery: { name: string; schoolLevel: number }, { limit, offset }: PaginationDto) {
-    const { name, schoolLevel } = whereQuery;
+  async getStudents(whereQuery: { name: string; schoolLevel: number; dayOfWeek: number }, { limit, offset }: PaginationDto) {
+    const { name, schoolLevel, dayOfWeek } = whereQuery;
     const where = {
       ...(name && { name: { contains: name } }),
       ...(schoolLevel && { schoolLevel }),
+      ...(dayOfWeek && { schedule: { dayOfWeek } }),
     };
     return await this.studentRepository._.findMany({ where, take: limit, skip: offset, orderBy: { name: 'asc' } });
   }
@@ -91,6 +92,8 @@ export class StudentService {
     const student = await this.studentRepository.findOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     if (student.scheduleId === scheduleId) return student;
+
+    // TODO: 변경을 언제부터 적용할지를 클라이언트로부터 받아야 함
 
     const savedStudent = await this.studentRepository._.update({ where: { id: studentId }, data: { schedule: { connect: { id: schedule.id } } } });
     this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
