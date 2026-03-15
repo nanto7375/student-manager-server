@@ -117,7 +117,7 @@ model Schedule {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
   deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
-  dayOfWeek Int       @map("day_of_week") @db.UnsignedInt // 1: 월 ~ 7: 일
+  dayOfWeek Int       @map("day_of_week") @db.UnsignedInt // 0: 일 ~ 6: 토
   lesson    Lesson?   @relation(fields: [lessonId], references: [id], map: "FK_6c8c0c369dc1fa673c88bb6381a")
   students  Student[]
 
