@@ -21,7 +21,7 @@ model ActivityRecord {
   report1            Boolean             @default(false) /// 감상문 제출
   report2            Boolean             @default(false) /// 주간 레오 제출
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt          DateTime            @default(now()) @map("updated_at") @db.Timestamp(6)
+  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp(6)
   movedAt            DateTime?           @map("moved_at")  @db.Timestamp(6)
   student            Student             @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_af5423ecbecaf2606b909307ca8")
   activityRecordLogs ActivityRecordLog[]
@@ -66,7 +66,7 @@ model Admin {
   role               String              @default("staff") @db.VarChar(20)
   isActive           Boolean             @default(true) @map("is_active")
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt          DateTime            @default(now()) @map("updated_at") @db.Timestamp(6)
+  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp(6)
   deletedAt          DateTime?           @map("deleted_at") @db.Timestamp(6)
   activityRecordLogs ActivityRecordLog[]
   assessments        Assessment[]
@@ -89,7 +89,7 @@ model BookRental {
   bookTitle  String?   @db.VarChar(255)
   borrowedAt DateTime  @default(now()) @map("borrowed_at") @db.Timestamp(0)
   returnedAt DateTime? @map("returned_at") @db.Timestamp(0)
-  updatedAt  DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
+  updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
   student    Student   @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_book_rental_student")
 
   @@index([studentId], map: "FK_book_rental_student")
@@ -101,7 +101,7 @@ model Lesson {
   code      String     @db.Char(3)
   name      String     @db.VarChar(30)
   createdAt DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt DateTime   @default(now()) @map("updated_at") @db.Timestamp(6)
+  updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamp(6)
   deletedAt DateTime?  @map("deleted_at") @db.Timestamp(6)
   schedules Schedule[]
 
@@ -115,7 +115,7 @@ model Schedule {
   endTime   String    @map("end_time") @db.Char(4)
   lessonId  Int?      @map("lesson_id")
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
   deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
   dayOfWeek Int       @map("day_of_week") @db.UnsignedInt // 0: 일 ~ 6: 토
   lesson    Lesson?   @relation(fields: [lessonId], references: [id], map: "FK_6c8c0c369dc1fa673c88bb6381a")
@@ -139,7 +139,7 @@ model Student {
   phone           String?          @db.VarChar(20)
   parentPhone     String?          @map("parent_phone") @db.VarChar(20)
   registeredAt    DateTime?        @map("registered_at") @db.Timestamp(0)
-  updatedAt       DateTime         @default(now()) @map("updated_at") @db.Timestamp(6)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamp(6)
   deletedAt       DateTime?        @map("deleted_at") @db.Timestamp(6)
   activityRecords ActivityRecord[]
   bookRentals     BookRental[]
@@ -156,7 +156,7 @@ model Assessment {
   lastCommenterId Int       @map("last_commenter_id")
   value           String    @default("") @db.VarChar(5000)
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt       DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
   deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
   student         Student?  @relation(fields: [studentId], references: [id])
   lastCommenter   Admin?    @relation(fields: [lastCommenterId], references: [id])
