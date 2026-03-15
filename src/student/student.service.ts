@@ -107,6 +107,8 @@ export class StudentService {
   }
 
   async createAssessmentRecord({ studentId, value, adminId }: { studentId: number; value: string; adminId: number }) {
+    if (value.length > 5000) throw new BadRequestException();
+
     return await this.assessmentRepository._.create({
       data: {
         value,
@@ -130,7 +132,11 @@ export class StudentService {
   }
 
   async getAssessments(studentId: number) {
-    return await this.assessmentRepository._.findMany({ where: { studentId } });
+    return await this.assessmentRepository._.findMany({
+      where: { studentId },
+      include: { lastCommenter: true },
+      orderBy: { id: 'asc' },
+    });
   }
 }
 

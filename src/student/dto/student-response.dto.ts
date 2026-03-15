@@ -100,7 +100,7 @@ export class StudentAssessMentDto {
   @ApiProperty()
   @Type(() => ShortAdminDto)
   @Expose()
-  lastCommentor: ShortAdminDto;
+  lastCommenter: ShortAdminDto;
 
   @ApiProperty()
   @Expose()
