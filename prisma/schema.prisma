@@ -154,7 +154,7 @@ model Assessment {
   id              Int       @id @default(autoincrement())
   studentId       Int       @map("student_id")
   lastCommenterId Int       @map("last_commenter_id")
-  value           String    @default("")
+  value           String    @default("") @db.VarChar(5000)
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt       DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
   deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)

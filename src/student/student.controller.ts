@@ -28,6 +28,14 @@ export class StudentController {
     return toInstance(ShortStudentDto, students);
   }
 
+  @Get(':studentId')
+  @ApiOperation({ summary: '학생 정보 조회' })
+  @ApiOkResponse({ type: StudentDto })
+  async getStudent(@Param('studentId', ParseIntPipe) studentId: number) {
+    const student = await this.studentService.getStudentOrThrow(studentId);
+    return toInstance(StudentDto, student);
+  }
+
   @Get(':studentId/assessments')
   @ApiOperation({ summary: '학생 평가 목록 조회' })
   @ApiOkResponse({ type: StudentAssessMentDto })
@@ -47,9 +55,9 @@ export class StudentController {
   @Post(':studentId/assessments')
   @ApiOperation({ summary: '학생 평가 레코드 생성' })
   @ApiOkResponse({ type: StudentAssessMentDto })
-  async createAssessmentRecord() {
+  async createAssessmentRecord(@Body() { value }: UpdateAssessmentRequestDto, @Param('studentId', ParseIntPipe) studentId: number) {
     // TODO: adminId
-    const assessment = await this.studentService.createAssessmentRecord(1);
+    const assessment = await this.studentService.createAssessmentRecord({ studentId, value, adminId: 1 });
     return toInstance(StudentAssessMentDto, assessment);
   }
 

@@ -106,8 +106,14 @@ export class StudentService {
     return savedStudent;
   }
 
-  async createAssessmentRecord(adminId: number) {
-    return await this.assessmentRepository._.create({ data: { lastCommenter: { connect: { id: adminId } } } });
+  async createAssessmentRecord({ studentId, value, adminId }: { studentId: number; value: string; adminId: number }) {
+    return await this.assessmentRepository._.create({
+      data: {
+        value,
+        student: { connect: { id: studentId } },
+        lastCommenter: { connect: { id: adminId } },
+      },
+    });
   }
 
   async updateAssessment({ assessmentId, adminId, studentId, value }: UpdateAssessmentParams) {
