@@ -106,7 +106,7 @@ export class StudentService {
     return savedStudent;
   }
 
-  async createAssessmentRecord({ studentId, value, adminId }: { studentId: number; value: string; adminId: number }) {
+  async createAssessment({ studentId, value, adminId }: { studentId: number; value: string; adminId: number }) {
     if (value.length > 5000) throw new BadRequestException();
 
     return await this.assessmentRepository._.create({
@@ -133,10 +133,15 @@ export class StudentService {
 
   async getAssessments(studentId: number) {
     return await this.assessmentRepository._.findMany({
-      where: { studentId },
+      where: { studentId, deletedAt: null },
       include: { lastCommenter: true },
       orderBy: { id: 'asc' },
     });
+  }
+
+  async deleteAssessment(assessmentId: number) {
+    await this.assessmentRepository.findOrThrow(assessmentId);
+    return await this.assessmentRepository.softDelete(assessmentId);
   }
 }
 

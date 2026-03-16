@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { DateService } from '@src/common/utils/date';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
 import { Prisma } from '@src/generated/prisma/client';
 
@@ -23,7 +24,10 @@ export class StudentRepository {
 @Injectable()
 export class AssessmentRepository {
   private readonly prismaAssessment;
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly dateService: DateService,
+  ) {
     this.prismaAssessment = this.prisma.assessment;
   }
 
@@ -34,6 +38,12 @@ export class AssessmentRepository {
   async findOrThrow(id: number) {
     const assessment = await this.prismaAssessment.findUnique({ where: { id } });
     if (!assessment) throw new NotFoundException();
+    if (assessment.deletedAt) throw new BadRequestException();
     return assessment;
+  }
+
+  async softDelete(id: number) {
+    await this.prismaAssessment.update({ where: { id }, data: { deletedAt: this.dateService.now() } });
+    return true;
   }
 }

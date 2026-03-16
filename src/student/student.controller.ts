@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
@@ -57,7 +57,7 @@ export class StudentController {
   @ApiOkResponse({ type: StudentAssessMentDto })
   async createAssessmentRecord(@Body() { value }: UpdateAssessmentRequestDto, @Param('studentId', ParseIntPipe) studentId: number) {
     // TODO: adminId
-    const assessment = await this.studentService.createAssessmentRecord({ studentId, value, adminId: 1 });
+    const assessment = await this.studentService.createAssessment({ studentId, value, adminId: 1 });
     return toInstance(StudentAssessMentDto, assessment);
   }
 
@@ -80,5 +80,12 @@ export class StudentController {
     // TODO: adminId
     const assessment = await this.studentService.updateAssessment({ assessmentId, adminId: 1, studentId, value });
     return toInstance(StudentAssessMentDto, assessment);
+  }
+
+  @Delete(':studentId/assessments/:assessmentId')
+  @ApiOperation({ summary: '학생 평가 레코드 제거' })
+  @ApiOkResponse({ type: Boolean })
+  async deleteAssessment(@Param('studentId', ParseIntPipe) studentId: number, @Param('assessmentId', ParseIntPipe) assessmentId: number) {
+    return await this.studentService.deleteAssessment(assessmentId);
   }
 }
