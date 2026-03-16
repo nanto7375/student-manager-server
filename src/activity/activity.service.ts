@@ -31,7 +31,10 @@ export class ActivityService {
 
   async getActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
     const activityRecords: ActivityRecordWithBorrowedBook[] = await this.activityRepository.findMany({
-      where: { date, student: { scheduleId } },
+      where: {
+        date,
+        student: { scheduleId, deletedAt: null },
+      },
       include: {
         student: {
           include: {
