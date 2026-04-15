@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Request } from 'express';
+import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
@@ -10,6 +11,7 @@ import { MyBcrypt } from '@src/common/utils/bcrypt';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
 import { AdminRoleType } from '@src/admin/admin.service';
 import { createHash } from 'crypto';
+import { Admin } from '@src/generated/prisma/client';
 
 export const TOKEN_EXPIRED_ERROR = 'jwt expired';
 
@@ -49,71 +51,79 @@ export class AuthService {
     this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_TOKEN_RENEWAL_PERIOD');
   }
 
-  // get accessTokenLifetimeInSeconds() {
-  //   return this._ACCESS_TOKEN_LIFETIME_IN_SECONDS;
-  // }
+  get accessTokenLifetimeInSeconds() {
+    return this._ACCESS_TOKEN_LIFETIME_IN_SECONDS;
+  }
 
-  // get refreshTokenLifetimeInSeconds() {
-  //   return this._REFRESH_TOKEN_LIFETIME_IN_SECONDS;
-  // }
+  get refreshTokenLifetimeInSeconds() {
+    return this._REFRESH_TOKEN_LIFETIME_IN_SECONDS;
+  }
 
-  // getFingerprint(req: Request) {
-  //   const components = [
-  //     req.ip,
-  //     req.headers['user-agent'] || '', //
-  //     req.headers['sec-ch-ua'] || '',
-  //     req.headers['sec-ch-ua-mobile'] || '',
-  //     req.headers['sec-ch-ua-platform'] || '',
-  //   ];
-  //   return createHash('sha256').update(components.join(':')).digest('hex');
-  // }
+  getFingerprint(req: Request) {
+    const components = [
+      req.headers['user-agent'] || '', // 브라우저/OS 정보
+      req.headers['sec-ch-ua'] || '', // 브라우저 버전
+      req.headers['sec-ch-ua-platform'] || '', // OS
+      req.headers['sec-ch-ua-mobile'] || '', // 모바일 여부
+      req.headers['accept-language'] || '', // 언어 설정
+    ];
+    return createHash('sha256').update(components.join(':')).digest('hex');
+  }
 
-  // private _signToken({ claims, signDate, tokenType = TokenType.ACCESS }: SignTokenParams): Promise<string> {
-  //   claims.exp = signDate.getTime() / 1000 + (tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS);
+  private _signToken({ claims, signDate, tokenType = TokenType.ACCESS }: SignTokenParams): Promise<string> {
+    const secret = tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_SECRET : this._REFRESH_TOKEN_SECRET;
 
-  //   return this.jwtService.signAsync(claims, {
-  //     secret: tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_SECRET : this._REFRESH_TOKEN_SECRET,
-  //   });
-  // }
+    const now = signDate.getTime() / 1000;
+    const tokeLifeTime = tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS;
+    claims.exp = now + tokeLifeTime;
 
-  // async verifyToken({ token, fingerprint, tokenType = TokenType.ACCESS }: VerifyTokenParams): Promise<TokenPayload> {
-  //   const payload = await this.jwtService.verifyAsync(token, {
-  //     secret: tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_SECRET : this._REFRESH_TOKEN_SECRET,
-  //   });
-  //   if (payload.fingerprint !== fingerprint) throw Error('fingerprint mismatch');
-  //   return payload;
-  // }
+    return this.jwtService.signAsync(claims, { secret });
+  }
 
-  // private async _authenticate({ email, password }: AuthenticateParams) {
-  //   const admin = await this.adminService.getAdminByEmailOrThrow(email);
-  //   const isPasswordCorrect = await this.myBcrypt.compare(password, admin.password);
-  //   if (!isPasswordCorrect) throw new AuthenticationFailed();
+  async verifyToken({ token, fingerprint, tokenType = TokenType.ACCESS }: VerifyTokenParams): Promise<TokenPayload> {
+    const secret = tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_SECRET : this._REFRESH_TOKEN_SECRET;
 
-  //   return admin;
-  // }
+    try {
+      const payload = await this.jwtService.verifyAsync(token, { secret });
+      if (payload.fingerprint !== fingerprint) throw Error('invalid-fingerprint');
+      return payload;
+    } catch (error) {
+      this.logger.error(error);
+      if (error.message === TOKEN_EXPIRED_ERROR) throw new HttpException('token-expired', 401);
+      throw new UnauthorizedException();
+    }
+  }
 
-  // async signin({ email, password, ip, fingerprint, signinDate = new Date() }: SigninParams) {
-  //   const failedSigninCount = await this.failedSigninAttemptCache.get(email);
-  //   // if (failedSigninCount >= 5) throw new Forbidden('too many failed');
+  private async _authenticate({ email, password }: AuthenticateParams) {
+    const admin = await this.adminService.getAdminByEmailOrThrow(email);
+    const isPasswordCorrect = await this.myBcrypt.compare(password, admin.password);
+    if (!isPasswordCorrect) throw new UnauthorizedException();
 
-  //   let admin: Admin;
-  //   try {
-  //     admin = await this._authenticate({ email, password });
-  //   } catch (e) {
-  //     this.logger.warn({ message: e.message, ip });
-  //     await this.failedSigninAttemptCache.set(email, failedSigninCount + 1);
-  //     throw e;
-  //   }
+    return admin;
+  }
 
-  //   const claims = { adminId: admin.id, email: admin.email, role: admin.role, fingerprint };
-  //   const [accessToken, refreshToken] = await Promise.all([
-  //     this._signToken({ claims, signDate: signinDate }), //
-  //     this._signToken({ claims, signDate: signinDate, tokenType: TokenType.REFRESH }),
-  //   ]);
-  //   if (failedSigninCount > 0) await this.failedSigninAttemptCache.clear(email);
+  async signin({ email, password, ip, fingerprint, signinDate = new Date() }: SigninParams) {
+    const failedSigninCount = await this.failedSigninAttemptCache.get(email);
+    if (failedSigninCount >= 5) throw new UnauthorizedException();
 
-  //   return { admin, accessToken, refreshToken };
-  // }
+    let admin: Admin;
+    try {
+      admin = await this._authenticate({ email, password });
+    } catch (e) {
+      this.logger.warn({ message: e.message, email, ip });
+      await this.failedSigninAttemptCache.set(email, failedSigninCount + 1);
+      throw e;
+    }
+
+    const claims = { adminId: admin.id, email: admin.email, role: admin.role, fingerprint };
+    const [accessToken, refreshToken] = await Promise.all([
+      this._signToken({ claims, signDate: signinDate }), //
+      this._signToken({ claims, signDate: signinDate, tokenType: TokenType.REFRESH }),
+    ]);
+    if (failedSigninCount > 0) await this.failedSigninAttemptCache.clear(email);
+
+    return { admin, accessToken, refreshToken };
+  }
 
   // async banIp(ip: string) {
   //   const bannedIp = new BannedIp();
