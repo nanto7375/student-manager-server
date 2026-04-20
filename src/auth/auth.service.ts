@@ -157,7 +157,7 @@ export class AuthService {
     }
 
     const payload = await this.verify({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
-    const claims = { adminId: payload.adminId, email: payload.email, role: payload.role, fingerprint };
+    const claims = { adminId: payload.adminId, role: payload.role, fingerprint };
     const accessToken = await this._sign({ claims, signDate: refreshDate, tokenType: TokenType.ACCESS });
 
     if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, refreshDate)) {

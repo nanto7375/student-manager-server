@@ -8,7 +8,7 @@ import { AUTH_SKIP_KEY } from '../decorator/auth-skip.decorator';
 
 import { AdminRoleType } from '@src/admin/admin.service';
 
-export type AuthenticatedRequest = Request & { email: string; role: AdminRoleType; adminId: number };
+export type AuthenticatedRequest = Request & { adminId: number; role: AdminRoleType };
 
 @Injectable()
 export class AuthGuard implements CanActivate {
