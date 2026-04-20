@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
@@ -13,7 +13,8 @@ import { AdminRoleType } from '@src/admin/admin.service';
 import { createHash } from 'crypto';
 import { Admin } from '@src/generated/prisma/client';
 
-export const TOKEN_EXPIRED_ERROR = 'jwt expired';
+const TOKEN_EXPIRED_ERROR = 'jwt expired';
+const WRONG_PASSWORD_ERROR = 'wrong-password';
 
 export enum TokenType {
   ACCESS = 'access',
@@ -21,7 +22,7 @@ export enum TokenType {
 }
 type TokenPayload = { adminId: number; email: string; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
 type SignTokenParams = { claims: Record<string, any>; signDate: Date; tokenType?: TokenType };
-type VerifyTokenParams = { token: string; fingerprint: string; tokenType?: TokenType };
+type VerifyTokenParams = { token: string; fingerprint: string; tokenType?: TokenType; ip?: string };
 type AuthenticateParams = { email: string; password: string };
 type SigninParams = { email: string; password: string; ip: string; fingerprint: string; signinDate?: Date };
 type DiscardTokenParams = { token: string; exp: number; currentDate?: Date };
@@ -34,6 +35,7 @@ export class AuthService {
   private readonly _ACCESS_TOKEN_LIFETIME_IN_SECONDS: number;
   private readonly _REFRESH_TOKEN_LIFETIME_IN_SECONDS: number;
   private readonly _REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS: number;
+  private readonly _ALLOWED_FAILED_SIGNIN_ATTEMPTS = 20;
 
   constructor(
     private readonly logger: MyLogger,
@@ -51,7 +53,7 @@ export class AuthService {
     this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_TOKEN_RENEWAL_PERIOD');
   }
 
-  get accessTokenLifetimeInSeconds() {
+  private get accessTokenLifetimeInSeconds() {
     return this._ACCESS_TOKEN_LIFETIME_IN_SECONDS;
   }
 
@@ -70,59 +72,82 @@ export class AuthService {
     return createHash('sha256').update(components.join(':')).digest('hex');
   }
 
-  private _signToken({ claims, signDate, tokenType = TokenType.ACCESS }: SignTokenParams): Promise<string> {
-    const secret = tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_SECRET : this._REFRESH_TOKEN_SECRET;
-
-    const now = signDate.getTime() / 1000;
-    const tokeLifeTime = tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS;
-    claims.exp = now + tokeLifeTime;
-
-    return this.jwtService.signAsync(claims, { secret });
+  private _getSecret(tokenType: TokenType) {
+    return tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_SECRET : this._REFRESH_TOKEN_SECRET;
   }
 
-  async verifyToken({ token, fingerprint, tokenType = TokenType.ACCESS }: VerifyTokenParams): Promise<TokenPayload> {
-    const secret = tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_SECRET : this._REFRESH_TOKEN_SECRET;
+  private _sign({ claims, signDate, tokenType = TokenType.ACCESS }: SignTokenParams): Promise<string> {
+    const now = signDate.getTime() / 1000;
+    const tokeLifeTime =
+      tokenType === TokenType.ACCESS //
+        ? this.accessTokenLifetimeInSeconds
+        : this.refreshTokenLifetimeInSeconds;
+    claims.exp = now + tokeLifeTime;
 
+    return this.jwtService.signAsync(claims, { secret: this._getSecret(tokenType) });
+  }
+
+  async verify({ token, fingerprint, tokenType = TokenType.ACCESS, ip }: VerifyTokenParams): Promise<TokenPayload> {
     try {
-      const payload = await this.jwtService.verifyAsync(token, { secret });
+      const payload = await this.jwtService.verifyAsync(token, { secret: this._getSecret(tokenType) });
       if (payload.fingerprint !== fingerprint) throw Error('invalid-fingerprint');
       return payload;
     } catch (error) {
       this.logger.error(error);
-      if (error.message === TOKEN_EXPIRED_ERROR) throw new HttpException('token-expired', 401);
+      if (error.message === TOKEN_EXPIRED_ERROR) {
+        throw new HttpException('expired', 401);
+      }
+      // await this.authService.banIp(req.ip);
       throw new UnauthorizedException();
     }
   }
 
   private async _authenticate({ email, password }: AuthenticateParams) {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
-    const isPasswordCorrect = await this.myBcrypt.compare(password, admin.password);
-    if (!isPasswordCorrect) throw new UnauthorizedException();
+
+    let isPasswordCorrect: boolean;
+    try {
+      isPasswordCorrect = await this.myBcrypt.compare(password, admin.password);
+    } catch (e) {
+      this.logger.error({ message: 'bcrypt error', error: e.message, stack: e.stack });
+      throw new InternalServerErrorException();
+    }
+    if (!isPasswordCorrect) throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
 
     return admin;
   }
 
   async signin({ email, password, ip, fingerprint, signinDate = new Date() }: SigninParams) {
     const failedSigninCount = await this.failedSigninAttemptCache.get(email);
-    if (failedSigninCount >= 5) throw new UnauthorizedException();
+    if (failedSigninCount >= this._ALLOWED_FAILED_SIGNIN_ATTEMPTS) {
+      this.logger.warn({ message: 'too many failed signin attempts', email, ip });
+      throw new UnauthorizedException();
+    }
 
     let admin: Admin;
     try {
       admin = await this._authenticate({ email, password });
     } catch (e) {
-      this.logger.warn({ message: e.message, email, ip });
-      await this.failedSigninAttemptCache.set(email, failedSigninCount + 1);
+      if (e instanceof UnauthorizedException) {
+        await this.failedSigninAttemptCache.set(email, failedSigninCount + 1);
+      }
       throw e;
     }
 
     const claims = { adminId: admin.id, email: admin.email, role: admin.role, fingerprint };
     const [accessToken, refreshToken] = await Promise.all([
-      this._signToken({ claims, signDate: signinDate }), //
-      this._signToken({ claims, signDate: signinDate, tokenType: TokenType.REFRESH }),
+      this._sign({ claims, signDate: signinDate }), //
+      this._sign({ claims, signDate: signinDate, tokenType: TokenType.REFRESH }),
     ]);
     if (failedSigninCount > 0) await this.failedSigninAttemptCache.clear(email);
 
     return { admin, accessToken, refreshToken };
+  }
+
+  async discardToken({ token, exp, currentDate = new Date() }: DiscardTokenParams) {
+    const remainingTime = Math.max(exp * 1000 - currentDate.getTime(), 0);
+    if (remainingTime <= 0) return;
+    await this.discardedTokenCache.set(token, remainingTime);
   }
 
   // async banIp(ip: string) {
@@ -136,46 +161,41 @@ export class AuthService {
   //   return !!bannedIp;
   // }
 
-  // async discardToken({ token, exp, currentDate = new Date() }: DiscardTokenParams) {
-  //   const remainingTime = Math.max(exp * 1000 - currentDate.getTime(), 0);
-  //   if (remainingTime <= 0) return;
-  //   await this.discardedTokenCache.set(token, remainingTime);
-  // }
+  private _isWithinRefreshTokenRenewalPeriod(tokenExp: number, now: Date) {
+    const refreshTokenExpiry = new Date(tokenExp * 1000);
+    const timeDiffInSeconds = (refreshTokenExpiry.getTime() - now.getTime()) / 1000;
+    return timeDiffInSeconds <= this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS;
+  }
 
-  // private _isWithinRefreshTokenRenewalPeriod(tokenExp: number, now: Date) {
-  //   const refreshTokenExpiry = new Date(tokenExp * 1000);
-  //   const timeDiffInSeconds = (refreshTokenExpiry.getTime() - now.getTime()) / 1000;
-  //   return timeDiffInSeconds <= this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS;
-  // }
+  async refresh({ refreshToken, ip, fingerprint, refreshDate = new Date() }: RefreshParams) {
+    const discardedToken = await this.discardedTokenCache.get(refreshToken);
+    if (discardedToken) {
+      this.logger.warn({ message: 'refreshtoken has been discarded', ip });
+      // await this.banIp(ip);
+      throw new UnauthorizedException();
+    }
 
-  // async refresh({ refreshToken, ip, fingerprint, refreshDate = new Date() }: RefreshParams) {
-  //   const discardedToken = await this.discardedTokenCache.get(refreshToken);
-  //   if (discardedToken) {
-  //     this.logger.warn({ message: 'refreshtoken has been discarded', ip });
-  //     await this.banIp(ip);
-  //     throw new Forbidden();
-  //   }
+    let payload: TokenPayload;
+    try {
+      payload = await this.verify({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
+    } catch (e) {
+      if (e.message !== TOKEN_EXPIRED_ERROR) {
+        this.logger.warn({ message: e.message, ip });
+        // await this.banIp(ip);
+      }
+      throw new UnauthorizedException();
+    }
 
-  //   let payload: TokenPayload;
-  //   try {
-  //     payload = await this.verifyToken({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
-  //   } catch (e) {
-  //     if (e.message !== TOKEN_EXPIRED_ERROR) {
-  //       this.logger.warn({ message: e.message, ip });
-  //       await this.banIp(ip);
-  //     }
-  //     throw new Unauthorized();
-  //   }
+    const claims = { adminId: payload.adminId, email: payload.email, role: payload.role, fingerprint };
+    const accessToken = await this._sign({ claims, signDate: refreshDate, tokenType: TokenType.ACCESS });
 
-  //   const claims = { adminId: payload.adminId, email: payload.email, role: payload.role, fingerprint };
-  //   const accessToken = await this._signToken({ claims, signDate: refreshDate, tokenType: TokenType.ACCESS });
-  //   if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, refreshDate)) {
-  //     [refreshToken] = await Promise.all([
-  //       this._signToken({ claims, signDate: refreshDate, tokenType: TokenType.REFRESH }),
-  //       this.discardToken({ token: refreshToken, exp: payload.exp, currentDate: refreshDate }), //
-  //     ]);
-  //   }
+    if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, refreshDate)) {
+      [refreshToken] = await Promise.all([
+        this._sign({ claims, signDate: refreshDate, tokenType: TokenType.REFRESH }),
+        this.discardToken({ token: refreshToken, exp: payload.exp, currentDate: refreshDate }), //
+      ]);
+    }
 
-  //   return { accessToken, refreshToken };
-  // }
+    return { accessToken, refreshToken };
+  }
 }
