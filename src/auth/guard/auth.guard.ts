@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
     const accessToken = request.headers.authorization?.split(' ')[1];
     if (!accessToken || accessToken === 'null') throw new UnauthorizedException();
 
-    const payload = await this.authService.verify({ token: accessToken, fingerprint: this.authService.getFingerprint(request) });
+    const payload = await this.authService.verifyToken({ token: accessToken, fingerprint: this.authService.getFingerprint(request) });
     request.adminId = payload.adminId;
     request.role = payload.role;
 

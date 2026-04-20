@@ -74,7 +74,7 @@ export class AuthService {
     return tokenType === TokenType.ACCESS ? this._ACCESS_TOKEN_SECRET : this._REFRESH_TOKEN_SECRET;
   }
 
-  private _sign({ claims, signDate, tokenType = TokenType.ACCESS }: SignTokenParams): Promise<string> {
+  private _signToken({ claims, signDate, tokenType = TokenType.ACCESS }: SignTokenParams): Promise<string> {
     const now = signDate.getTime() / 1000;
     const tokeLifeTime =
       tokenType === TokenType.ACCESS //
@@ -85,7 +85,7 @@ export class AuthService {
     return this.jwtService.signAsync(claims, { secret: this._getSecret(tokenType) });
   }
 
-  async verify({ token, fingerprint, tokenType = TokenType.ACCESS }: VerifyTokenParams): Promise<TokenPayload> {
+  async verifyToken({ token, fingerprint, tokenType = TokenType.ACCESS }: VerifyTokenParams): Promise<TokenPayload> {
     try {
       const payload = await this.jwtService.verifyAsync(token, { secret: this._getSecret(tokenType) });
       if (payload.fingerprint !== fingerprint) throw new Error('invalid-fingerprint');
@@ -97,7 +97,7 @@ export class AuthService {
     }
   }
 
-  decode(token: string): TokenPayload {
+  decodeToken(token: string): TokenPayload {
     return this.jwtService.decode(token);
   }
 
@@ -129,8 +129,8 @@ export class AuthService {
 
     const claims = { adminId: admin.id, role: admin.role, fingerprint };
     const [accessToken, refreshToken] = await Promise.all([
-      this._sign({ claims, signDate: signinDate }), //
-      this._sign({ claims, signDate: signinDate, tokenType: TokenType.REFRESH }),
+      this._signToken({ claims, signDate: signinDate }), //
+      this._signToken({ claims, signDate: signinDate, tokenType: TokenType.REFRESH }),
     ]);
     if (failedSigninCount > 0) await this.failedSigninAttemptCache.clear(email);
 
@@ -156,13 +156,13 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const payload = await this.verify({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
+    const payload = await this.verifyToken({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
     const claims = { adminId: payload.adminId, role: payload.role, fingerprint };
-    const accessToken = await this._sign({ claims, signDate: refreshDate, tokenType: TokenType.ACCESS });
+    const accessToken = await this._signToken({ claims, signDate: refreshDate, tokenType: TokenType.ACCESS });
 
     if (this._isWithinRefreshTokenRenewalPeriod(payload.exp, refreshDate)) {
       [refreshToken] = await Promise.all([
-        this._sign({ claims, signDate: refreshDate, tokenType: TokenType.REFRESH }),
+        this._signToken({ claims, signDate: refreshDate, tokenType: TokenType.REFRESH }),
         this.discardToken({ token: refreshToken, exp: payload.exp, currentDate: refreshDate }), //
       ]);
     }

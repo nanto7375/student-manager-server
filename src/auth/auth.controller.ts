@@ -67,7 +67,7 @@ export class AuthController {
     const refreshToken = req.cookies['refr'];
     if (refreshToken) {
       try {
-        const payload = this.authService.decode(refreshToken);
+        const payload = this.authService.decodeToken(refreshToken);
         await this.authService.discardToken({ token: refreshToken, exp: payload.exp });
       } catch (e) {
         this.logger.warn({ message: 'Failed to discard token on signout', error: e.message, stack: e.stack });
