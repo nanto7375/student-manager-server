@@ -76,11 +76,11 @@ export class AuthService {
 
   private _signToken({ claims, signDate, tokenType = TokenType.ACCESS }: SignTokenParams): Promise<string> {
     const now = signDate.getTime() / 1000;
-    const tokeLifeTime =
+    const tokenLifeTime =
       tokenType === TokenType.ACCESS //
         ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS
         : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS;
-    claims.exp = now + tokeLifeTime;
+    claims.exp = now + tokenLifeTime;
 
     return this.jwtService.signAsync(claims, { secret: this._getSecret(tokenType) });
   }
