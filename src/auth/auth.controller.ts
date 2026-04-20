@@ -65,16 +65,15 @@ export class AuthController {
   @ApiOperation({ summary: '로그아웃' })
   async signout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies['refr'];
-    if (!refreshToken) throw new UnauthorizedException();
+    if (refreshToken) {
+      try {
+        const payload = this.authService.decode(refreshToken);
+        await this.authService.discardToken({ token: refreshToken, exp: payload.exp });
+      } catch (e) {
+        this.logger.warn({ message: 'Failed to discard token on signout', error: e.message, stack: e.stack });
+      }
+    }
 
-    const payload = await this.authService.verify({
-      token: refreshToken,
-      fingerprint: this.authService.getFingerprint(req),
-      tokenType: TokenType.REFRESH,
-      ip: req.ip,
-    });
-
-    await this.authService.discardToken({ token: refreshToken, exp: payload.exp });
     res.clearCookie('refr', { secure: true, sameSite: 'none' });
     return true;
   }

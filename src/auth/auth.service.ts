@@ -97,16 +97,14 @@ export class AuthService {
     }
   }
 
+  decode(token: string): TokenPayload {
+    return this.jwtService.decode(token);
+  }
+
   private async _authenticate({ email, password }: AuthenticateParams) {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
 
-    let isPasswordCorrect: boolean;
-    try {
-      isPasswordCorrect = await this.bcryptService.compare(password, admin.password);
-    } catch (e) {
-      this.logger.error({ message: 'bcrypt error', error: e.message, stack: e.stack });
-      throw new InternalServerErrorException();
-    }
+    const isPasswordCorrect = await this.bcryptService.compare(password, admin.password);
     if (!isPasswordCorrect) throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
 
     return admin;
