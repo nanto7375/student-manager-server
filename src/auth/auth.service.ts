@@ -13,8 +13,10 @@ import { DiscardedTokenCache } from './cache/discarded-token.cache';
 import { AdminRoleType } from '@src/admin/admin.service';
 import { Admin } from '@src/generated/prisma/client';
 
-const TOKEN_EXPIRED_ERROR = 'jwt expired';
-const WRONG_PASSWORD_ERROR = 'wrong-password';
+const ERROR_MESSAGES = {
+  tokenExpired: 'jwt expired',
+  wrongPassword: 'wrong-password',
+};
 
 enum TokenType {
   ACCESS = 'access',
@@ -91,8 +93,8 @@ export class AuthService {
       if (payload.fingerprint !== fingerprint) throw new Error('invalid-fingerprint');
       return payload;
     } catch (e) {
-      if (e.message === TOKEN_EXPIRED_ERROR) throw new HttpException('token-expired', 401);
-      this.logger.warn(e);
+      if (e.message === ERROR_MESSAGES.tokenExpired) throw new HttpException('token-expired', 401);
+      this.logger.warn({ message: 'token verification failed', error: e.message, stack: e.stack });
       throw new UnauthorizedException();
     }
   }
@@ -105,7 +107,7 @@ export class AuthService {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
 
     const isPasswordCorrect = await this.bcryptService.compare(password, admin.password);
-    if (!isPasswordCorrect) throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
+    if (!isPasswordCorrect) throw new UnauthorizedException(ERROR_MESSAGES.wrongPassword);
 
     return admin;
   }

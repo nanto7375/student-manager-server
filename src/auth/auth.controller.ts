@@ -70,11 +70,11 @@ export class AuthController {
         const payload = this.authService.decodeToken(refreshToken);
         await this.authService.discardToken({ token: refreshToken, exp: payload.exp });
       } catch (e) {
-        this.logger.warn({ message: 'Failed to discard token on signout', error: e.message, stack: e.stack });
+        this.logger.error({ message: 'Failed to discard token on signout', error: e.message, stack: e.stack });
       }
     }
 
-    res.clearCookie('refr', { secure: true, sameSite: 'none' });
+    res.clearCookie('refr', this._getTokenCookieOptions());
     return true;
   }
 
@@ -82,7 +82,7 @@ export class AuthController {
   @Throttle({ default: { limit: 10, ttl: 60 } })
   @AuthSkip()
   @ApiOperation({ summary: '토큰 갱신' })
-  @ApiOkResponse({ type: Boolean })
+  @ApiOkResponse({ type: String })
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies['refr'];
     if (!refreshToken) throw new UnauthorizedException();
