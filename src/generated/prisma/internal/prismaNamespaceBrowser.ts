@@ -55,7 +55,6 @@ export const ModelName = {
   ActivityRecordGenerationLog: 'ActivityRecordGenerationLog',
   ActivityRecordLog: 'ActivityRecordLog',
   Admin: 'Admin',
-  BannedIp: 'BannedIp',
   BookRental: 'BookRental',
   Lesson: 'Lesson',
   Schedule: 'Schedule',
@@ -133,15 +132,6 @@ export const AdminScalarFieldEnum = {
 } as const
 
 export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof AdminScalarFieldEnum]
-
-
-export const BannedIpScalarFieldEnum = {
-  id: 'id',
-  ip: 'ip',
-  createdAt: 'createdAt'
-} as const
-
-export type BannedIpScalarFieldEnum = (typeof BannedIpScalarFieldEnum)[keyof typeof BannedIpScalarFieldEnum]
 
 
 export const BookRentalScalarFieldEnum = {
@@ -262,13 +252,6 @@ export const AdminOrderByRelevanceFieldEnum = {
 } as const
 
 export type AdminOrderByRelevanceFieldEnum = (typeof AdminOrderByRelevanceFieldEnum)[keyof typeof AdminOrderByRelevanceFieldEnum]
-
-
-export const BannedIpOrderByRelevanceFieldEnum = {
-  ip: 'ip'
-} as const
-
-export type BannedIpOrderByRelevanceFieldEnum = (typeof BannedIpOrderByRelevanceFieldEnum)[keyof typeof BannedIpOrderByRelevanceFieldEnum]
 
 
 export const BookRentalOrderByRelevanceFieldEnum = {

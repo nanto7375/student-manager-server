@@ -388,7 +388,6 @@ export const ModelName = {
   ActivityRecordGenerationLog: 'ActivityRecordGenerationLog',
   ActivityRecordLog: 'ActivityRecordLog',
   Admin: 'Admin',
-  BannedIp: 'BannedIp',
   BookRental: 'BookRental',
   Lesson: 'Lesson',
   Schedule: 'Schedule',
@@ -409,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "activityRecord" | "activityRecordGenerationLog" | "activityRecordLog" | "admin" | "bannedIp" | "bookRental" | "lesson" | "schedule" | "student" | "assessment"
+    modelProps: "activityRecord" | "activityRecordGenerationLog" | "activityRecordLog" | "admin" | "bookRental" | "lesson" | "schedule" | "student" | "assessment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -674,72 +673,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AdminCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AdminCountAggregateOutputType> | number
-        }
-      }
-    }
-    BannedIp: {
-      payload: Prisma.$BannedIpPayload<ExtArgs>
-      fields: Prisma.BannedIpFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.BannedIpFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannedIpPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.BannedIpFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannedIpPayload>
-        }
-        findFirst: {
-          args: Prisma.BannedIpFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannedIpPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.BannedIpFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannedIpPayload>
-        }
-        findMany: {
-          args: Prisma.BannedIpFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannedIpPayload>[]
-        }
-        create: {
-          args: Prisma.BannedIpCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannedIpPayload>
-        }
-        createMany: {
-          args: Prisma.BannedIpCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        delete: {
-          args: Prisma.BannedIpDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannedIpPayload>
-        }
-        update: {
-          args: Prisma.BannedIpUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannedIpPayload>
-        }
-        deleteMany: {
-          args: Prisma.BannedIpDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.BannedIpUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        upsert: {
-          args: Prisma.BannedIpUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannedIpPayload>
-        }
-        aggregate: {
-          args: Prisma.BannedIpAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateBannedIp>
-        }
-        groupBy: {
-          args: Prisma.BannedIpGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.BannedIpGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.BannedIpCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.BannedIpCountAggregateOutputType> | number
         }
       }
     }
@@ -1168,15 +1101,6 @@ export const AdminScalarFieldEnum = {
 export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof AdminScalarFieldEnum]
 
 
-export const BannedIpScalarFieldEnum = {
-  id: 'id',
-  ip: 'ip',
-  createdAt: 'createdAt'
-} as const
-
-export type BannedIpScalarFieldEnum = (typeof BannedIpScalarFieldEnum)[keyof typeof BannedIpScalarFieldEnum]
-
-
 export const BookRentalScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
@@ -1295,13 +1219,6 @@ export const AdminOrderByRelevanceFieldEnum = {
 } as const
 
 export type AdminOrderByRelevanceFieldEnum = (typeof AdminOrderByRelevanceFieldEnum)[keyof typeof AdminOrderByRelevanceFieldEnum]
-
-
-export const BannedIpOrderByRelevanceFieldEnum = {
-  ip: 'ip'
-} as const
-
-export type BannedIpOrderByRelevanceFieldEnum = (typeof BannedIpOrderByRelevanceFieldEnum)[keyof typeof BannedIpOrderByRelevanceFieldEnum]
 
 
 export const BookRentalOrderByRelevanceFieldEnum = {
@@ -1486,7 +1403,6 @@ export type GlobalOmitConfig = {
   activityRecordGenerationLog?: Prisma.ActivityRecordGenerationLogOmit
   activityRecordLog?: Prisma.ActivityRecordLogOmit
   admin?: Prisma.AdminOmit
-  bannedIp?: Prisma.BannedIpOmit
   bookRental?: Prisma.BookRentalOmit
   lesson?: Prisma.LessonOmit
   schedule?: Prisma.ScheduleOmit

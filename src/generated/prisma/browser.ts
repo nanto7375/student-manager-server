@@ -38,11 +38,6 @@ export type ActivityRecordLog = Prisma.ActivityRecordLogModel
  */
 export type Admin = Prisma.AdminModel
 /**
- * Model BannedIp
- * 
- */
-export type BannedIp = Prisma.BannedIpModel
-/**
  * Model BookRental
  * This model represents book rental records for students
  */
