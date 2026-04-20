@@ -38,7 +38,7 @@ export class AuthController {
       secure: !this.isDevelopment,
       sameSite: this.isDevelopment ? 'lax' : 'none', //
       path: '/',
-      maxAge: this.authService.refreshTokenLifetimeInSeconds * 1000,
+      maxAge: this.authService.refreshTokenLifetime,
     };
   }
 
@@ -90,8 +90,8 @@ export class AuthController {
 
     const { accessToken, refreshToken: _refreshToken } = await this.authService.refresh({
       refreshToken,
-      ip: req.ip,
       fingerprint: this.authService.getFingerprint(req),
+      ip: req.ip,
     });
 
     if (refreshToken !== _refreshToken) res.cookie('refr', _refreshToken, this._getTokenCookieOptions());

@@ -20,13 +20,14 @@ export enum TokenType {
   ACCESS = 'access',
   REFRESH = 'refresh',
 }
+
 type TokenPayload = { adminId: number; email: string; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
 type SignTokenParams = { claims: Record<string, any>; signDate: Date; tokenType?: TokenType };
 type VerifyTokenParams = { token: string; fingerprint: string; tokenType?: TokenType; ip?: string };
 type AuthenticateParams = { email: string; password: string };
 type SigninParams = { email: string; password: string; ip: string; fingerprint: string; signinDate?: Date };
 type DiscardTokenParams = { token: string; exp: number; currentDate?: Date };
-type RefreshParams = { refreshToken: string; ip: string; fingerprint: string; refreshDate?: Date };
+type RefreshParams = { refreshToken: string; fingerprint: string; refreshDate?: Date; ip?: string };
 
 @Injectable()
 export class AuthService {
@@ -53,12 +54,8 @@ export class AuthService {
     this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS = this.configService.get('SM_JWT_REFRESH_TOKEN_RENEWAL_PERIOD');
   }
 
-  private get accessTokenLifetimeInSeconds() {
-    return this._ACCESS_TOKEN_LIFETIME_IN_SECONDS;
-  }
-
-  get refreshTokenLifetimeInSeconds() {
-    return this._REFRESH_TOKEN_LIFETIME_IN_SECONDS;
+  get refreshTokenLifetime() {
+    return this._REFRESH_TOKEN_LIFETIME_IN_SECONDS * 1000;
   }
 
   getFingerprint(req: Request) {
@@ -80,8 +77,8 @@ export class AuthService {
     const now = signDate.getTime() / 1000;
     const tokeLifeTime =
       tokenType === TokenType.ACCESS //
-        ? this.accessTokenLifetimeInSeconds
-        : this.refreshTokenLifetimeInSeconds;
+        ? this._ACCESS_TOKEN_LIFETIME_IN_SECONDS
+        : this._REFRESH_TOKEN_LIFETIME_IN_SECONDS;
     claims.exp = now + tokeLifeTime;
 
     return this.jwtService.signAsync(claims, { secret: this._getSecret(tokenType) });
@@ -167,7 +164,7 @@ export class AuthService {
     return timeDiffInSeconds <= this._REFRESH_TOKEN_RENEWAL_PERIOD_IN_SECONDS;
   }
 
-  async refresh({ refreshToken, ip, fingerprint, refreshDate = new Date() }: RefreshParams) {
+  async refresh({ refreshToken, fingerprint, refreshDate = new Date(), ip }: RefreshParams) {
     const discardedToken = await this.discardedTokenCache.get(refreshToken);
     if (discardedToken) {
       this.logger.warn({ message: 'refreshtoken has been discarded', ip });
