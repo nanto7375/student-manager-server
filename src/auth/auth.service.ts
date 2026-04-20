@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { HttpException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { createHash } from 'crypto';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
 
@@ -10,7 +11,6 @@ import { FailedSigninAttemptCache } from './cache/failed-signin-attempt.cache';
 import { MyBcrypt } from '@src/common/utils/bcrypt';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
 import { AdminRoleType } from '@src/admin/admin.service';
-import { createHash } from 'crypto';
 import { Admin } from '@src/generated/prisma/client';
 
 const TOKEN_EXPIRED_ERROR = 'jwt expired';
@@ -147,17 +147,6 @@ export class AuthService {
     await this.discardedTokenCache.set(token, remainingTime);
   }
 
-  // async banIp(ip: string) {
-  //   const bannedIp = new BannedIp();
-  //   bannedIp.ip = ip;
-  //   return this.bannedIpRepository.save(bannedIp);
-  // }
-
-  // async isBannedIp(ip: string) {
-  //   const bannedIp = await this.bannedIpRepository.findOne({ where: { ip } });
-  //   return !!bannedIp;
-  // }
-
   private _isWithinRefreshTokenRenewalPeriod(tokenExp: number, now: Date) {
     const refreshTokenExpiry = new Date(tokenExp * 1000);
     const timeDiffInSeconds = (refreshTokenExpiry.getTime() - now.getTime()) / 1000;
@@ -178,7 +167,6 @@ export class AuthService {
     } catch (e) {
       if (e.message !== TOKEN_EXPIRED_ERROR) {
         this.logger.warn({ message: e.message, ip });
-        // await this.banIp(ip);
       }
       throw new UnauthorizedException();
     }

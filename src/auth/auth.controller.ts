@@ -1,7 +1,8 @@
+import { CookieOptions, Request, Response } from 'express';
 import { Body, Controller, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
-import { CookieOptions, Request, Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { AuthService, TokenType } from './auth.service';
@@ -10,7 +11,6 @@ import { toInstance } from '@src/common/utils/toInstance';
 import { SigninRequestDto } from './dto/auth-request.dto';
 import { AdminDto } from '@src/admin/dto/admin-response.dto';
 import { AuthSkip } from './decorator/auth-skip.decorator';
-import { ConfigService } from '@nestjs/config';
 import { SigninResponseDto } from './dto/auth-response.dto';
 
 // TODO: auth용 throttler 따로 설정하기

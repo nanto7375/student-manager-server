@@ -74,14 +74,6 @@ model Admin {
   @@map("admin")
 }
 
-model BannedIp {
-  id        Int      @id @default(autoincrement())
-  ip        String   @unique(map: "IDX_70671f15d0b5eca41ad754d94e") @db.VarChar(255)
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-
-  @@map("banned_ip")
-}
-
 /// This model represents book rental records for students
 model BookRental {
   id         Int       @id @default(autoincrement())

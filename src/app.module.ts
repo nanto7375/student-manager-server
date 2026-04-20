@@ -17,7 +17,6 @@ import { MyCacheModule } from './configs/cache/my-cache.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { StudentModule } from './student/student.module';
 
-import { BannedIpGuard } from './auth/guard/banned-ip.guard';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { RoleGuard } from './admin/admin-role.guard';
 import { ActivityModule } from './activity/activity.module';
@@ -49,7 +48,6 @@ import { BookRentalModule } from './book-rental/book-rental.module';
   controllers: [AppController],
   providers: [
     // { provide: APP_GUARD, useClass: ThrottlerGuard },
-    // { provide: APP_GUARD, useClass: BannedIpGuard },
     // { provide: APP_GUARD, useClass: AuthGuard },
     // { provide: APP_GUARD, useClass: RoleGuard },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
