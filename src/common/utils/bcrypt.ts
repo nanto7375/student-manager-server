@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class MyBcrypt {
+export class BcryptService {
   private readonly _SALT: number;
 
   constructor(configService: ConfigService) {

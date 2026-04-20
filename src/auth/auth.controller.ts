@@ -16,8 +16,8 @@ import { SigninResponseDto } from './dto/auth-response.dto';
 // TODO: auth용 throttler 따로 설정하기
 // TODO: ip ban 처리 미들웨어로 따로 뺄까?
 @Controller('auth')
-@UseGuards(ThrottlerGuard)
 @ApiTags('auth')
+@UseGuards(ThrottlerGuard)
 export class AuthController {
   private readonly isDevelopment: boolean;
 

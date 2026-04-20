@@ -2,16 +2,16 @@ import { Request } from 'express';
 import { HttpException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { createHash } from 'crypto';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
 
 import { AdminService } from '@src/admin/admin.service';
 import { FailedSigninAttemptCache } from './cache/failed-signin-attempt.cache';
-import { MyBcrypt } from '@src/common/utils/bcrypt';
+import { BcryptService } from '@src/common/utils/bcrypt';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
 import { AdminRoleType } from '@src/admin/admin.service';
 import { Admin } from '@src/generated/prisma/client';
+import { CryptoService } from '@src/common/utils/crypto';
 
 const TOKEN_EXPIRED_ERROR = 'jwt expired';
 const WRONG_PASSWORD_ERROR = 'wrong-password';
@@ -43,7 +43,8 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly adminService: AdminService,
-    private readonly myBcrypt: MyBcrypt,
+    private readonly bcryptService: BcryptService,
+    private readonly cryptoService: CryptoService,
     private readonly failedSigninAttemptCache: FailedSigninAttemptCache,
     private readonly discardedTokenCache: DiscardedTokenCache,
   ) {
@@ -66,7 +67,7 @@ export class AuthService {
       req.headers['sec-ch-ua-mobile'] || '', // 모바일 여부
       req.headers['accept-language'] || '', // 언어 설정
     ];
-    return createHash('sha256').update(components.join(':')).digest('hex');
+    return this.cryptoService.createHash({ value: components.join(':') });
   }
 
   private _getSecret(tokenType: TokenType) {
@@ -90,11 +91,8 @@ export class AuthService {
       if (payload.fingerprint !== fingerprint) throw Error('invalid-fingerprint');
       return payload;
     } catch (error) {
-      this.logger.error(error);
-      if (error.message === TOKEN_EXPIRED_ERROR) {
-        throw new HttpException('expired', 401);
-      }
-      // await this.authService.banIp(req.ip);
+      this.logger.error({ error: error, ip });
+      if (error.message === TOKEN_EXPIRED_ERROR) throw new HttpException('expired', 401);
       throw new UnauthorizedException();
     }
   }
@@ -104,7 +102,7 @@ export class AuthService {
 
     let isPasswordCorrect: boolean;
     try {
-      isPasswordCorrect = await this.myBcrypt.compare(password, admin.password);
+      isPasswordCorrect = await this.bcryptService.compare(password, admin.password);
     } catch (e) {
       this.logger.error({ message: 'bcrypt error', error: e.message, stack: e.stack });
       throw new InternalServerErrorException();
@@ -157,7 +155,6 @@ export class AuthService {
     const discardedToken = await this.discardedTokenCache.get(refreshToken);
     if (discardedToken) {
       this.logger.warn({ message: 'refreshtoken has been discarded', ip });
-      // await this.banIp(ip);
       throw new UnauthorizedException();
     }
 

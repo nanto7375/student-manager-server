@@ -1,10 +1,11 @@
 import { Global, Module } from '@nestjs/common';
 import { DateService } from './date';
-import { MyBcrypt } from './bcrypt';
+import { BcryptService } from './bcrypt';
+import { CryptoService } from './crypto';
 
 @Global()
 @Module({
-  providers: [DateService, MyBcrypt],
-  exports: [DateService, MyBcrypt],
+  providers: [DateService, BcryptService, CryptoService],
+  exports: [DateService, BcryptService, CryptoService],
 })
 export class UtilsModule {}
