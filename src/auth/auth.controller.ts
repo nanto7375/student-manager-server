@@ -5,12 +5,13 @@ import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { AuthService, TokenType } from './auth.service';
+import { AuthService } from './auth.service';
 
 import { toInstance } from '@src/common/utils/toInstance';
+import { AuthSkip } from './decorator/auth-skip.decorator';
+
 import { SigninRequestDto } from './dto/auth-request.dto';
 import { AdminDto } from '@src/admin/dto/admin-response.dto';
-import { AuthSkip } from './decorator/auth-skip.decorator';
 import { SigninResponseDto } from './dto/auth-response.dto';
 
 // TODO: auth용 throttler 따로 설정하기
