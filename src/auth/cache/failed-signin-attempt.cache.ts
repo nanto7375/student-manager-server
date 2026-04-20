@@ -4,7 +4,7 @@ import { MyCacheService } from '@src/configs/cache/my-cache.service';
 
 @Injectable()
 export class FailedSigninAttemptCache {
-  private readonly _FAILED_ATTEMPTS_CACHE_KEY_PREFIX = 'failed_attempts';
+  private readonly _FAILED_ATTEMPTS_CACHE_KEY_PREFIX = 'failed-attempts';
   private readonly _SIGNIN_FAILED_ATTEMPTS_CLEAR_TTL: number;
 
   constructor(

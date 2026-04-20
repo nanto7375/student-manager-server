@@ -3,7 +3,7 @@ import { MyCacheService } from '@src/configs/cache/my-cache.service';
 
 @Injectable()
 export class DiscardedTokenCache {
-  private readonly _DISCARDED_TOKEN_CACHE_KEY_PREFIX = 'discarded_tokens';
+  private readonly _DISCARDED_TOKEN_CACHE_KEY_PREFIX = 'discarded-tokens';
 
   constructor(private readonly cacheService: MyCacheService<string>) {}
 
