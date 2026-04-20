@@ -1,9 +1,9 @@
 import { Reflector } from '@nestjs/core';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { AuthService, TOKEN_EXPIRED_ERROR } from '../auth.service';
+import { AuthService } from '../auth.service';
 import { AUTH_SKIP_KEY } from '../decorator/auth-skip.decorator';
 
 import { AdminRoleType } from '@src/admin/admin.service';
@@ -21,26 +21,17 @@ export class AuthGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext) {
-    // const authSkip = this.reflector.get(AUTH_SKIP_KEY, context.getHandler());
-    // if (authSkip) return true;
+    const authSkip = this.reflector.get(AUTH_SKIP_KEY, context.getHandler());
+    if (authSkip) return true;
 
-    // const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
-    // const accessToken = request.headers.authorization?.split(' ')[1];
-    // if (!accessToken || accessToken === 'null') throw new TokenNotProvided();
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const accessToken = request.headers.authorization?.split(' ')[1];
+    if (!accessToken || accessToken === 'null') throw new UnauthorizedException();
 
-    // let payload: Record<string, any>;
-    // try {
-    //   payload = await this.authService.verifyToken({ token: accessToken, fingerprint: this.authService.getFingerprint(request) });
-    // } catch (e) {
-    //   console.log(e);
-    //   if (e.message === TOKEN_EXPIRED_ERROR) throw new TokenExpired();
-    //   this.logger.warn({ message: e.message, ip: request.ip });
-    //   throw new Unauthorized();
-    // }
+    const payload = await this.authService.verify({ token: accessToken, fingerprint: this.authService.getFingerprint(request) });
+    request.adminId = payload.adminId;
+    request.role = payload.role;
 
-    // request.adminId = payload.adminId;
-    // request.email = payload.email;
-    // request.role = payload.role;
     return true;
   }
 }

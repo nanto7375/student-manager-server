@@ -21,9 +21,9 @@ enum TokenType {
   REFRESH = 'refresh',
 }
 
-type TokenPayload = { adminId: number; email: string; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
+type TokenPayload = { adminId: number; role: AdminRoleType; exp: number; fingerprint: string } & Record<string, any>;
 type SignTokenParams = { claims: Record<string, any>; signDate: Date; tokenType?: TokenType };
-type VerifyTokenParams = { token: string; fingerprint: string; tokenType?: TokenType; ip?: string };
+type VerifyTokenParams = { token: string; fingerprint: string; tokenType?: TokenType };
 type AuthenticateParams = { email: string; password: string };
 type SigninParams = { email: string; password: string; ip: string; fingerprint: string; signinDate?: Date };
 type DiscardTokenParams = { token: string; exp: number; currentDate?: Date };
@@ -85,14 +85,14 @@ export class AuthService {
     return this.jwtService.signAsync(claims, { secret: this._getSecret(tokenType) });
   }
 
-  async verify({ token, fingerprint, tokenType = TokenType.ACCESS, ip }: VerifyTokenParams): Promise<TokenPayload> {
+  async verify({ token, fingerprint, tokenType = TokenType.ACCESS }: VerifyTokenParams): Promise<TokenPayload> {
     try {
       const payload = await this.jwtService.verifyAsync(token, { secret: this._getSecret(tokenType) });
-      if (payload.fingerprint !== fingerprint) throw Error('invalid-fingerprint');
+      if (payload.fingerprint !== fingerprint) throw new Error('invalid-fingerprint');
       return payload;
-    } catch (error) {
-      this.logger.error({ error: error, ip });
-      if (error.message === TOKEN_EXPIRED_ERROR) throw new HttpException('expired', 401);
+    } catch (e) {
+      if (e.message === TOKEN_EXPIRED_ERROR) throw new HttpException('token-expired', 401);
+      this.logger.warn(e);
       throw new UnauthorizedException();
     }
   }
@@ -127,7 +127,7 @@ export class AuthService {
       throw e;
     }
 
-    const claims = { adminId: admin.id, email: admin.email, role: admin.role, fingerprint };
+    const claims = { adminId: admin.id, role: admin.role, fingerprint };
     const [accessToken, refreshToken] = await Promise.all([
       this._sign({ claims, signDate: signinDate }), //
       this._sign({ claims, signDate: signinDate, tokenType: TokenType.REFRESH }),
@@ -156,16 +156,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    let payload: TokenPayload;
-    try {
-      payload = await this.verify({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
-    } catch (e) {
-      if (e.message !== TOKEN_EXPIRED_ERROR) {
-        this.logger.warn({ message: e.message, ip });
-      }
-      throw new UnauthorizedException();
-    }
-
+    const payload = await this.verify({ token: refreshToken, fingerprint, tokenType: TokenType.REFRESH });
     const claims = { adminId: payload.adminId, email: payload.email, role: payload.role, fingerprint };
     const accessToken = await this._sign({ claims, signDate: refreshDate, tokenType: TokenType.ACCESS });
 

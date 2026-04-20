@@ -8,8 +8,9 @@ import { toInstance } from '@src/common/utils/toInstance';
 import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
 import { AdminDto } from './dto/admin-response.dto';
 import { PaginationRequestDto } from '@src/common/common.dto';
-import { AdminLevel } from './decorator/admin-level.decorator';
+import { RequireRole } from './decorator/require-role.decorator';
 import { AdminId } from './decorator/admin.decorators';
+import { Auth } from '@src/auth/decorator/auth.decorator';
 
 @Controller('admins')
 @ApiTags('admin')
@@ -17,7 +18,7 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Post()
-  @AdminLevel(AdminRoleType.ADMIN)
+  @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 생성' })
   @ApiOkResponse({ type: AdminDto })
   async createAdmin(@Body() createAdminDto: AdminCreateDto) {
@@ -25,7 +26,7 @@ export class AdminController {
   }
 
   @Put(':id')
-  @AdminLevel(AdminRoleType.ADMIN)
+  @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 수정' })
   @ApiOkResponse({ type: AdminDto })
   async updateAdmin(@Param('id', ParseIntPipe) id: number, @Body() updateAdminDto: AdminUpdateDto) {
@@ -33,7 +34,7 @@ export class AdminController {
   }
 
   @Get()
-  @AdminLevel(AdminRoleType.ADMIN)
+  @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 조회' })
   @ApiOkResponsePaginated(AdminDto)
   async getAdmins(@Query() { limit, offset }: PaginationRequestDto) {
@@ -42,6 +43,7 @@ export class AdminController {
   }
 
   @Get('me')
+  @Auth()
   @ApiOperation({ summary: '내 정보 조회' })
   @ApiOkResponse({ type: AdminDto })
   async getMe(@AdminId() id: number) {
@@ -49,7 +51,7 @@ export class AdminController {
   }
 
   @Delete(':id')
-  @AdminLevel(AdminRoleType.ADMIN)
+  @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 삭제' })
   async deleteAdmin(@Param('id', ParseIntPipe) id: number) {
     await this.adminService.removeAdmin(id);

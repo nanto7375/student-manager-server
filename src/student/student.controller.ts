@@ -6,7 +6,8 @@ import { PatchStudentRequestDto, RegisterStudentRequestDto, UpdateAssessmentRequ
 import { ShortStudentDto, StudentAssessMentDto, StudentDto } from './dto/student-response.dto';
 
 import { AdminRoleType } from '@src/admin/admin.service';
-import { AdminLevel } from '@src/admin/decorator/admin-level.decorator';
+import { RequireRole } from '@src/admin/decorator/require-role.decorator';
+import { Auth } from '@src/auth/decorator/auth.decorator';
 
 import { StudentService } from './student.service';
 import { PaginationRequestDto } from '@src/common/common.dto';
@@ -17,6 +18,7 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Get()
+  @Auth()
   @ApiOperation({ summary: '학생 목록 조회' })
   @ApiOkResponse({ type: ShortStudentDto })
   async getStudents(@Query() { limit, offset, name, schoolLevel, dayOfWeek }: PaginationRequestDto & { name: string; schoolLevel: number; dayOfWeek: number }) {
@@ -29,6 +31,7 @@ export class StudentController {
   }
 
   @Get(':studentId')
+  @Auth()
   @ApiOperation({ summary: '학생 정보 조회' })
   @ApiOkResponse({ type: StudentDto })
   async getStudent(@Param('studentId', ParseIntPipe) studentId: number) {
@@ -37,6 +40,7 @@ export class StudentController {
   }
 
   @Get(':studentId/assessments')
+  @Auth()
   @ApiOperation({ summary: '학생 평가 목록 조회' })
   @ApiOkResponse({ type: StudentAssessMentDto })
   async getAssessment(@Param('studentId', ParseIntPipe) studentId: number) {
@@ -45,6 +49,7 @@ export class StudentController {
   }
 
   @Post()
+  @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '학생 등록' })
   @ApiOkResponse({ type: StudentDto })
   async register(@Body() registerStudentRequestDto: RegisterStudentRequestDto) {
@@ -53,6 +58,7 @@ export class StudentController {
   }
 
   @Post(':studentId/assessments')
+  @Auth()
   @ApiOperation({ summary: '학생 평가 레코드 생성' })
   @ApiOkResponse({ type: StudentAssessMentDto })
   async createAssessmentRecord(@Body() { value }: UpdateAssessmentRequestDto, @Param('studentId', ParseIntPipe) studentId: number) {
@@ -62,6 +68,7 @@ export class StudentController {
   }
 
   @Patch(':studentId')
+  @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '학생 정보 수정' })
   @ApiOkResponse({ type: StudentDto })
   async updatePersonalInfo(@Param('studentId', ParseIntPipe) studentId: number, @Body() patchStudentRequestDto: PatchStudentRequestDto) {
@@ -70,6 +77,7 @@ export class StudentController {
   }
 
   @Patch(':studentId/assessments/:assessmentId')
+  @Auth()
   @ApiOperation({ summary: '학생 평가 레코드 업데이트' })
   @ApiOkResponse({ type: StudentAssessMentDto })
   async updateAssessment(
