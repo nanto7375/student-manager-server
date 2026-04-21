@@ -45,4 +45,6 @@ export class CustomThrottleGuard extends ThrottlerGuard {
     const tracker = `${request.ip}-${fingerprint}`;
     return tracker;
   }
+
+  // TODO: ban 로직 추가할지는 고민
 }
