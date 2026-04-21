@@ -19,7 +19,7 @@ import { StudentModule } from './student/student.module';
 
 import { AuthGuard } from './auth/guard/auth.guard';
 import { RoleGuard } from './admin/admin-role.guard';
-import { CustomThrottleGuard } from './common/guards/custom-throttle.guard';
+import { CustomThrottleGuard, intializeStandardThrottlers } from './common/guards/custom-throttle.guard';
 import { ActivityModule } from './activity/activity.module';
 import { AppBootstrapService } from './app-bootstrap.service';
 import { UtilsModule } from './common/utils/utils.module';
@@ -29,7 +29,7 @@ import { BookRentalModule } from './book-rental/book-rental.module';
 @Module({
   imports: [
     ConfigDynamicModule,
-    ThrottlerModule.forRoot([]),
+    ThrottlerModule.forRoot(intializeStandardThrottlers()),
     EventEmitterModule.forRoot(),
     NestScheduleModule.forRoot(),
     MyLoggerModule,

@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { MyBcrypt } from '@src/common/utils/bcrypt';
+import { BcryptService } from '@src/common/utils/bcrypt';
 import { AdminModule } from '@src/admin/admin.module';
 import { FailedSigninAttemptCache } from './cache/failed-signin-attempt.cache';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
@@ -14,7 +14,7 @@ import { DiscardedTokenCache } from './cache/discarded-token.cache';
     AdminModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, MyBcrypt, FailedSigninAttemptCache, DiscardedTokenCache],
+  providers: [AuthService, BcryptService, FailedSigninAttemptCache, DiscardedTokenCache],
   exports: [AuthService],
 })
 export class AuthModule {}

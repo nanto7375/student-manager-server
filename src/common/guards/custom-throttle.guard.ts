@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModuleOptions, ThrottlerOptions, ThrottlerStorage } from '@nestjs/throttler';
 import { Request } from 'express';
-import { AuthenticatedRequest } from '@src/auth/guard/auth.guard';
 import { AuthService } from '@src/auth/auth.service';
 
 export const throttleNames = {
@@ -10,6 +9,24 @@ export const throttleNames = {
   medium: 'medium',
   long: 'long',
 };
+
+export const intializeStandardThrottlers = (): Array<ThrottlerOptions> => [
+  {
+    name: throttleNames.short,
+    ttl: 3_000,
+    limit: 10,
+  },
+  {
+    name: throttleNames.medium,
+    ttl: 10_000,
+    limit: 30,
+  },
+  {
+    name: throttleNames.long,
+    ttl: 60_000,
+    limit: 120,
+  },
+];
 
 @Injectable()
 export class CustomThrottleGuard extends ThrottlerGuard {
@@ -22,30 +39,10 @@ export class CustomThrottleGuard extends ThrottlerGuard {
     super(options, storageService, reflector);
   }
 
-  protected throttlers: Array<ThrottlerOptions> = [
-    {
-      name: throttleNames.short,
-      ttl: 1_000,
-      limit: 3,
-    },
-    {
-      name: throttleNames.medium,
-      ttl: 10_000,
-      limit: 20,
-    },
-    {
-      name: throttleNames.long,
-      ttl: 60_000,
-      limit: 100,
-    },
-  ];
-
   protected async getTracker(req: Record<string, any>): Promise<string> {
-    const request = req as AuthenticatedRequest;
-    if (request.adminId) {
-      return `admin-${request.adminId}`;
-    }
-    const fingerprint = this.authService.getFingerprint(request as Request);
-    return `${request.ip}-${fingerprint}`;
+    const request = req as Request;
+    const fingerprint = this.authService.getFingerprint(request);
+    const tracker = `${request.ip}-${fingerprint}`;
+    return tracker;
   }
 }

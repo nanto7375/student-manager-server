@@ -13,7 +13,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       port: +configService.get('SM_MYSQL_DB_PORT'),
       user: configService.get('SM_MYSQL_DB_USER'),
       password: configService.get('SM_MYSQL_DB_PASSWORD'),
-      connectionLimit: 5,
+      connectionLimit: 20,
+      connectTimeout: 30000,
+      acquireTimeout: 30000,
     });
     super({ adapter });
   }

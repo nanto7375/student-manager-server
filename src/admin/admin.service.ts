@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { AdminCreateDto, AdminUpdateDto } from './dto/admin-request.dto';
-import { MyBcrypt } from '@src/common/utils/bcrypt';
+import { BcryptService } from '@src/common/utils/bcrypt';
 import { PaginationDto } from '@src/common/common.dto';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
 import { Prisma } from '@src/generated/prisma/client';
@@ -32,7 +32,7 @@ export const getAdminRoleLevel = (role: AdminRoleType) => {
 export class AdminService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly myBcrypt: MyBcrypt,
+    private readonly bcryptService: BcryptService,
   ) {}
 
   async registerAdmin(createAdminDto: AdminCreateDto) {
@@ -41,7 +41,7 @@ export class AdminService {
 
     const admin: Prisma.AdminCreateInput = {
       ...createAdminDto,
-      password: await this.myBcrypt.hash(createAdminDto.password),
+      password: await this.bcryptService.hash(createAdminDto.password),
     };
     return this.prisma.admin.create({ data: admin });
   }
