@@ -14,17 +14,17 @@ export const intializeStandardThrottlers = (): Array<ThrottlerOptions> => [
   {
     name: throttleNames.short,
     ttl: 3_000,
-    limit: 10,
+    limit: 20,
   },
   {
     name: throttleNames.medium,
     ttl: 10_000,
-    limit: 30,
+    limit: 50,
   },
   {
     name: throttleNames.long,
     ttl: 60_000,
-    limit: 120,
+    limit: 180,
   },
 ];
 
