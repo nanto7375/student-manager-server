@@ -1,6 +1,6 @@
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 
@@ -19,6 +19,7 @@ import { StudentModule } from './student/student.module';
 
 import { AuthGuard } from './auth/guard/auth.guard';
 import { RoleGuard } from './admin/admin-role.guard';
+import { CustomThrottleGuard } from './common/guards/custom-throttle.guard';
 import { ActivityModule } from './activity/activity.module';
 import { AppBootstrapService } from './app-bootstrap.service';
 import { UtilsModule } from './common/utils/utils.module';
@@ -28,10 +29,7 @@ import { BookRentalModule } from './book-rental/book-rental.module';
 @Module({
   imports: [
     ConfigDynamicModule,
-    ThrottlerModule.forRoot([
-      { name: 'short', ttl: 1000, limit: 10 },
-      { name: 'medium', ttl: 10000, limit: 60 },
-    ]),
+    ThrottlerModule.forRoot([]),
     EventEmitterModule.forRoot(),
     NestScheduleModule.forRoot(),
     MyLoggerModule,
@@ -47,9 +45,9 @@ import { BookRentalModule } from './book-rental/book-rental.module';
   ],
   controllers: [AppController],
   providers: [
-    // { provide: APP_GUARD, useClass: ThrottlerGuard },
-    // { provide: APP_GUARD, useClass: AuthGuard },
-    // { provide: APP_GUARD, useClass: RoleGuard },
+    { provide: APP_GUARD, useClass: CustomThrottleGuard },
+    { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: RoleGuard },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: APP_FILTER, useClass: NotFoundExceptionFilter },

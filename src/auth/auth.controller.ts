@@ -1,7 +1,6 @@
 import { CookieOptions, Request, Response } from 'express';
-import { Body, Controller, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
@@ -14,10 +13,8 @@ import { SigninRequestDto } from './dto/auth-request.dto';
 import { AdminDto } from '@src/admin/dto/admin-response.dto';
 import { SigninResponseDto } from './dto/auth-response.dto';
 
-// TODO: auth용 throttler 따로 설정하기
 @Controller('auth')
 @ApiTags('auth')
-@UseGuards(ThrottlerGuard)
 export class AuthController {
   private readonly isDevelopment: boolean;
 
@@ -43,7 +40,6 @@ export class AuthController {
   }
 
   @Post('signin')
-  @Throttle({ default: { limit: 5, ttl: 60 } })
   @AuthSkip()
   @ApiOperation({ summary: '로그인' })
   @ApiOkResponse({ type: AdminDto })
@@ -61,7 +57,6 @@ export class AuthController {
   }
 
   @Post('signout')
-  @Throttle({ default: { limit: 10, ttl: 60 } })
   @ApiOperation({ summary: '로그아웃' })
   async signout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies['refr'];
@@ -79,7 +74,6 @@ export class AuthController {
   }
 
   @Post('refresh')
-  @Throttle({ default: { limit: 10, ttl: 60 } })
   @AuthSkip()
   @ApiOperation({ summary: '토큰 갱신' })
   @ApiOkResponse({ type: String })
