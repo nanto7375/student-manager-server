@@ -12,6 +12,8 @@ import { AuthSkip } from './decorator/auth-skip.decorator';
 import { SigninRequestDto } from './dto/auth-request.dto';
 import { AdminDto } from '@src/admin/dto/admin-response.dto';
 import { SigninResponseDto } from './dto/auth-response.dto';
+import { Throttle } from '@nestjs/throttler';
+import { throttleNames } from '@src/common/guards';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -41,6 +43,11 @@ export class AuthController {
 
   @Post('signin')
   @AuthSkip()
+  @Throttle({
+    [throttleNames.short]: { ttl: 1_000, limit: 1 },
+    [throttleNames.medium]: { ttl: 10_000, limit: 5 },
+    [throttleNames.long]: { ttl: 60_000, limit: 20 },
+  })
   @ApiOperation({ summary: '로그인' })
   @ApiOkResponse({ type: AdminDto })
   async signin(@Body() body: SigninRequestDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -75,6 +82,7 @@ export class AuthController {
 
   @Post('refresh')
   @AuthSkip()
+  @Throttle({ [throttleNames.long]: { ttl: 60_000, limit: 5 } })
   @ApiOperation({ summary: '토큰 갱신' })
   @ApiOkResponse({ type: String })
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
