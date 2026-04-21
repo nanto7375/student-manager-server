@@ -9,10 +9,7 @@ import { FailedSigninAttemptCache } from './cache/failed-signin-attempt.cache';
 import { DiscardedTokenCache } from './cache/discarded-token.cache';
 
 @Module({
-  imports: [
-    JwtModule.register({}), //
-    AdminModule,
-  ],
+  imports: [JwtModule.register({}), AdminModule],
   controllers: [AuthController],
   providers: [AuthService, BcryptService, FailedSigninAttemptCache, DiscardedTokenCache],
   exports: [AuthService],
