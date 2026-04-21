@@ -67,7 +67,10 @@ export class AuthController {
   @ApiOperation({ summary: '로그아웃' })
   async signout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies['refr'];
-    if (refreshToken) {
+
+    if (!refreshToken) {
+      this.logger.warn({ message: 'No refresh token found on signout attempt', ip: req.ip });
+    } else {
       try {
         const payload = this.authService.decodeToken(refreshToken);
         await this.authService.discardToken({ token: refreshToken, exp: payload.exp });
