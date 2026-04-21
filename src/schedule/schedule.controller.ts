@@ -3,9 +3,6 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
 import { ScheduleDto } from './dto/schedule-response.dto';
-
-import { AdminRoleType } from '@src/admin/admin.service';
-
 import { ScheduleService } from './schedule.service';
 
 @Controller('schedules')
