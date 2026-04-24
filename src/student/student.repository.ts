@@ -22,28 +22,28 @@ export class StudentRepository {
 }
 
 @Injectable()
-export class AssessmentRepository {
-  private readonly prismaAssessment;
+export class NoteRepository {
+  private readonly prismaNote;
   constructor(
     private readonly prisma: PrismaService,
     private readonly dateService: DateService,
   ) {
-    this.prismaAssessment = this.prisma.assessment;
+    this.prismaNote = this.prisma.note;
   }
 
   get _() {
-    return this.prismaAssessment;
+    return this.prismaNote;
   }
 
   async findOrThrow(id: number) {
-    const assessment = await this.prismaAssessment.findUnique({ where: { id } });
-    if (!assessment) throw new NotFoundException();
-    if (assessment.deletedAt) throw new BadRequestException();
-    return assessment;
+    const note = await this.prismaNote.findUnique({ where: { id } });
+    if (!note) throw new NotFoundException();
+    if (note.deletedAt) throw new BadRequestException();
+    return note;
   }
 
   async softDelete(id: number) {
-    await this.prismaAssessment.update({ where: { id }, data: { deletedAt: this.dateService.now() } });
+    await this.prismaNote.update({ where: { id }, data: { deletedAt: this.dateService.now() } });
     return true;
   }
 }

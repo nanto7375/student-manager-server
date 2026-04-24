@@ -6,13 +6,13 @@ import { StudentBuilder } from './student.builder';
 
 import { AuthModule } from '@src/auth/auth.module';
 import { ScheduleModule } from '@src/schedule/schedule.module';
-import { AssessmentRepository, StudentRepository } from './student.repository';
+import { NoteRepository, StudentRepository } from './student.repository';
 import { StudentEvent } from './student.event';
 
 @Module({
   imports: [AuthModule, ScheduleModule],
   controllers: [StudentController],
-  providers: [StudentService, StudentBuilder, StudentRepository, AssessmentRepository, StudentEvent],
+  providers: [StudentService, StudentBuilder, StudentRepository, NoteRepository, StudentEvent],
   exports: [StudentService],
 })
 export class StudentModule {}

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { AssessmentRepository, StudentRepository } from './student.repository';
+import { NoteRepository, StudentRepository } from './student.repository';
 import { StudentBuilder } from './student.builder';
 import { type ScheduleResult, ScheduleService } from '@src/schedule/schedule.service';
 
@@ -17,7 +17,7 @@ export class StudentService {
     private readonly scheduleService: ScheduleService,
     private readonly studentEvent: StudentEvent,
     private readonly studentRepository: StudentRepository,
-    private readonly assessmentRepository: AssessmentRepository,
+    private readonly noteRepository: NoteRepository,
     private readonly date: DateService,
   ) {}
 
@@ -109,9 +109,10 @@ export class StudentService {
   async createAssessment({ studentId, value, adminId }: { studentId: number; value: string; adminId: number }) {
     if (value.length > 5000) throw new BadRequestException();
 
-    return await this.assessmentRepository._.create({
+    return await this.noteRepository._.create({
       data: {
         value,
+        type: 'assessment',
         student: { connect: { id: studentId } },
         lastCommenter: { connect: { id: adminId } },
       },
@@ -119,12 +120,12 @@ export class StudentService {
   }
 
   async updateAssessment({ assessmentId, adminId, studentId, value }: UpdateAssessmentParams) {
-    const assessment = await this.assessmentRepository.findOrThrow(assessmentId);
+    const assessment = await this.noteRepository.findOrThrow(assessmentId);
     if (assessment.studentId !== studentId) throw new BadRequestException(); // 필요한가
 
     // TODO: 다른 admin에 의해 수정중이면 접근 못함
 
-    const updated = await this.assessmentRepository._.update({
+    const updated = await this.noteRepository._.update({
       where: { id: assessment.id },
       data: { value, lastCommenter: { connect: { id: adminId } } },
     });
@@ -132,7 +133,7 @@ export class StudentService {
   }
 
   async getAssessments(studentId: number) {
-    return await this.assessmentRepository._.findMany({
+    return await this.noteRepository._.findMany({
       where: { studentId, deletedAt: null },
       include: { lastCommenter: true },
       orderBy: { id: 'asc' },
@@ -140,8 +141,8 @@ export class StudentService {
   }
 
   async deleteAssessment(assessmentId: number) {
-    await this.assessmentRepository.findOrThrow(assessmentId);
-    return await this.assessmentRepository.softDelete(assessmentId);
+    await this.noteRepository.findOrThrow(assessmentId);
+    return await this.noteRepository.softDelete(assessmentId);
   }
 }
 
