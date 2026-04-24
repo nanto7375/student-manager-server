@@ -69,7 +69,7 @@ model Admin {
   updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp(6)
   deletedAt          DateTime?           @map("deleted_at") @db.Timestamp(6)
   activityRecordLogs ActivityRecordLog[]
-  assessments        Assessment[]
+  notes        Note[]
 
   @@map("admin")
 }
@@ -136,16 +136,17 @@ model Student {
   activityRecords ActivityRecord[]
   bookRentals     BookRental[]
   schedule        Schedule?        @relation(fields: [scheduleId], references: [id], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
-  assessments     Assessment[]
+  notes     Note[]
 
   @@index([scheduleId], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
   @@map("student")
 }
 
-model Assessment {
+model Note {
   id              Int       @id @default(autoincrement())
   studentId       Int       @map("student_id")
   lastCommenterId Int       @map("last_commenter_id")
+  type            String    @db.VarChar(50) // assessment, parent-counsel, fixed-memo, temporary-memo
   value           String    @default("") @db.VarChar(5000)
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
@@ -154,5 +155,5 @@ model Assessment {
   lastCommenter   Admin?    @relation(fields: [lastCommenterId], references: [id])
 
   @@index([studentId])
-  @@map("assessment")
+  @@map("note")
 }

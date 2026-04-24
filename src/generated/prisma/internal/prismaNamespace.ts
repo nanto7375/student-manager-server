@@ -392,7 +392,7 @@ export const ModelName = {
   Lesson: 'Lesson',
   Schedule: 'Schedule',
   Student: 'Student',
-  Assessment: 'Assessment'
+  Note: 'Note'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "activityRecord" | "activityRecordGenerationLog" | "activityRecordLog" | "admin" | "bookRental" | "lesson" | "schedule" | "student" | "assessment"
+    modelProps: "activityRecord" | "activityRecordGenerationLog" | "activityRecordLog" | "admin" | "bookRental" | "lesson" | "schedule" | "student" | "note"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -940,69 +940,69 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Assessment: {
-      payload: Prisma.$AssessmentPayload<ExtArgs>
-      fields: Prisma.AssessmentFieldRefs
+    Note: {
+      payload: Prisma.$NotePayload<ExtArgs>
+      fields: Prisma.NoteFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.AssessmentFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload> | null
+          args: Prisma.NoteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.AssessmentFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+          args: Prisma.NoteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
         }
         findFirst: {
-          args: Prisma.AssessmentFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload> | null
+          args: Prisma.NoteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.AssessmentFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+          args: Prisma.NoteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
         }
         findMany: {
-          args: Prisma.AssessmentFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>[]
+          args: Prisma.NoteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>[]
         }
         create: {
-          args: Prisma.AssessmentCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+          args: Prisma.NoteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
         }
         createMany: {
-          args: Prisma.AssessmentCreateManyArgs<ExtArgs>
+          args: Prisma.NoteCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         delete: {
-          args: Prisma.AssessmentDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+          args: Prisma.NoteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
         }
         update: {
-          args: Prisma.AssessmentUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+          args: Prisma.NoteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
         }
         deleteMany: {
-          args: Prisma.AssessmentDeleteManyArgs<ExtArgs>
+          args: Prisma.NoteDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.AssessmentUpdateManyArgs<ExtArgs>
+          args: Prisma.NoteUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         upsert: {
-          args: Prisma.AssessmentUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+          args: Prisma.NoteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotePayload>
         }
         aggregate: {
-          args: Prisma.AssessmentAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAssessment>
+          args: Prisma.NoteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNote>
         }
         groupBy: {
-          args: Prisma.AssessmentGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AssessmentGroupByOutputType>[]
+          args: Prisma.NoteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NoteGroupByOutputType>[]
         }
         count: {
-          args: Prisma.AssessmentCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AssessmentCountAggregateOutputType> | number
+          args: Prisma.NoteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NoteCountAggregateOutputType> | number
         }
       }
     }
@@ -1159,17 +1159,18 @@ export const StudentScalarFieldEnum = {
 export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
 
 
-export const AssessmentScalarFieldEnum = {
+export const NoteScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   lastCommenterId: 'lastCommenterId',
+  type: 'type',
   value: 'value',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
 } as const
 
-export type AssessmentScalarFieldEnum = (typeof AssessmentScalarFieldEnum)[keyof typeof AssessmentScalarFieldEnum]
+export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1257,11 +1258,12 @@ export const StudentOrderByRelevanceFieldEnum = {
 export type StudentOrderByRelevanceFieldEnum = (typeof StudentOrderByRelevanceFieldEnum)[keyof typeof StudentOrderByRelevanceFieldEnum]
 
 
-export const AssessmentOrderByRelevanceFieldEnum = {
+export const NoteOrderByRelevanceFieldEnum = {
+  type: 'type',
   value: 'value'
 } as const
 
-export type AssessmentOrderByRelevanceFieldEnum = (typeof AssessmentOrderByRelevanceFieldEnum)[keyof typeof AssessmentOrderByRelevanceFieldEnum]
+export type NoteOrderByRelevanceFieldEnum = (typeof NoteOrderByRelevanceFieldEnum)[keyof typeof NoteOrderByRelevanceFieldEnum]
 
 
 
@@ -1407,7 +1409,7 @@ export type GlobalOmitConfig = {
   lesson?: Prisma.LessonOmit
   schedule?: Prisma.ScheduleOmit
   student?: Prisma.StudentOmit
-  assessment?: Prisma.AssessmentOmit
+  note?: Prisma.NoteOmit
 }
 
 /* Types for Logging */

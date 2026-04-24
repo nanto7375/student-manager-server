@@ -58,7 +58,7 @@ export type Schedule = Prisma.ScheduleModel
  */
 export type Student = Prisma.StudentModel
 /**
- * Model Assessment
+ * Model Note
  * 
  */
-export type Assessment = Prisma.AssessmentModel
+export type Note = Prisma.NoteModel

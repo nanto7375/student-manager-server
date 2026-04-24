@@ -303,7 +303,7 @@ export type StudentWhereInput = {
   activityRecords?: Prisma.ActivityRecordListRelationFilter
   bookRentals?: Prisma.BookRentalListRelationFilter
   schedule?: Prisma.XOR<Prisma.ScheduleNullableScalarRelationFilter, Prisma.ScheduleWhereInput> | null
-  assessments?: Prisma.AssessmentListRelationFilter
+  notes?: Prisma.NoteListRelationFilter
 }
 
 export type StudentOrderByWithRelationInput = {
@@ -324,7 +324,7 @@ export type StudentOrderByWithRelationInput = {
   activityRecords?: Prisma.ActivityRecordOrderByRelationAggregateInput
   bookRentals?: Prisma.BookRentalOrderByRelationAggregateInput
   schedule?: Prisma.ScheduleOrderByWithRelationInput
-  assessments?: Prisma.AssessmentOrderByRelationAggregateInput
+  notes?: Prisma.NoteOrderByRelationAggregateInput
   _relevance?: Prisma.StudentOrderByRelevanceInput
 }
 
@@ -349,7 +349,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   activityRecords?: Prisma.ActivityRecordListRelationFilter
   bookRentals?: Prisma.BookRentalListRelationFilter
   schedule?: Prisma.XOR<Prisma.ScheduleNullableScalarRelationFilter, Prisma.ScheduleWhereInput> | null
-  assessments?: Prisma.AssessmentListRelationFilter
+  notes?: Prisma.NoteListRelationFilter
 }, "id">
 
 export type StudentOrderByWithAggregationInput = {
@@ -410,7 +410,7 @@ export type StudentCreateInput = {
   activityRecords?: Prisma.ActivityRecordCreateNestedManyWithoutStudentInput
   bookRentals?: Prisma.BookRentalCreateNestedManyWithoutStudentInput
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudentsInput
-  assessments?: Prisma.AssessmentCreateNestedManyWithoutStudentInput
+  notes?: Prisma.NoteCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateInput = {
@@ -430,7 +430,7 @@ export type StudentUncheckedCreateInput = {
   deletedAt?: Date | string | null
   activityRecords?: Prisma.ActivityRecordUncheckedCreateNestedManyWithoutStudentInput
   bookRentals?: Prisma.BookRentalUncheckedCreateNestedManyWithoutStudentInput
-  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutStudentInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUpdateInput = {
@@ -449,7 +449,7 @@ export type StudentUpdateInput = {
   activityRecords?: Prisma.ActivityRecordUpdateManyWithoutStudentNestedInput
   bookRentals?: Prisma.BookRentalUpdateManyWithoutStudentNestedInput
   schedule?: Prisma.ScheduleUpdateOneWithoutStudentsNestedInput
-  assessments?: Prisma.AssessmentUpdateManyWithoutStudentNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateInput = {
@@ -469,7 +469,7 @@ export type StudentUncheckedUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecords?: Prisma.ActivityRecordUncheckedUpdateManyWithoutStudentNestedInput
   bookRentals?: Prisma.BookRentalUncheckedUpdateManyWithoutStudentNestedInput
-  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutStudentNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateManyInput = {
@@ -682,20 +682,20 @@ export type StudentUncheckedUpdateManyWithoutScheduleNestedInput = {
   deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
 }
 
-export type StudentCreateNestedOneWithoutAssessmentsInput = {
-  create?: Prisma.XOR<Prisma.StudentCreateWithoutAssessmentsInput, Prisma.StudentUncheckedCreateWithoutAssessmentsInput>
-  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutAssessmentsInput
+export type StudentCreateNestedOneWithoutNotesInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutNotesInput, Prisma.StudentUncheckedCreateWithoutNotesInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutNotesInput
   connect?: Prisma.StudentWhereUniqueInput
 }
 
-export type StudentUpdateOneWithoutAssessmentsNestedInput = {
-  create?: Prisma.XOR<Prisma.StudentCreateWithoutAssessmentsInput, Prisma.StudentUncheckedCreateWithoutAssessmentsInput>
-  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutAssessmentsInput
-  upsert?: Prisma.StudentUpsertWithoutAssessmentsInput
+export type StudentUpdateOneWithoutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutNotesInput, Prisma.StudentUncheckedCreateWithoutNotesInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutNotesInput
+  upsert?: Prisma.StudentUpsertWithoutNotesInput
   disconnect?: Prisma.StudentWhereInput | boolean
   delete?: Prisma.StudentWhereInput | boolean
   connect?: Prisma.StudentWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutAssessmentsInput, Prisma.StudentUpdateWithoutAssessmentsInput>, Prisma.StudentUncheckedUpdateWithoutAssessmentsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutNotesInput, Prisma.StudentUpdateWithoutNotesInput>, Prisma.StudentUncheckedUpdateWithoutNotesInput>
 }
 
 export type StudentCreateWithoutActivityRecordsInput = {
@@ -713,7 +713,7 @@ export type StudentCreateWithoutActivityRecordsInput = {
   deletedAt?: Date | string | null
   bookRentals?: Prisma.BookRentalCreateNestedManyWithoutStudentInput
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudentsInput
-  assessments?: Prisma.AssessmentCreateNestedManyWithoutStudentInput
+  notes?: Prisma.NoteCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutActivityRecordsInput = {
@@ -732,7 +732,7 @@ export type StudentUncheckedCreateWithoutActivityRecordsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   bookRentals?: Prisma.BookRentalUncheckedCreateNestedManyWithoutStudentInput
-  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutStudentInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutActivityRecordsInput = {
@@ -766,7 +766,7 @@ export type StudentUpdateWithoutActivityRecordsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookRentals?: Prisma.BookRentalUpdateManyWithoutStudentNestedInput
   schedule?: Prisma.ScheduleUpdateOneWithoutStudentsNestedInput
-  assessments?: Prisma.AssessmentUpdateManyWithoutStudentNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutActivityRecordsInput = {
@@ -785,7 +785,7 @@ export type StudentUncheckedUpdateWithoutActivityRecordsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookRentals?: Prisma.BookRentalUncheckedUpdateManyWithoutStudentNestedInput
-  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutStudentNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutBookRentalsInput = {
@@ -803,7 +803,7 @@ export type StudentCreateWithoutBookRentalsInput = {
   deletedAt?: Date | string | null
   activityRecords?: Prisma.ActivityRecordCreateNestedManyWithoutStudentInput
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudentsInput
-  assessments?: Prisma.AssessmentCreateNestedManyWithoutStudentInput
+  notes?: Prisma.NoteCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutBookRentalsInput = {
@@ -822,7 +822,7 @@ export type StudentUncheckedCreateWithoutBookRentalsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   activityRecords?: Prisma.ActivityRecordUncheckedCreateNestedManyWithoutStudentInput
-  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutStudentInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutBookRentalsInput = {
@@ -856,7 +856,7 @@ export type StudentUpdateWithoutBookRentalsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecords?: Prisma.ActivityRecordUpdateManyWithoutStudentNestedInput
   schedule?: Prisma.ScheduleUpdateOneWithoutStudentsNestedInput
-  assessments?: Prisma.AssessmentUpdateManyWithoutStudentNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutBookRentalsInput = {
@@ -875,7 +875,7 @@ export type StudentUncheckedUpdateWithoutBookRentalsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecords?: Prisma.ActivityRecordUncheckedUpdateManyWithoutStudentNestedInput
-  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutStudentNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutScheduleInput = {
@@ -893,7 +893,7 @@ export type StudentCreateWithoutScheduleInput = {
   deletedAt?: Date | string | null
   activityRecords?: Prisma.ActivityRecordCreateNestedManyWithoutStudentInput
   bookRentals?: Prisma.BookRentalCreateNestedManyWithoutStudentInput
-  assessments?: Prisma.AssessmentCreateNestedManyWithoutStudentInput
+  notes?: Prisma.NoteCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutScheduleInput = {
@@ -912,7 +912,7 @@ export type StudentUncheckedCreateWithoutScheduleInput = {
   deletedAt?: Date | string | null
   activityRecords?: Prisma.ActivityRecordUncheckedCreateNestedManyWithoutStudentInput
   bookRentals?: Prisma.BookRentalUncheckedCreateNestedManyWithoutStudentInput
-  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutStudentInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutScheduleInput = {
@@ -961,7 +961,7 @@ export type StudentScalarWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
 }
 
-export type StudentCreateWithoutAssessmentsInput = {
+export type StudentCreateWithoutNotesInput = {
   name: string
   birthYear?: string | null
   birthDate?: string | null
@@ -979,7 +979,7 @@ export type StudentCreateWithoutAssessmentsInput = {
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudentsInput
 }
 
-export type StudentUncheckedCreateWithoutAssessmentsInput = {
+export type StudentUncheckedCreateWithoutNotesInput = {
   id?: number
   name: string
   birthYear?: string | null
@@ -998,23 +998,23 @@ export type StudentUncheckedCreateWithoutAssessmentsInput = {
   bookRentals?: Prisma.BookRentalUncheckedCreateNestedManyWithoutStudentInput
 }
 
-export type StudentCreateOrConnectWithoutAssessmentsInput = {
+export type StudentCreateOrConnectWithoutNotesInput = {
   where: Prisma.StudentWhereUniqueInput
-  create: Prisma.XOR<Prisma.StudentCreateWithoutAssessmentsInput, Prisma.StudentUncheckedCreateWithoutAssessmentsInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutNotesInput, Prisma.StudentUncheckedCreateWithoutNotesInput>
 }
 
-export type StudentUpsertWithoutAssessmentsInput = {
-  update: Prisma.XOR<Prisma.StudentUpdateWithoutAssessmentsInput, Prisma.StudentUncheckedUpdateWithoutAssessmentsInput>
-  create: Prisma.XOR<Prisma.StudentCreateWithoutAssessmentsInput, Prisma.StudentUncheckedCreateWithoutAssessmentsInput>
+export type StudentUpsertWithoutNotesInput = {
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutNotesInput, Prisma.StudentUncheckedUpdateWithoutNotesInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutNotesInput, Prisma.StudentUncheckedCreateWithoutNotesInput>
   where?: Prisma.StudentWhereInput
 }
 
-export type StudentUpdateToOneWithWhereWithoutAssessmentsInput = {
+export type StudentUpdateToOneWithWhereWithoutNotesInput = {
   where?: Prisma.StudentWhereInput
-  data: Prisma.XOR<Prisma.StudentUpdateWithoutAssessmentsInput, Prisma.StudentUncheckedUpdateWithoutAssessmentsInput>
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutNotesInput, Prisma.StudentUncheckedUpdateWithoutNotesInput>
 }
 
-export type StudentUpdateWithoutAssessmentsInput = {
+export type StudentUpdateWithoutNotesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1032,7 +1032,7 @@ export type StudentUpdateWithoutAssessmentsInput = {
   schedule?: Prisma.ScheduleUpdateOneWithoutStudentsNestedInput
 }
 
-export type StudentUncheckedUpdateWithoutAssessmentsInput = {
+export type StudentUncheckedUpdateWithoutNotesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1082,7 +1082,7 @@ export type StudentUpdateWithoutScheduleInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecords?: Prisma.ActivityRecordUpdateManyWithoutStudentNestedInput
   bookRentals?: Prisma.BookRentalUpdateManyWithoutStudentNestedInput
-  assessments?: Prisma.AssessmentUpdateManyWithoutStudentNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutScheduleInput = {
@@ -1101,7 +1101,7 @@ export type StudentUncheckedUpdateWithoutScheduleInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecords?: Prisma.ActivityRecordUncheckedUpdateManyWithoutStudentNestedInput
   bookRentals?: Prisma.BookRentalUncheckedUpdateManyWithoutStudentNestedInput
-  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutStudentNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutScheduleInput = {
@@ -1128,13 +1128,13 @@ export type StudentUncheckedUpdateManyWithoutScheduleInput = {
 export type StudentCountOutputType = {
   activityRecords: number
   bookRentals: number
-  assessments: number
+  notes: number
 }
 
 export type StudentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activityRecords?: boolean | StudentCountOutputTypeCountActivityRecordsArgs
   bookRentals?: boolean | StudentCountOutputTypeCountBookRentalsArgs
-  assessments?: boolean | StudentCountOutputTypeCountAssessmentsArgs
+  notes?: boolean | StudentCountOutputTypeCountNotesArgs
 }
 
 /**
@@ -1164,8 +1164,8 @@ export type StudentCountOutputTypeCountBookRentalsArgs<ExtArgs extends runtime.T
 /**
  * StudentCountOutputType without action
  */
-export type StudentCountOutputTypeCountAssessmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AssessmentWhereInput
+export type StudentCountOutputTypeCountNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteWhereInput
 }
 
 
@@ -1187,7 +1187,7 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   activityRecords?: boolean | Prisma.Student$activityRecordsArgs<ExtArgs>
   bookRentals?: boolean | Prisma.Student$bookRentalsArgs<ExtArgs>
   schedule?: boolean | Prisma.Student$scheduleArgs<ExtArgs>
-  assessments?: boolean | Prisma.Student$assessmentsArgs<ExtArgs>
+  notes?: boolean | Prisma.Student$notesArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
@@ -1215,7 +1215,7 @@ export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   activityRecords?: boolean | Prisma.Student$activityRecordsArgs<ExtArgs>
   bookRentals?: boolean | Prisma.Student$bookRentalsArgs<ExtArgs>
   schedule?: boolean | Prisma.Student$scheduleArgs<ExtArgs>
-  assessments?: boolean | Prisma.Student$assessmentsArgs<ExtArgs>
+  notes?: boolean | Prisma.Student$notesArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1225,7 +1225,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     activityRecords: Prisma.$ActivityRecordPayload<ExtArgs>[]
     bookRentals: Prisma.$BookRentalPayload<ExtArgs>[]
     schedule: Prisma.$SchedulePayload<ExtArgs> | null
-    assessments: Prisma.$AssessmentPayload<ExtArgs>[]
+    notes: Prisma.$NotePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1585,7 +1585,7 @@ export interface Prisma__StudentClient<T, Null = never, ExtArgs extends runtime.
   activityRecords<T extends Prisma.Student$activityRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$activityRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bookRentals<T extends Prisma.Student$bookRentalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$bookRentalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookRentalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   schedule<T extends Prisma.Student$scheduleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$scheduleArgs<ExtArgs>>): Prisma.Prisma__ScheduleClient<runtime.Types.Result.GetResult<Prisma.$SchedulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  assessments<T extends Prisma.Student$assessmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$assessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notes<T extends Prisma.Student$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2039,27 +2039,27 @@ export type Student$scheduleArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * Student.assessments
+ * Student.notes
  */
-export type Student$assessmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Student$notesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Assessment
+   * Select specific fields to fetch from the Note
    */
-  select?: Prisma.AssessmentSelect<ExtArgs> | null
+  select?: Prisma.NoteSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Assessment
+   * Omit specific fields from the Note
    */
-  omit?: Prisma.AssessmentOmit<ExtArgs> | null
+  omit?: Prisma.NoteOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AssessmentInclude<ExtArgs> | null
-  where?: Prisma.AssessmentWhereInput
-  orderBy?: Prisma.AssessmentOrderByWithRelationInput | Prisma.AssessmentOrderByWithRelationInput[]
-  cursor?: Prisma.AssessmentWhereUniqueInput
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
+  orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[]
+  cursor?: Prisma.NoteWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.AssessmentScalarFieldEnum | Prisma.AssessmentScalarFieldEnum[]
+  distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
 /**

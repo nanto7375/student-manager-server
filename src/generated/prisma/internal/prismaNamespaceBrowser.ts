@@ -59,7 +59,7 @@ export const ModelName = {
   Lesson: 'Lesson',
   Schedule: 'Schedule',
   Student: 'Student',
-  Assessment: 'Assessment'
+  Note: 'Note'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -192,17 +192,18 @@ export const StudentScalarFieldEnum = {
 export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
 
 
-export const AssessmentScalarFieldEnum = {
+export const NoteScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   lastCommenterId: 'lastCommenterId',
+  type: 'type',
   value: 'value',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
 } as const
 
-export type AssessmentScalarFieldEnum = (typeof AssessmentScalarFieldEnum)[keyof typeof AssessmentScalarFieldEnum]
+export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -290,9 +291,10 @@ export const StudentOrderByRelevanceFieldEnum = {
 export type StudentOrderByRelevanceFieldEnum = (typeof StudentOrderByRelevanceFieldEnum)[keyof typeof StudentOrderByRelevanceFieldEnum]
 
 
-export const AssessmentOrderByRelevanceFieldEnum = {
+export const NoteOrderByRelevanceFieldEnum = {
+  type: 'type',
   value: 'value'
 } as const
 
-export type AssessmentOrderByRelevanceFieldEnum = (typeof AssessmentOrderByRelevanceFieldEnum)[keyof typeof AssessmentOrderByRelevanceFieldEnum]
+export type NoteOrderByRelevanceFieldEnum = (typeof NoteOrderByRelevanceFieldEnum)[keyof typeof NoteOrderByRelevanceFieldEnum]
 
