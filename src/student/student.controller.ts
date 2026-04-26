@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query 
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
-import { PatchStudentRequestDto, RegisterStudentRequestDto, UpdateNoteRequestDto } from './dto/student-request.dto';
+import { CreateNoteRequestDto, PatchStudentRequestDto, RegisterStudentRequestDto, UpdateNoteRequestDto } from './dto/student-request.dto';
 import { ShortStudentDto, StudentNoteDto, StudentDto } from './dto/student-response.dto';
 
 import { AdminRoleType } from '@src/admin/admin.service';
@@ -58,9 +58,9 @@ export class StudentController {
   @Post(':studentId/notes')
   @ApiOperation({ summary: '학생 노트 생성' })
   @ApiOkResponse({ type: StudentNoteDto })
-  async createAssessmentRecord(@Body() { value, type }: UpdateNoteRequestDto, @Param('studentId', ParseIntPipe) studentId: number) {
+  async createAssessmentRecord(@Body() { value, type }: CreateNoteRequestDto, @Param('studentId', ParseIntPipe) studentId: number) {
     // TODO: adminId
-    const note = await this.studentService.createAssessment({ studentId, value, type, adminId: 1 });
+    const note = await this.studentService.createNote({ studentId, value, type, adminId: 1 });
     return toInstance(StudentNoteDto, note);
   }
 

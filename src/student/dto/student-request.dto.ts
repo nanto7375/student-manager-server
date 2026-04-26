@@ -93,12 +93,19 @@ export class PatchStudentRequestDto {
   schoolGrade: number;
 }
 
-export class UpdateNoteRequestDto {
+export class CreateNoteRequestDto {
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   value: string;
 
   @ApiProperty({ enum: ['assessment', 'parent-counseling', 'fixed-memo', 'temporary-memo'] })
   @IsEnum(['assessment', 'parent-counseling', 'fixed-memo', 'temporary-memo'])
   type: 'assessment' | 'parent-counseling' | 'fixed-memo' | 'temporary-memo';
+}
+
+export class UpdateNoteRequestDto {
+  @ApiProperty()
+  @IsString()
+  value: string;
 }
