@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query 
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
-import { PatchStudentRequestDto, RegisterStudentRequestDto, UpdateAssessmentRequestDto } from './dto/student-request.dto';
-import { ShortStudentDto, StudentAssessMentDto, StudentDto } from './dto/student-response.dto';
+import { PatchStudentRequestDto, RegisterStudentRequestDto, UpdateNoteRequestDto } from './dto/student-request.dto';
+import { ShortStudentDto, StudentNoteDto, StudentDto } from './dto/student-response.dto';
 
 import { AdminRoleType } from '@src/admin/admin.service';
 import { RequireRole } from '@src/admin/decorator/require-role.decorator';
@@ -18,7 +18,6 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Get()
-  @Auth()
   @ApiOperation({ summary: '학생 목록 조회' })
   @ApiOkResponse({ type: ShortStudentDto })
   async getStudents(@Query() { limit, offset, name, schoolLevel, dayOfWeek }: PaginationRequestDto & { name: string; schoolLevel: number; dayOfWeek: number }) {
@@ -31,22 +30,21 @@ export class StudentController {
   }
 
   @Get(':studentId')
-  @Auth()
   @ApiOperation({ summary: '학생 정보 조회' })
   @ApiOkResponse({ type: StudentDto })
   async getStudent(@Param('studentId', ParseIntPipe) studentId: number) {
-    const student = await this.studentService.getStudentOrThrow(studentId);
+    const student = await this.studentService.getStudentOrThrow(studentId, { includeNotes: true });
+    console.log(student);
     return toInstance(StudentDto, student);
   }
 
-  @Get(':studentId/assessments')
-  @Auth()
-  @ApiOperation({ summary: '학생 평가 목록 조회' })
-  @ApiOkResponse({ type: StudentAssessMentDto })
-  async getAssessment(@Param('studentId', ParseIntPipe) studentId: number) {
-    const accessments = await this.studentService.getAssessments(studentId);
-    return toInstance(StudentAssessMentDto, accessments);
-  }
+  // @Get(':studentId/notes')
+  // @ApiOperation({ summary: '학생 노트 목록 조회' })
+  // @ApiOkResponse({ type: StudentNoteDto })
+  // async getNotes(@Param('studentId', ParseIntPipe) studentId: number) {
+  //   const notes = await this.studentService.getNotes(studentId);
+  //   return toInstance(StudentNoteDto, notes);
+  // }
 
   @Post()
   @RequireRole(AdminRoleType.ADMIN)
@@ -57,14 +55,13 @@ export class StudentController {
     return toInstance(StudentDto, student);
   }
 
-  @Post(':studentId/assessments')
-  @Auth()
-  @ApiOperation({ summary: '학생 평가 레코드 생성' })
-  @ApiOkResponse({ type: StudentAssessMentDto })
-  async createAssessmentRecord(@Body() { value }: UpdateAssessmentRequestDto, @Param('studentId', ParseIntPipe) studentId: number) {
+  @Post(':studentId/notes')
+  @ApiOperation({ summary: '학생 노트 생성' })
+  @ApiOkResponse({ type: StudentNoteDto })
+  async createAssessmentRecord(@Body() { value, type }: UpdateNoteRequestDto, @Param('studentId', ParseIntPipe) studentId: number) {
     // TODO: adminId
-    const assessment = await this.studentService.createAssessment({ studentId, value, adminId: 1 });
-    return toInstance(StudentAssessMentDto, assessment);
+    const note = await this.studentService.createAssessment({ studentId, value, type, adminId: 1 });
+    return toInstance(StudentNoteDto, note);
   }
 
   @Patch(':studentId')
@@ -76,24 +73,23 @@ export class StudentController {
     return toInstance(StudentDto, student);
   }
 
-  @Patch(':studentId/assessments/:assessmentId')
-  @Auth()
-  @ApiOperation({ summary: '학생 평가 레코드 업데이트' })
-  @ApiOkResponse({ type: StudentAssessMentDto })
+  @Patch(':studentId/notes/:noteId')
+  @ApiOperation({ summary: '학생 노트 업데이트' })
+  @ApiOkResponse({ type: StudentNoteDto })
   async updateAssessment(
     @Param('studentId', ParseIntPipe) studentId: number, //
-    @Param('assessmentId', ParseIntPipe) assessmentId: number,
-    @Body() { value }: UpdateAssessmentRequestDto,
+    @Param('noteId', ParseIntPipe) noteId: number,
+    @Body() { value }: UpdateNoteRequestDto,
   ) {
     // TODO: adminId
-    const assessment = await this.studentService.updateAssessment({ assessmentId, adminId: 1, studentId, value });
-    return toInstance(StudentAssessMentDto, assessment);
+    const note = await this.studentService.updateNote({ noteId, adminId: 1, studentId, value });
+    return toInstance(StudentNoteDto, note);
   }
 
-  @Delete(':studentId/assessments/:assessmentId')
-  @ApiOperation({ summary: '학생 평가 레코드 제거' })
+  @Delete(':studentId/notes/:noteId')
+  @ApiOperation({ summary: '학생 노트 제거' })
   @ApiOkResponse({ type: Boolean })
-  async deleteAssessment(@Param('studentId', ParseIntPipe) studentId: number, @Param('assessmentId', ParseIntPipe) assessmentId: number) {
-    return await this.studentService.deleteAssessment(assessmentId);
+  async deleteNote(@Param('studentId', ParseIntPipe) studentId: number, @Param('noteId', ParseIntPipe) noteId: number) {
+    return await this.studentService.deleteNote(noteId);
   }
 }

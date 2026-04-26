@@ -10,6 +10,8 @@ import { SchoolLevel } from '@src/common/constant/common.const';
 import { DateService } from '@src/common/utils/date';
 import { PaginationDto } from '@src/common/common.dto';
 
+type NoteType = 'assessment' | 'parent-counseling' | 'fixed-memo' | 'temporary-memo';
+
 @Injectable()
 export class StudentService {
   constructor(
@@ -21,8 +23,8 @@ export class StudentService {
     private readonly date: DateService,
   ) {}
 
-  async getStudentOrThrow(id: number) {
-    return await this.studentRepository.findOrThrow(id);
+  async getStudentOrThrow(id: number, { includeNotes = false } = {}) {
+    return await this.studentRepository.findOrThrow(id, { includeNotes });
   }
 
   async getStudents(whereQuery: { name: string; schoolLevel: number; dayOfWeek: number }, { limit, offset }: PaginationDto) {
@@ -106,33 +108,33 @@ export class StudentService {
     return savedStudent;
   }
 
-  async createAssessment({ studentId, value, adminId }: { studentId: number; value: string; adminId: number }) {
+  async createAssessment({ studentId, value, type, adminId }: { studentId: number; value: string; type: NoteType; adminId: number }) {
     if (value.length > 5000) throw new BadRequestException();
 
     return await this.noteRepository._.create({
       data: {
         value,
-        type: 'assessment',
+        type,
         student: { connect: { id: studentId } },
         lastCommenter: { connect: { id: adminId } },
       },
     });
   }
 
-  async updateAssessment({ assessmentId, adminId, studentId, value }: UpdateAssessmentParams) {
-    const assessment = await this.noteRepository.findOrThrow(assessmentId);
-    if (assessment.studentId !== studentId) throw new BadRequestException(); // 필요한가
+  async updateNote({ noteId, adminId, studentId, value }: UpdateNoteParams) {
+    const note = await this.noteRepository.findOrThrow(noteId);
+    if (note.studentId !== studentId) throw new BadRequestException(); // 필요한가
 
     // TODO: 다른 admin에 의해 수정중이면 접근 못함
 
     const updated = await this.noteRepository._.update({
-      where: { id: assessment.id },
+      where: { id: noteId },
       data: { value, lastCommenter: { connect: { id: adminId } } },
     });
     return updated;
   }
 
-  async getAssessments(studentId: number) {
+  async getNotes(studentId: number) {
     return await this.noteRepository._.findMany({
       where: { studentId, deletedAt: null },
       include: { lastCommenter: true },
@@ -140,9 +142,9 @@ export class StudentService {
     });
   }
 
-  async deleteAssessment(assessmentId: number) {
-    await this.noteRepository.findOrThrow(assessmentId);
-    return await this.noteRepository.softDelete(assessmentId);
+  async deleteNote(noteId: number) {
+    await this.noteRepository.findOrThrow(noteId);
+    return await this.noteRepository.softDelete(noteId);
   }
 }
 
@@ -169,8 +171,8 @@ type StudentResult = {
   registeredAt: Date;
   schedule: ScheduleResult;
 };
-type UpdateAssessmentParams = {
-  assessmentId: number;
+type UpdateNoteParams = {
+  noteId: number;
   adminId: number;
   studentId: number;
   value: string;

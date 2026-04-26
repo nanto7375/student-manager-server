@@ -37,9 +37,10 @@ export class StudentDto {
   @Expose()
   schoolGrade: number;
 
-  @ApiProperty({ description: '비고' })
+  @ApiProperty({ description: '노트 목록', type: () => [StudentNoteDto] })
   @Expose()
-  note: string;
+  @Type(() => StudentNoteDto)
+  notes: StudentNoteDto[];
 
   @ApiProperty({ type: () => ScheduleDto, description: '수업 시간' })
   @Expose()
@@ -88,7 +89,7 @@ export class ShortStudentDto {
   scheduleId: number;
 }
 
-export class StudentAssessMentDto {
+export class StudentNoteDto {
   @ApiProperty({ description: '평가 id' })
   @Expose()
   id: number;
@@ -105,6 +106,10 @@ export class StudentAssessMentDto {
   @ApiProperty()
   @Expose()
   value: string;
+
+  @ApiProperty()
+  @Expose()
+  type: string;
 
   @ApiProperty()
   @Expose()
