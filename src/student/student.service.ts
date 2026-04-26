@@ -108,7 +108,7 @@ export class StudentService {
     return savedStudent;
   }
 
-  async createAssessment({ studentId, value, type, adminId }: { studentId: number; value: string; type: NoteType; adminId: number }) {
+  async createNote({ studentId, value, type, adminId }: { studentId: number; value: string; type: NoteType; adminId: number }) {
     if (value.length > 5000) throw new BadRequestException();
 
     return await this.noteRepository._.create({
