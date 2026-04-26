@@ -146,7 +146,7 @@ model Note {
   id              Int       @id @default(autoincrement())
   studentId       Int       @map("student_id")
   lastCommenterId Int       @map("last_commenter_id")
-  type            String    @db.VarChar(50) // assessment, parent-counsel, fixed-memo, temporary-memo
+  type            String    @db.VarChar(50) @default("assessment") // assessment, parent-counsel, fixed-memo, temporary-memo
   value           String    @default("") @db.VarChar(5000)
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)

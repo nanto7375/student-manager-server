@@ -313,7 +313,7 @@ export type NoteScalarWhereWithAggregatesInput = {
 }
 
 export type NoteCreateInput = {
-  type: string
+  type?: string
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -326,7 +326,7 @@ export type NoteUncheckedCreateInput = {
   id?: number
   studentId: number
   lastCommenterId: number
-  type: string
+  type?: string
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -358,7 +358,7 @@ export type NoteCreateManyInput = {
   id?: number
   studentId: number
   lastCommenterId: number
-  type: string
+  type?: string
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -530,7 +530,7 @@ export type NoteUncheckedUpdateManyWithoutStudentNestedInput = {
 }
 
 export type NoteCreateWithoutLastCommenterInput = {
-  type: string
+  type?: string
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -541,7 +541,7 @@ export type NoteCreateWithoutLastCommenterInput = {
 export type NoteUncheckedCreateWithoutLastCommenterInput = {
   id?: number
   studentId: number
-  type: string
+  type?: string
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -589,7 +589,7 @@ export type NoteScalarWhereInput = {
 }
 
 export type NoteCreateWithoutStudentInput = {
-  type: string
+  type?: string
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -600,7 +600,7 @@ export type NoteCreateWithoutStudentInput = {
 export type NoteUncheckedCreateWithoutStudentInput = {
   id?: number
   lastCommenterId: number
-  type: string
+  type?: string
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -636,7 +636,7 @@ export type NoteUpdateManyWithWhereWithoutStudentInput = {
 export type NoteCreateManyLastCommenterInput = {
   id?: number
   studentId: number
-  type: string
+  type?: string
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -675,7 +675,7 @@ export type NoteUncheckedUpdateManyWithoutLastCommenterInput = {
 export type NoteCreateManyStudentInput = {
   id?: number
   lastCommenterId: number
-  type: string
+  type?: string
   value?: string
   createdAt?: Date | string
   updatedAt?: Date | string
