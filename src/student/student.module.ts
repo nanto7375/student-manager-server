@@ -7,12 +7,12 @@ import { StudentBuilder } from './student.builder';
 import { AuthModule } from '@src/auth/auth.module';
 import { ScheduleModule } from '@src/schedule/schedule.module';
 import { NoteRepository, StudentRepository } from './student.repository';
-import { StudentEvent } from './student.event';
+import { ActivityModule } from '@src/activity/activity.module';
 
 @Module({
-  imports: [AuthModule, ScheduleModule],
+  imports: [AuthModule, ScheduleModule, ActivityModule],
   controllers: [StudentController],
-  providers: [StudentService, StudentBuilder, StudentRepository, NoteRepository, StudentEvent],
+  providers: [StudentService, StudentBuilder, StudentRepository, NoteRepository],
   exports: [StudentService],
 })
 export class StudentModule {}

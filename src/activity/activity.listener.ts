@@ -1,19 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { APP_BOOTSTRAP_COMPLETED, STUDENT_SCHEDULE_REGISTERED } from '../common/constant/event.const';
+import { APP_BOOTSTRAP_COMPLETED } from '../common/constant/event.const';
 import { ActivityTask } from './activity.task';
-import { ActivityService } from './activity.service';
-import { StudentScheduleRegisteredEvent } from '@src/student/student.event';
 import { MyLogger } from '@src/configs/logger/my-logger';
-import { DateService } from '@src/common/utils/date';
 
 @Injectable()
 export class ActivityListener {
   constructor(
     private readonly activityTask: ActivityTask,
-    private readonly activityService: ActivityService,
     private readonly logger: MyLogger,
-    private readonly date: DateService,
   ) {
     this.logger.setContext('ActivityListener');
   }
@@ -22,16 +17,6 @@ export class ActivityListener {
   async generateActivityRecords() {
     try {
       await this.activityTask.generateActivityRecordsForAllStudents();
-    } catch (error) {
-      this.logger.error(error);
-    }
-  }
-
-  @OnEvent(STUDENT_SCHEDULE_REGISTERED)
-  async generateActivityRecordsForStudent({ student, schedule }: StudentScheduleRegisteredEvent) {
-    try {
-      const yearMonth = this.date.currentYearMonth();
-      await this.activityService.generateThisMonthActivityRecords({ students: [student], dayOfWeek: schedule.dayOfWeek, yearMonth });
     } catch (error) {
       this.logger.error(error);
     }

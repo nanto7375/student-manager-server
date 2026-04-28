@@ -5,10 +5,10 @@ import { StudentBuilder } from './student.builder';
 import { type ScheduleResult, ScheduleService } from '@src/schedule/schedule.service';
 
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
-import { StudentEvent } from './student.event';
 import { SchoolLevel } from '@src/common/constant/common.const';
 import { DateService } from '@src/common/utils/date';
 import { PaginationDto } from '@src/common/common.dto';
+import { ActivityService } from '@src/activity/activity.service';
 
 type NoteType = 'assessment' | 'parent-counseling' | 'fixed-memo' | 'temporary-memo';
 
@@ -16,10 +16,10 @@ type NoteType = 'assessment' | 'parent-counseling' | 'fixed-memo' | 'temporary-m
 export class StudentService {
   constructor(
     private readonly studentBuilder: StudentBuilder,
-    private readonly scheduleService: ScheduleService,
-    private readonly studentEvent: StudentEvent,
     private readonly studentRepository: StudentRepository,
     private readonly noteRepository: NoteRepository,
+    private readonly scheduleService: ScheduleService,
+    private readonly activityService: ActivityService,
     private readonly date: DateService,
   ) {}
 
@@ -64,7 +64,10 @@ export class StudentService {
       .create();
 
     const savedStudent = await this.studentRepository._.create({ data: newStudent });
-    if (schedule) this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
+    if (schedule) {
+      // TODO: transaction 처리할지 고민
+      await this.activityService.generateThisMonthActivityRecords({ students: [savedStudent], dayOfWeek: schedule.dayOfWeek });
+    }
     return savedStudent;
   }
 
@@ -99,7 +102,8 @@ export class StudentService {
     // TODO: 변경을 언제부터 적용할지를 클라이언트로부터 받아야 함
 
     const savedStudent = await this.studentRepository._.update({ where: { id: studentId }, data: { schedule: { connect: { id: schedule.id } } } });
-    this.studentEvent.studentScheduleRegistered(savedStudent, schedule);
+    // TODO: transaction 처리할지 고민
+    await this.activityService.generateThisMonthActivityRecords({ students: [savedStudent], dayOfWeek: schedule.dayOfWeek });
     if (student.scheduleId) {
       // TODO:
       // const previousSchedule = await this.scheduleService.getScheduleOrThrow(student.scheduleId);

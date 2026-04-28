@@ -55,7 +55,7 @@ export class ActivityService {
     }));
   }
 
-  async generateThisMonthActivityRecords({ students, dayOfWeek, yearMonth }: { students: Student[]; dayOfWeek: number; yearMonth: string }) {
+  async generateThisMonthActivityRecords({ students, dayOfWeek, yearMonth = this.date.currentYearMonth() }: { students: Student[]; dayOfWeek: number; yearMonth?: string }) {
     const dates = this.date.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek });
     const activityRecords = students.flatMap((student) => dates.map((date) => ({ studentId: student.id, date })));
     return await this.activityRepository.createMany(activityRecords);
