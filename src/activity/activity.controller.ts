@@ -32,7 +32,6 @@ export class ActivityController {
     const params = {
       activityRecordId,
       activityRecordDto: updateActivityRecordRequestDto,
-      adminId: 1,
     };
     const result = !monthly //
       ? await this.activityService.updateActivityRecord(params)

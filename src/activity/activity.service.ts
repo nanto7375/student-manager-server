@@ -70,7 +70,7 @@ export class ActivityService {
     return activityGenerationLogs;
   }
 
-  async updateActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
+  async updateActivityRecord({ activityRecordId, activityRecordDto }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
     const { activityKey, activityValue } = activityRecordDto;
 
@@ -83,7 +83,7 @@ export class ActivityService {
     return true;
   }
 
-  async updateMonthlyActivityRecord({ activityRecordId, activityRecordDto, adminId }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto; adminId: number }) {
+  async updateMonthlyActivityRecord({ activityRecordId, activityRecordDto }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
     const { activityKey, activityValue } = activityRecordDto;
 

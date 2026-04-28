@@ -63,10 +63,13 @@ export class StudentService {
       .setSchedule(schedule?.id)
       .create();
 
+    // TODO: transaction 처리할지 고민
     const savedStudent = await this.studentRepository._.create({ data: newStudent });
     if (schedule) {
-      // TODO: transaction 처리할지 고민
-      await this.activityService.generateThisMonthActivityRecords({ students: [savedStudent], dayOfWeek: schedule.dayOfWeek });
+      await this.activityService.generateThisMonthActivityRecords({
+        students: [savedStudent],
+        dayOfWeek: schedule.dayOfWeek,
+      });
     }
     return savedStudent;
   }
@@ -101,9 +104,15 @@ export class StudentService {
 
     // TODO: 변경을 언제부터 적용할지를 클라이언트로부터 받아야 함
 
-    const savedStudent = await this.studentRepository._.update({ where: { id: studentId }, data: { schedule: { connect: { id: schedule.id } } } });
+    const savedStudent = await this.studentRepository._.update({
+      where: { id: studentId },
+      data: { schedule: { connect: { id: schedule.id } } },
+    });
     // TODO: transaction 처리할지 고민
-    await this.activityService.generateThisMonthActivityRecords({ students: [savedStudent], dayOfWeek: schedule.dayOfWeek });
+    await this.activityService.generateThisMonthActivityRecords({
+      students: [savedStudent],
+      dayOfWeek: schedule.dayOfWeek,
+    });
     if (student.scheduleId) {
       // TODO:
       // const previousSchedule = await this.scheduleService.getScheduleOrThrow(student.scheduleId);
