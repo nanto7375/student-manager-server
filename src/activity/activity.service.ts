@@ -5,18 +5,7 @@ import { ActivityRecordGenerationLogRepository, ActivityRepository } from './act
 
 import { DateService } from '@src/common/utils/date';
 
-import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
-
-const weekelyActivityKeys = {
-  ATTENDANCE: 'attendance',
-  REPORT1: 'report1',
-  REPORT2: 'report2',
-};
-const monthlyActivityKeys = {
-  MONTHLY_PROJECT: 'monthlyProject',
-  MONTHLY_PREVIEW: 'monthlyPreview',
-  MONTHLY_REPORT: 'monthlyReport',
-};
+import { UpdateActivityRecordRequestDto, UpdateMonthlyActivityRecordRequestDto } from './dto/activity.request.dto';
 
 /**
  * @description ARGL: ActivityRecordGenerationLog
@@ -72,34 +61,34 @@ export class ActivityService {
 
   async updateActivityRecord({ activityRecordId, activityRecordDto }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
-    const { activityKey, activityValue } = activityRecordDto;
+    const { attendance, report1, report2 } = activityRecordDto;
 
-    if (!Object.values(weekelyActivityKeys).includes(activityKey)) {
-      throw new BadRequestException('invalid activity key');
-    }
-
-    const body = { [activityKey]: activityValue };
+    const body = {
+      ...(attendance !== undefined && { attendance }),
+      ...(report1 !== undefined && { report1 }),
+      ...(report2 !== undefined && { report2 }),
+    };
     await this.activityRepository.update(activityRecord.id, body);
     return true;
   }
 
-  async updateMonthlyActivityRecord({ activityRecordId, activityRecordDto }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto }) {
+  async updateMonthlyActivityRecord({ activityRecordId, activityRecordDto }: { activityRecordId: number; activityRecordDto: UpdateMonthlyActivityRecordRequestDto }) {
     const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
-    const { activityKey, activityValue } = activityRecordDto;
+    const { monthlyProject, monthlyPreview, monthlyReport } = activityRecordDto;
 
-    if (!Object.values(monthlyActivityKeys).includes(activityKey)) {
-      throw new BadRequestException('invalid activity key');
-    }
     const notParticipatedIn = !activityRecord.monthlyProject;
-    const isAboutReportKey = activityKey !== monthlyActivityKeys.MONTHLY_PROJECT;
-    if (isAboutReportKey && notParticipatedIn) {
+    if (notParticipatedIn && (monthlyPreview !== undefined || monthlyReport !== undefined)) {
       throw new BadRequestException('monthly project is not participated');
     }
 
-    const outOfMonthlyProject = activityKey === monthlyActivityKeys.MONTHLY_PROJECT && activityValue === false;
-    const body = !outOfMonthlyProject //
-      ? { [activityKey]: activityValue }
-      : { monthlyProject: false, monthlyPreview: false, monthlyReport: false };
+    const outOfMonthlyProject = monthlyProject === false;
+    const body = outOfMonthlyProject
+      ? { monthlyProject: false, monthlyPreview: false, monthlyReport: false }
+      : {
+          ...(monthlyProject !== undefined && { monthlyProject }),
+          ...(monthlyPreview !== undefined && { monthlyPreview }),
+          ...(monthlyReport !== undefined && { monthlyReport }),
+        };
     const yearMonth = activityRecord.date.substring(0, 6);
     await this.activityRepository.updateMany({
       body,

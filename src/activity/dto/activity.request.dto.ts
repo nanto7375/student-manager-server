@@ -1,12 +1,36 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsBoolean, IsOptional } from 'class-validator';
 
 export class UpdateActivityRecordRequestDto {
-  @ApiProperty({ description: '활동 키' })
-  @IsString()
-  activityKey: string;
-
-  @ApiProperty({ description: '활동 값' })
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsBoolean()
-  activityValue: boolean;
+  attendance?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  report1?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  report2?: boolean;
+}
+
+export class UpdateMonthlyActivityRecordRequestDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  monthlyProject?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  monthlyPreview?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  monthlyReport?: boolean;
 }

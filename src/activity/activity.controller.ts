@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, ParseBoolPipe, ParseIntPipe, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
-import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
+import { UpdateActivityRecordRequestDto, UpdateMonthlyActivityRecordRequestDto } from './dto/activity.request.dto';
 import { ActivityRecordDto } from './dto/activity.response.dto';
 
 import { ActivityService } from './activity.service';
@@ -23,19 +23,14 @@ export class ActivityController {
   @Patch(':activityRecordId')
   @ApiOperation({ summary: '활동 기록 업데이트' })
   @ApiOkResponse({ type: Boolean })
-  async updateActivityRecord(
-    @Param('activityRecordId', ParseIntPipe) activityRecordId: number, //
-    @Query('monthly', ParseBoolPipe) monthly: boolean,
-    @Body() updateActivityRecordRequestDto: UpdateActivityRecordRequestDto,
-  ) {
-    // TODO: adminId
-    const params = {
-      activityRecordId,
-      activityRecordDto: updateActivityRecordRequestDto,
-    };
-    const result = !monthly //
-      ? await this.activityService.updateActivityRecord(params)
-      : await this.activityService.updateMonthlyActivityRecord(params);
-    return result;
+  async updateActivityRecord(@Param('activityRecordId', ParseIntPipe) activityRecordId: number, @Body() activityRecordDto: UpdateActivityRecordRequestDto) {
+    return await this.activityService.updateActivityRecord({ activityRecordId, activityRecordDto });
+  }
+
+  @Patch(':activityRecordId/monthly')
+  @ApiOperation({ summary: '월간 활동 기록 업데이트' })
+  @ApiOkResponse({ type: Boolean })
+  async updateMonthlyActivityRecord(@Param('activityRecordId', ParseIntPipe) activityRecordId: number, @Body() activityRecordDto: UpdateMonthlyActivityRecordRequestDto) {
+    return await this.activityService.updateMonthlyActivityRecord({ activityRecordId, activityRecordDto });
   }
 }
