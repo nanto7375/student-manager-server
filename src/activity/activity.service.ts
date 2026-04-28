@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { ActivityRecord, Student, BookRental } from '@src/generated/prisma/client';
+import { ActivityRecord, Student, BookRental, Note } from '@src/generated/prisma/client';
 import { ActivityRecordGenerationLogRepository, ActivityRepository } from './activity.repository';
 
 import { DateService } from '@src/common/utils/date';
@@ -31,6 +31,9 @@ export class ActivityService {
               where: { returnedAt: null },
               take: 1,
               orderBy: { borrowedAt: 'desc' },
+            },
+            notes: {
+              where: { type: { in: ['temporary-memo', 'fixed-memo'] } },
             },
           },
         },
@@ -98,4 +101,4 @@ export class ActivityService {
   }
 }
 
-type ActivityRecordWithBorrowedBook = ActivityRecord & { student: Student & { bookRentals: BookRental[] } };
+type ActivityRecordWithBorrowedBook = ActivityRecord & { student: Student & { bookRentals: BookRental[]; notes: Note[] } };
