@@ -12,5 +12,6 @@ import { ActivityRecordGenerationLogRepository, ActivityRepository } from './act
   imports: [ScheduleModule],
   controllers: [ActivityController],
   providers: [ActivityService, ActivityTask, ActivityListener, ActivityRepository, ActivityRecordGenerationLogRepository],
+  exports: [ActivityService],
 })
 export class ActivityModule {}
