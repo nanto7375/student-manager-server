@@ -106,7 +106,9 @@ export class AuthService {
   private async _authenticate({ email, password }: AuthenticateParams) {
     const admin = await this.adminService.getAdminByEmailOrThrow(email);
 
-    const isPasswordCorrect = await this.bcryptService.compare(password, admin.password);
+    // TODO: 어드민 생성 페이지 만들면 그때 활성화
+    // const isPasswordCorrect = await this.bcryptService.compare(password, admin.password);
+    const isPasswordCorrect = password === admin.password;
     if (!isPasswordCorrect) throw new UnauthorizedException(ERROR_MESSAGES.wrongPassword);
 
     return admin;
