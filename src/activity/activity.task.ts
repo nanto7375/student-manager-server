@@ -29,7 +29,7 @@ export class ActivityTask {
       // TODO: transaction
       const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
       for (const schedule of schedulesWithStudents) {
-        await this.activityService.generateThisMonthActivityRecords({
+        await this.activityService.generateActivityRecordsForSchedule({
           students: schedule.students,
           dayOfWeek: schedule.dayOfWeek,
           yearMonth: currentYearMonth,

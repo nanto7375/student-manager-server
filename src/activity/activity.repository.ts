@@ -17,6 +17,9 @@ export class ActivityRepository {
   async updateMany({ where, body }: { where: Prisma.ActivityRecordWhereInput; body: Prisma.ActivityRecordUpdateInput }) {
     return await this.prisma.activityRecord.updateMany({ where, data: body });
   }
+  async deleteMany(where: Prisma.ActivityRecordWhereInput) {
+    return await this.prisma.activityRecord.deleteMany({ where });
+  }
   async findOrThrow(id: number) {
     const activityRecord = await this.prisma.activityRecord.findUnique({ where: { id } });
     if (!activityRecord) throw new NotFoundException('not found activity record');

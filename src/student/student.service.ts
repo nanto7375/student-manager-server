@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { NoteRepository, StudentRepository } from './student.repository';
 import { StudentBuilder } from './student.builder';
@@ -23,8 +23,8 @@ export class StudentService {
     private readonly date: DateService,
   ) {}
 
-  async getStudentOrThrow(id: number, { includeNotes = false } = {}) {
-    return await this.studentRepository.findOrThrow(id, { includeNotes });
+  async getStudentOrThrow(id: number, { includeNotes = false, includeScheduleChangeReservations = false } = {}) {
+    return await this.studentRepository.findOrThrow(id, { includeNotes, includeScheduleChangeReservations });
   }
 
   async getStudents(whereQuery: { name: string; schoolLevel: number; dayOfWeek: number }, { limit, offset }: PaginationDto) {
@@ -66,7 +66,7 @@ export class StudentService {
     // TODO: transaction 처리할지 고민
     const savedStudent = await this.studentRepository._.create({ data: newStudent });
     if (schedule) {
-      await this.activityService.generateThisMonthActivityRecords({
+      await this.activityService.generateActivityRecordsForSchedule({
         students: [savedStudent],
         dayOfWeek: schedule.dayOfWeek,
       });
@@ -97,28 +97,52 @@ export class StudentService {
     return await this.studentRepository._.update({ where: { id: studentId }, data: updatedStudent });
   }
 
-  async changeSchedule({ studentId, scheduleId }: ChangeScheduleParams) {
+  async changeSchedule({ studentId, scheduleId, dateForChange }: ChangeScheduleParams) {
     const student = await this.studentRepository.findOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     if (student.scheduleId === scheduleId) return student;
 
-    // TODO: 변경을 언제부터 적용할지를 클라이언트로부터 받아야 함
-
-    const savedStudent = await this.studentRepository._.update({
-      where: { id: studentId },
-      data: { schedule: { connect: { id: schedule.id } } },
-    });
-    // TODO: transaction 처리할지 고민
-    await this.activityService.generateThisMonthActivityRecords({
-      students: [savedStudent],
-      dayOfWeek: schedule.dayOfWeek,
-    });
-    if (student.scheduleId) {
-      // TODO:
-      // const previousSchedule = await this.scheduleService.getScheduleOrThrow(student.scheduleId);
-      // this.studentEvent.studentScheduleChanged(savedStudent, previousSchedule, schedule);
+    if (dateForChange) {
+      await this.scheduleService.reserveScheduleChange({ studentId, scheduleId, date: dateForChange });
+    } else {
+      const savedStudent = await this.studentRepository._.update({
+        where: { id: studentId },
+        data: { schedule: { connect: { id: schedule.id } } },
+      });
+      await this.activityService.generateActivityRecordsForSchedule({
+        students: [savedStudent],
+        dayOfWeek: schedule.dayOfWeek,
+      });
     }
-    return savedStudent;
+    return true;
+  }
+
+  async executeScheduleChange({ studentId, scheduleId, dateForChange }: ChangeScheduleParams) {
+    let student, schedule;
+    try {
+      student = await this.getStudentOrThrow(studentId);
+      schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
+    } catch (error) {
+      if (error instanceof NotFoundException) return false;
+      else throw error;
+    }
+
+    const previousSchedule = student.schedule;
+    const [yearMonth, day] = [dateForChange.slice(0, 6), dateForChange.slice(6)];
+
+    // TODO: transaction
+    await this.activityService.removeActivityRecordsByScheduleChange({ studentId, schedule: previousSchedule, dateForChange });
+    await this.activityService.generateActivityRecordsForSchedule({
+      students: [student],
+      dayOfWeek: schedule.dayOfWeek,
+      yearMonth,
+      startDay: Number(day),
+    });
+    await this.studentRepository._.update({
+      where: { id: studentId },
+      data: { schedule: { connect: { id: scheduleId } } },
+    });
+    return true;
   }
 
   async createNote({ studentId, value, type, adminId }: { studentId: number; value: string; type: NoteType; adminId: number }) {
@@ -168,6 +192,7 @@ type UpdatePersonalInfoParams = {
 type ChangeScheduleParams = {
   studentId: number;
   scheduleId: number;
+  dateForChange: string; // YYYYMMDD
 };
 type StudentResult = {
   id: number;

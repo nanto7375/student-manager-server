@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   ActivityRecord: 'ActivityRecord',
   ActivityRecordGenerationLog: 'ActivityRecordGenerationLog',
+  ScheduleChangeReservation: 'ScheduleChangeReservation',
   ActivityRecordLog: 'ActivityRecordLog',
   Admin: 'Admin',
   BookRental: 'BookRental',
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "activityRecord" | "activityRecordGenerationLog" | "activityRecordLog" | "admin" | "bookRental" | "lesson" | "schedule" | "student" | "note"
+    modelProps: "activityRecord" | "activityRecordGenerationLog" | "scheduleChangeReservation" | "activityRecordLog" | "admin" | "bookRental" | "lesson" | "schedule" | "student" | "note"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -541,6 +542,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ActivityRecordGenerationLogCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ActivityRecordGenerationLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    ScheduleChangeReservation: {
+      payload: Prisma.$ScheduleChangeReservationPayload<ExtArgs>
+      fields: Prisma.ScheduleChangeReservationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ScheduleChangeReservationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduleChangeReservationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ScheduleChangeReservationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduleChangeReservationPayload>
+        }
+        findFirst: {
+          args: Prisma.ScheduleChangeReservationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduleChangeReservationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ScheduleChangeReservationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduleChangeReservationPayload>
+        }
+        findMany: {
+          args: Prisma.ScheduleChangeReservationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduleChangeReservationPayload>[]
+        }
+        create: {
+          args: Prisma.ScheduleChangeReservationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduleChangeReservationPayload>
+        }
+        createMany: {
+          args: Prisma.ScheduleChangeReservationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ScheduleChangeReservationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduleChangeReservationPayload>
+        }
+        update: {
+          args: Prisma.ScheduleChangeReservationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduleChangeReservationPayload>
+        }
+        deleteMany: {
+          args: Prisma.ScheduleChangeReservationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ScheduleChangeReservationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ScheduleChangeReservationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduleChangeReservationPayload>
+        }
+        aggregate: {
+          args: Prisma.ScheduleChangeReservationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateScheduleChangeReservation>
+        }
+        groupBy: {
+          args: Prisma.ScheduleChangeReservationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScheduleChangeReservationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ScheduleChangeReservationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScheduleChangeReservationCountAggregateOutputType> | number
         }
       }
     }
@@ -1048,6 +1115,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const ActivityRecordScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
+  scheduleId: 'scheduleId',
   date: 'date',
   isMakeup: 'isMakeup',
   attendance: 'attendance',
@@ -1071,6 +1139,18 @@ export const ActivityRecordGenerationLogScalarFieldEnum = {
 } as const
 
 export type ActivityRecordGenerationLogScalarFieldEnum = (typeof ActivityRecordGenerationLogScalarFieldEnum)[keyof typeof ActivityRecordGenerationLogScalarFieldEnum]
+
+
+export const ScheduleChangeReservationScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  scheduleId: 'scheduleId',
+  date: 'date',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+} as const
+
+export type ScheduleChangeReservationScalarFieldEnum = (typeof ScheduleChangeReservationScalarFieldEnum)[keyof typeof ScheduleChangeReservationScalarFieldEnum]
 
 
 export const ActivityRecordLogScalarFieldEnum = {
@@ -1201,6 +1281,13 @@ export const ActivityRecordGenerationLogOrderByRelevanceFieldEnum = {
 } as const
 
 export type ActivityRecordGenerationLogOrderByRelevanceFieldEnum = (typeof ActivityRecordGenerationLogOrderByRelevanceFieldEnum)[keyof typeof ActivityRecordGenerationLogOrderByRelevanceFieldEnum]
+
+
+export const ScheduleChangeReservationOrderByRelevanceFieldEnum = {
+  date: 'date'
+} as const
+
+export type ScheduleChangeReservationOrderByRelevanceFieldEnum = (typeof ScheduleChangeReservationOrderByRelevanceFieldEnum)[keyof typeof ScheduleChangeReservationOrderByRelevanceFieldEnum]
 
 
 export const ActivityRecordLogOrderByRelevanceFieldEnum = {
@@ -1403,6 +1490,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   activityRecord?: Prisma.ActivityRecordOmit
   activityRecordGenerationLog?: Prisma.ActivityRecordGenerationLogOmit
+  scheduleChangeReservation?: Prisma.ScheduleChangeReservationOmit
   activityRecordLog?: Prisma.ActivityRecordLogOmit
   admin?: Prisma.AdminOmit
   bookRental?: Prisma.BookRentalOmit

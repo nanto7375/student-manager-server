@@ -48,6 +48,11 @@ export type ActivityRecord = Prisma.ActivityRecordModel
  */
 export type ActivityRecordGenerationLog = Prisma.ActivityRecordGenerationLogModel
 /**
+ * Model ScheduleChangeReservation
+ * 
+ */
+export type ScheduleChangeReservation = Prisma.ScheduleChangeReservationModel
+/**
  * Model ActivityRecordLog
  * 
  */

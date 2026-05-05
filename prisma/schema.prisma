@@ -12,6 +12,7 @@ datasource db {
 model ActivityRecord {
   id                 Int                 @id @default(autoincrement())
   studentId          Int                 @map("student_id")
+  scheduleId         Int                 @map("schedule_id")
   date               String              @db.Char(8)  //YYYYMMDD
   isMakeup           Boolean             @default(false) @map("is_makeup")
   attendance         Boolean             @default(false) /// 출석 여부
@@ -38,6 +39,19 @@ model ActivityRecordGenerationLog {
   createdAt                  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   @@map("activity_record_generation_log")
+}
+
+model ScheduleChangeReservation {
+  id          Int         @id @default(autoincrement())
+  studentId   Int         @map("student_id")
+  scheduleId  Int         @map("schedule_id")
+  date        String      @db.Char(8)  //YYYYMMDD
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  completedAt DateTime?   @map("completed_at") @db.Timestamp(6)
+
+  student     Student     @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_schedule_change_reservation_student")
+  schedule    Schedule    @relation(fields: [scheduleId], references: [id], map: "FK_schedule_change_reservation_schedule")
+  @@map("schedule_change_reservation")
 }
 
 // TODO: 제거할지 말지 고민
@@ -112,6 +126,7 @@ model Schedule {
   dayOfWeek Int       @map("day_of_week") @db.UnsignedInt // 0: 일 ~ 6: 토
   lesson    Lesson?   @relation(fields: [lessonId], references: [id], map: "FK_6c8c0c369dc1fa673c88bb6381a")
   students  Student[]
+  scheduleChangeReservations ScheduleChangeReservation[]
 
   @@index([lessonId], map: "FK_6c8c0c369dc1fa673c88bb6381a")
   @@map("schedule")
@@ -137,6 +152,7 @@ model Student {
   bookRentals     BookRental[]
   schedule        Schedule?        @relation(fields: [scheduleId], references: [id], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
   notes     Note[]
+  scheduleChangeReservations ScheduleChangeReservation[]
 
   @@index([scheduleId], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
   @@map("student")

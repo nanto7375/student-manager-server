@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   ActivityRecord: 'ActivityRecord',
   ActivityRecordGenerationLog: 'ActivityRecordGenerationLog',
+  ScheduleChangeReservation: 'ScheduleChangeReservation',
   ActivityRecordLog: 'ActivityRecordLog',
   Admin: 'Admin',
   BookRental: 'BookRental',
@@ -81,6 +82,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const ActivityRecordScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
+  scheduleId: 'scheduleId',
   date: 'date',
   isMakeup: 'isMakeup',
   attendance: 'attendance',
@@ -104,6 +106,18 @@ export const ActivityRecordGenerationLogScalarFieldEnum = {
 } as const
 
 export type ActivityRecordGenerationLogScalarFieldEnum = (typeof ActivityRecordGenerationLogScalarFieldEnum)[keyof typeof ActivityRecordGenerationLogScalarFieldEnum]
+
+
+export const ScheduleChangeReservationScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  scheduleId: 'scheduleId',
+  date: 'date',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+} as const
+
+export type ScheduleChangeReservationScalarFieldEnum = (typeof ScheduleChangeReservationScalarFieldEnum)[keyof typeof ScheduleChangeReservationScalarFieldEnum]
 
 
 export const ActivityRecordLogScalarFieldEnum = {
@@ -234,6 +248,13 @@ export const ActivityRecordGenerationLogOrderByRelevanceFieldEnum = {
 } as const
 
 export type ActivityRecordGenerationLogOrderByRelevanceFieldEnum = (typeof ActivityRecordGenerationLogOrderByRelevanceFieldEnum)[keyof typeof ActivityRecordGenerationLogOrderByRelevanceFieldEnum]
+
+
+export const ScheduleChangeReservationOrderByRelevanceFieldEnum = {
+  date: 'date'
+} as const
+
+export type ScheduleChangeReservationOrderByRelevanceFieldEnum = (typeof ScheduleChangeReservationOrderByRelevanceFieldEnum)[keyof typeof ScheduleChangeReservationOrderByRelevanceFieldEnum]
 
 
 export const ActivityRecordLogOrderByRelevanceFieldEnum = {

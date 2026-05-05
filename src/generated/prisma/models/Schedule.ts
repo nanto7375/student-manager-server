@@ -250,6 +250,7 @@ export type ScheduleWhereInput = {
   dayOfWeek?: Prisma.IntFilter<"Schedule"> | number
   lesson?: Prisma.XOR<Prisma.LessonNullableScalarRelationFilter, Prisma.LessonWhereInput> | null
   students?: Prisma.StudentListRelationFilter
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationListRelationFilter
 }
 
 export type ScheduleOrderByWithRelationInput = {
@@ -263,6 +264,7 @@ export type ScheduleOrderByWithRelationInput = {
   dayOfWeek?: Prisma.SortOrder
   lesson?: Prisma.LessonOrderByWithRelationInput
   students?: Prisma.StudentOrderByRelationAggregateInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationOrderByRelationAggregateInput
   _relevance?: Prisma.ScheduleOrderByRelevanceInput
 }
 
@@ -280,6 +282,7 @@ export type ScheduleWhereUniqueInput = Prisma.AtLeast<{
   dayOfWeek?: Prisma.IntFilter<"Schedule"> | number
   lesson?: Prisma.XOR<Prisma.LessonNullableScalarRelationFilter, Prisma.LessonWhereInput> | null
   students?: Prisma.StudentListRelationFilter
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationListRelationFilter
 }, "id">
 
 export type ScheduleOrderByWithAggregationInput = {
@@ -321,6 +324,7 @@ export type ScheduleCreateInput = {
   dayOfWeek: number
   lesson?: Prisma.LessonCreateNestedOneWithoutSchedulesInput
   students?: Prisma.StudentCreateNestedManyWithoutScheduleInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationCreateNestedManyWithoutScheduleInput
 }
 
 export type ScheduleUncheckedCreateInput = {
@@ -333,6 +337,7 @@ export type ScheduleUncheckedCreateInput = {
   deletedAt?: Date | string | null
   dayOfWeek: number
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutScheduleInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationUncheckedCreateNestedManyWithoutScheduleInput
 }
 
 export type ScheduleUpdateInput = {
@@ -344,6 +349,7 @@ export type ScheduleUpdateInput = {
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   lesson?: Prisma.LessonUpdateOneWithoutSchedulesNestedInput
   students?: Prisma.StudentUpdateManyWithoutScheduleNestedInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationUpdateManyWithoutScheduleNestedInput
 }
 
 export type ScheduleUncheckedUpdateInput = {
@@ -356,6 +362,7 @@ export type ScheduleUncheckedUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   students?: Prisma.StudentUncheckedUpdateManyWithoutScheduleNestedInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationUncheckedUpdateManyWithoutScheduleNestedInput
 }
 
 export type ScheduleCreateManyInput = {
@@ -387,6 +394,11 @@ export type ScheduleUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type ScheduleScalarRelationFilter = {
+  is?: Prisma.ScheduleWhereInput
+  isNot?: Prisma.ScheduleWhereInput
 }
 
 export type ScheduleListRelationFilter = {
@@ -455,6 +467,20 @@ export type ScheduleNullableScalarRelationFilter = {
   isNot?: Prisma.ScheduleWhereInput | null
 }
 
+export type ScheduleCreateNestedOneWithoutScheduleChangeReservationsInput = {
+  create?: Prisma.XOR<Prisma.ScheduleCreateWithoutScheduleChangeReservationsInput, Prisma.ScheduleUncheckedCreateWithoutScheduleChangeReservationsInput>
+  connectOrCreate?: Prisma.ScheduleCreateOrConnectWithoutScheduleChangeReservationsInput
+  connect?: Prisma.ScheduleWhereUniqueInput
+}
+
+export type ScheduleUpdateOneRequiredWithoutScheduleChangeReservationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ScheduleCreateWithoutScheduleChangeReservationsInput, Prisma.ScheduleUncheckedCreateWithoutScheduleChangeReservationsInput>
+  connectOrCreate?: Prisma.ScheduleCreateOrConnectWithoutScheduleChangeReservationsInput
+  upsert?: Prisma.ScheduleUpsertWithoutScheduleChangeReservationsInput
+  connect?: Prisma.ScheduleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ScheduleUpdateToOneWithWhereWithoutScheduleChangeReservationsInput, Prisma.ScheduleUpdateWithoutScheduleChangeReservationsInput>, Prisma.ScheduleUncheckedUpdateWithoutScheduleChangeReservationsInput>
+}
+
 export type ScheduleCreateNestedManyWithoutLessonInput = {
   create?: Prisma.XOR<Prisma.ScheduleCreateWithoutLessonInput, Prisma.ScheduleUncheckedCreateWithoutLessonInput> | Prisma.ScheduleCreateWithoutLessonInput[] | Prisma.ScheduleUncheckedCreateWithoutLessonInput[]
   connectOrCreate?: Prisma.ScheduleCreateOrConnectWithoutLessonInput | Prisma.ScheduleCreateOrConnectWithoutLessonInput[]
@@ -521,6 +547,68 @@ export type ScheduleUpdateOneWithoutStudentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ScheduleUpdateToOneWithWhereWithoutStudentsInput, Prisma.ScheduleUpdateWithoutStudentsInput>, Prisma.ScheduleUncheckedUpdateWithoutStudentsInput>
 }
 
+export type ScheduleCreateWithoutScheduleChangeReservationsInput = {
+  startTime: string
+  endTime: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  dayOfWeek: number
+  lesson?: Prisma.LessonCreateNestedOneWithoutSchedulesInput
+  students?: Prisma.StudentCreateNestedManyWithoutScheduleInput
+}
+
+export type ScheduleUncheckedCreateWithoutScheduleChangeReservationsInput = {
+  id?: number
+  startTime: string
+  endTime: string
+  lessonId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  dayOfWeek: number
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutScheduleInput
+}
+
+export type ScheduleCreateOrConnectWithoutScheduleChangeReservationsInput = {
+  where: Prisma.ScheduleWhereUniqueInput
+  create: Prisma.XOR<Prisma.ScheduleCreateWithoutScheduleChangeReservationsInput, Prisma.ScheduleUncheckedCreateWithoutScheduleChangeReservationsInput>
+}
+
+export type ScheduleUpsertWithoutScheduleChangeReservationsInput = {
+  update: Prisma.XOR<Prisma.ScheduleUpdateWithoutScheduleChangeReservationsInput, Prisma.ScheduleUncheckedUpdateWithoutScheduleChangeReservationsInput>
+  create: Prisma.XOR<Prisma.ScheduleCreateWithoutScheduleChangeReservationsInput, Prisma.ScheduleUncheckedCreateWithoutScheduleChangeReservationsInput>
+  where?: Prisma.ScheduleWhereInput
+}
+
+export type ScheduleUpdateToOneWithWhereWithoutScheduleChangeReservationsInput = {
+  where?: Prisma.ScheduleWhereInput
+  data: Prisma.XOR<Prisma.ScheduleUpdateWithoutScheduleChangeReservationsInput, Prisma.ScheduleUncheckedUpdateWithoutScheduleChangeReservationsInput>
+}
+
+export type ScheduleUpdateWithoutScheduleChangeReservationsInput = {
+  startTime?: Prisma.StringFieldUpdateOperationsInput | string
+  endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
+  lesson?: Prisma.LessonUpdateOneWithoutSchedulesNestedInput
+  students?: Prisma.StudentUpdateManyWithoutScheduleNestedInput
+}
+
+export type ScheduleUncheckedUpdateWithoutScheduleChangeReservationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  startTime?: Prisma.StringFieldUpdateOperationsInput | string
+  endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  lessonId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
+  students?: Prisma.StudentUncheckedUpdateManyWithoutScheduleNestedInput
+}
+
 export type ScheduleCreateWithoutLessonInput = {
   startTime: string
   endTime: string
@@ -529,6 +617,7 @@ export type ScheduleCreateWithoutLessonInput = {
   deletedAt?: Date | string | null
   dayOfWeek: number
   students?: Prisma.StudentCreateNestedManyWithoutScheduleInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationCreateNestedManyWithoutScheduleInput
 }
 
 export type ScheduleUncheckedCreateWithoutLessonInput = {
@@ -540,6 +629,7 @@ export type ScheduleUncheckedCreateWithoutLessonInput = {
   deletedAt?: Date | string | null
   dayOfWeek: number
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutScheduleInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationUncheckedCreateNestedManyWithoutScheduleInput
 }
 
 export type ScheduleCreateOrConnectWithoutLessonInput = {
@@ -590,6 +680,7 @@ export type ScheduleCreateWithoutStudentsInput = {
   deletedAt?: Date | string | null
   dayOfWeek: number
   lesson?: Prisma.LessonCreateNestedOneWithoutSchedulesInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationCreateNestedManyWithoutScheduleInput
 }
 
 export type ScheduleUncheckedCreateWithoutStudentsInput = {
@@ -601,6 +692,7 @@ export type ScheduleUncheckedCreateWithoutStudentsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   dayOfWeek: number
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationUncheckedCreateNestedManyWithoutScheduleInput
 }
 
 export type ScheduleCreateOrConnectWithoutStudentsInput = {
@@ -627,6 +719,7 @@ export type ScheduleUpdateWithoutStudentsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   lesson?: Prisma.LessonUpdateOneWithoutSchedulesNestedInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationUpdateManyWithoutScheduleNestedInput
 }
 
 export type ScheduleUncheckedUpdateWithoutStudentsInput = {
@@ -638,6 +731,7 @@ export type ScheduleUncheckedUpdateWithoutStudentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationUncheckedUpdateManyWithoutScheduleNestedInput
 }
 
 export type ScheduleCreateManyLessonInput = {
@@ -658,6 +752,7 @@ export type ScheduleUpdateWithoutLessonInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   students?: Prisma.StudentUpdateManyWithoutScheduleNestedInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationUpdateManyWithoutScheduleNestedInput
 }
 
 export type ScheduleUncheckedUpdateWithoutLessonInput = {
@@ -669,6 +764,7 @@ export type ScheduleUncheckedUpdateWithoutLessonInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   students?: Prisma.StudentUncheckedUpdateManyWithoutScheduleNestedInput
+  scheduleChangeReservations?: Prisma.ScheduleChangeReservationUncheckedUpdateManyWithoutScheduleNestedInput
 }
 
 export type ScheduleUncheckedUpdateManyWithoutLessonInput = {
@@ -688,10 +784,12 @@ export type ScheduleUncheckedUpdateManyWithoutLessonInput = {
 
 export type ScheduleCountOutputType = {
   students: number
+  scheduleChangeReservations: number
 }
 
 export type ScheduleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   students?: boolean | ScheduleCountOutputTypeCountStudentsArgs
+  scheduleChangeReservations?: boolean | ScheduleCountOutputTypeCountScheduleChangeReservationsArgs
 }
 
 /**
@@ -711,6 +809,13 @@ export type ScheduleCountOutputTypeCountStudentsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.StudentWhereInput
 }
 
+/**
+ * ScheduleCountOutputType without action
+ */
+export type ScheduleCountOutputTypeCountScheduleChangeReservationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ScheduleChangeReservationWhereInput
+}
+
 
 export type ScheduleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -723,6 +828,7 @@ export type ScheduleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   dayOfWeek?: boolean
   lesson?: boolean | Prisma.Schedule$lessonArgs<ExtArgs>
   students?: boolean | Prisma.Schedule$studentsArgs<ExtArgs>
+  scheduleChangeReservations?: boolean | Prisma.Schedule$scheduleChangeReservationsArgs<ExtArgs>
   _count?: boolean | Prisma.ScheduleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["schedule"]>
 
@@ -743,6 +849,7 @@ export type ScheduleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type ScheduleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lesson?: boolean | Prisma.Schedule$lessonArgs<ExtArgs>
   students?: boolean | Prisma.Schedule$studentsArgs<ExtArgs>
+  scheduleChangeReservations?: boolean | Prisma.Schedule$scheduleChangeReservationsArgs<ExtArgs>
   _count?: boolean | Prisma.ScheduleCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -751,6 +858,7 @@ export type $SchedulePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     lesson: Prisma.$LessonPayload<ExtArgs> | null
     students: Prisma.$StudentPayload<ExtArgs>[]
+    scheduleChangeReservations: Prisma.$ScheduleChangeReservationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1103,6 +1211,7 @@ export interface Prisma__ScheduleClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   lesson<T extends Prisma.Schedule$lessonArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Schedule$lessonArgs<ExtArgs>>): Prisma.Prisma__LessonClient<runtime.Types.Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   students<T extends Prisma.Schedule$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Schedule$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  scheduleChangeReservations<T extends Prisma.Schedule$scheduleChangeReservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Schedule$scheduleChangeReservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ScheduleChangeReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1523,6 +1632,30 @@ export type Schedule$studentsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.StudentScalarFieldEnum | Prisma.StudentScalarFieldEnum[]
+}
+
+/**
+ * Schedule.scheduleChangeReservations
+ */
+export type Schedule$scheduleChangeReservationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ScheduleChangeReservation
+   */
+  select?: Prisma.ScheduleChangeReservationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ScheduleChangeReservation
+   */
+  omit?: Prisma.ScheduleChangeReservationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ScheduleChangeReservationInclude<ExtArgs> | null
+  where?: Prisma.ScheduleChangeReservationWhereInput
+  orderBy?: Prisma.ScheduleChangeReservationOrderByWithRelationInput | Prisma.ScheduleChangeReservationOrderByWithRelationInput[]
+  cursor?: Prisma.ScheduleChangeReservationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ScheduleChangeReservationScalarFieldEnum | Prisma.ScheduleChangeReservationScalarFieldEnum[]
 }
 
 /**

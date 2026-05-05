@@ -93,6 +93,13 @@ export class PatchStudentRequestDto {
   schoolGrade: number;
 }
 
+export class ChangeScheduleRequestDto {
+  @ApiProperty()
+  @IsString()
+  @Nullable()
+  dateForChange: string; // YYYYMMDD
+}
+
 export class CreateNoteRequestDto {
   @ApiProperty()
   @IsString()

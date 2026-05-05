@@ -34,6 +34,23 @@ export class ScheduleService {
   async getSchedulesWithStudents() {
     return await this.prisma.schedule.findMany({ where: { deletedAt: null }, include: { students: true } });
   }
+
+  async reserveScheduleChange({ studentId, scheduleId, date }: ChangeScheduleParams) {
+    await this.prisma.scheduleChangeReservation.create({
+      data: {
+        studentId,
+        scheduleId,
+        date,
+      },
+    });
+    return true;
+  }
+
+  async getReservedScheduleChanges(date: string) {
+    return await this.prisma.scheduleChangeReservation.findMany({
+      where: { date, completedAt: null },
+    });
+  }
 }
 
 export type ScheduleResult = {
@@ -43,4 +60,9 @@ export type ScheduleResult = {
   endTime: string;
   lessonId: number;
   lesson: { id: number; code: string; name: string };
+};
+type ChangeScheduleParams = {
+  studentId: number;
+  scheduleId: number;
+  date: string; // YYYYMMDD
 };

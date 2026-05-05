@@ -14,10 +14,14 @@ export class StudentRepository {
     return this.prismaStudent;
   }
 
-  async findOrThrow(id: number, { includeNotes = false } = {}) {
+  async findOrThrow(id: number, { includeNotes = false, includeScheduleChangeReservations = false } = {}) {
     const student = await this.prisma.student.findUnique({
       where: { id, deletedAt: null },
-      include: { notes: includeNotes ? { where: { deletedAt: null }, include: { lastCommenter: true } } : false },
+      include: {
+        schedule: { include: { lesson: true } },
+        notes: includeNotes ? { where: { deletedAt: null }, include: { lastCommenter: true } } : false,
+        scheduleChangeReservations: includeScheduleChangeReservations ? { where: { completedAt: null } } : false,
+      },
     });
     if (!student) throw new NotFoundException('not found student');
     return student;

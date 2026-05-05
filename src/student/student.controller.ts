@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query 
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
-import { CreateNoteRequestDto, PatchStudentRequestDto, RegisterStudentRequestDto, UpdateNoteRequestDto } from './dto/student-request.dto';
+import { ChangeScheduleRequestDto, CreateNoteRequestDto, PatchStudentRequestDto, RegisterStudentRequestDto, UpdateNoteRequestDto } from './dto/student-request.dto';
 import { ShortStudentDto, StudentNoteDto, StudentDto } from './dto/student-response.dto';
 
 import { AdminRoleType } from '@src/admin/admin.service';
@@ -33,18 +33,9 @@ export class StudentController {
   @ApiOperation({ summary: '학생 정보 조회' })
   @ApiOkResponse({ type: StudentDto })
   async getStudent(@Param('studentId', ParseIntPipe) studentId: number) {
-    const student = await this.studentService.getStudentOrThrow(studentId, { includeNotes: true });
-    console.log(student);
+    const student = await this.studentService.getStudentOrThrow(studentId, { includeNotes: true, includeScheduleChangeReservations: true });
     return toInstance(StudentDto, student);
   }
-
-  // @Get(':studentId/notes')
-  // @ApiOperation({ summary: '학생 노트 목록 조회' })
-  // @ApiOkResponse({ type: StudentNoteDto })
-  // async getNotes(@Param('studentId', ParseIntPipe) studentId: number) {
-  //   const notes = await this.studentService.getNotes(studentId);
-  //   return toInstance(StudentNoteDto, notes);
-  // }
 
   @Post()
   @RequireRole(AdminRoleType.ADMIN)
@@ -70,6 +61,19 @@ export class StudentController {
   @ApiOkResponse({ type: StudentDto })
   async updatePersonalInfo(@Param('studentId', ParseIntPipe) studentId: number, @Body() patchStudentRequestDto: PatchStudentRequestDto) {
     const student = await this.studentService.updatePersonalInfo({ studentId, studentDto: patchStudentRequestDto });
+    return toInstance(StudentDto, student);
+  }
+
+  @Patch(':studentId/schedules/:scheduleId')
+  @RequireRole(AdminRoleType.ADMIN)
+  @ApiOperation({ summary: '학생 스케줄 변경' })
+  @ApiOkResponse({ type: StudentDto })
+  async changeSchedule(
+    @Param('studentId', ParseIntPipe) studentId: number, //
+    @Param('scheduleId', ParseIntPipe) scheduleId: number,
+    @Body() { dateForChange }: ChangeScheduleRequestDto,
+  ) {
+    const student = await this.studentService.changeSchedule({ studentId, scheduleId, dateForChange });
     return toInstance(StudentDto, student);
   }
 

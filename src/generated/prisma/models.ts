@@ -10,6 +10,7 @@
  */
 export type * from './models/ActivityRecord'
 export type * from './models/ActivityRecordGenerationLog'
+export type * from './models/ScheduleChangeReservation'
 export type * from './models/ActivityRecordLog'
 export type * from './models/Admin'
 export type * from './models/BookRental'

@@ -6,6 +6,7 @@ import { ActivityRecordGenerationLogRepository, ActivityRepository } from './act
 import { DateService } from '@src/common/utils/date';
 
 import { UpdateActivityRecordRequestDto, UpdateMonthlyActivityRecordRequestDto } from './dto/activity.request.dto';
+import { ScheduleResult } from '@src/schedule/schedule.service';
 
 /**
  * @description ARGL: ActivityRecordGenerationLog
@@ -20,10 +21,7 @@ export class ActivityService {
 
   async getActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
     const activityRecords: ActivityRecordWithBorrowedBook[] = await this.activityRepository.findMany({
-      where: {
-        date,
-        student: { scheduleId, deletedAt: null },
-      },
+      where: { date, scheduleId },
       include: {
         student: {
           include: {
@@ -47,10 +45,15 @@ export class ActivityService {
     }));
   }
 
-  async generateThisMonthActivityRecords({ students, dayOfWeek, yearMonth = this.date.currentYearMonth() }: { students: Student[]; dayOfWeek: number; yearMonth?: string }) {
-    const dates = this.date.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek });
-    const activityRecords = students.flatMap((student) => dates.map((date) => ({ studentId: student.id, date })));
+  async generateActivityRecordsForSchedule({ students, dayOfWeek, yearMonth = this.date.currentYearMonth(), startDay }: { students: Student[]; dayOfWeek: number; yearMonth?: string; startDay?: number }) {
+    const dates = this.date.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek, startDay });
+    const activityRecords = students.flatMap((student) => dates.map((date) => ({ studentId: student.id, date, scheduleId: student.scheduleId })));
     return await this.activityRepository.createMany(activityRecords);
+  }
+
+  async removeActivityRecordsByScheduleChange({ studentId, schedule, dateForChange }: { studentId: number; schedule: ScheduleResult; dateForChange: string }) {
+    const dates = this.date.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth: dateForChange.slice(0, 6), dayOfWeek: schedule.dayOfWeek, startDay: Number(dateForChange.slice(6)) });
+    await this.activityRepository.deleteMany({ studentId, date: { in: dates } });
   }
 
   async generateARGLs({ yearMonth }: { yearMonth: string }) {
