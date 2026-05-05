@@ -21,11 +21,14 @@ export class StudentTask {
       const reservedChanges = await this.scheduleService.getReservedScheduleChanges(date);
       if (!reservedChanges.length) return;
 
-      await Promise.all(
+      const results = await Promise.all(
         reservedChanges.map(async ({ studentId, scheduleId, date }) => {
-          await this.studentService.executeScheduleChange({ studentId, scheduleId, dateForChange: date });
+          const result = await this.studentService.executeScheduleChange({ studentId, scheduleId, dateForChange: date });
+          return { studentId, scheduleId, date, success: result };
         }),
       );
+
+      // TODO: results 확인 후 실패 별도 처리
 
       this.logger.log(`Executed schedule changes for ${reservedChanges.length} students`);
     } catch (error) {
