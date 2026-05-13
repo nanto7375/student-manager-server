@@ -27,6 +27,8 @@ export class EnvironmentVariables {
   @IsOptional()
   SM_LOG_LEVEL: 'error' | 'warn' | 'info' | 'verbose' | 'debug' = 'info';
 
+  SM_DOMAIN: string;
+
   SM_DATABASE_URL: string;
 
   SM_MYSQL_DB: string;

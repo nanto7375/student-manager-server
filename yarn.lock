@@ -1211,12 +1211,12 @@
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.2.4.tgz#d897170a2b0ba51f78a099edccd968f7b103387c"
   integrity sha512-ROFF39F6ZrnzSUEmQQZUar0Jt4xVoP9WnDRdWwF4NNcXs3xBTLgBUDoOwW141y1jP+S8nahIbdxbFC7IShw9Iw==
 
-"@prisma/adapter-mariadb@^7.3.0":
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/@prisma/adapter-mariadb/-/adapter-mariadb-7.3.0.tgz#56aebbc8ebb1fcbf246cdd2e53b5d484169971a9"
-  integrity sha512-cZaNZqdnm255Di8+0ztWDVdg40zRburNEMqHN2AIP98SO0Xbo9UDqHKC7sYkmm5Rqy9fNVxMjBJnoiZJ4Ae+tw==
+"@prisma/adapter-mariadb@^7.8.0":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@prisma/adapter-mariadb/-/adapter-mariadb-7.8.0.tgz#f04ba6fa61c80b127e5c726467f9a290105f492f"
+  integrity sha512-mWsgcfbUjxB3qSzRlLs8E03vsKrqXzYK2zpx3e8u6wIgeHJM/sE46cuOGcYvHiZGmeQLCd3xL6YSSGM9QOLI6w==
   dependencies:
-    "@prisma/driver-adapter-utils" "7.3.0"
+    "@prisma/driver-adapter-utils" "7.8.0"
     mariadb "3.4.5"
 
 "@prisma/client-runtime-utils@7.3.0":
@@ -1260,6 +1260,11 @@
   resolved "https://registry.yarnpkg.com/@prisma/debug/-/debug-7.3.0.tgz#b953ee8263b26af54ddb2c1799953009d51ec814"
   integrity sha512-yh/tHhraCzYkffsI1/3a7SHX8tpgbJu1NPnuxS4rEpJdWAUDHUH25F1EDo6PPzirpyLNkgPPZdhojQK804BGtg==
 
+"@prisma/debug@7.8.0":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@prisma/debug/-/debug-7.8.0.tgz#8e2f70d284b3091c2d713aa093a0f5898487e431"
+  integrity sha512-p+QZReysDUqXC+mk17q9a+Y/qzh4c2KYliDK30buYUyfrGeTGSyfmc0AIrJRhZJrLHhRiJa9Au/J72h3C+szvA==
+
 "@prisma/dev@0.20.0":
   version "0.20.0"
   resolved "https://registry.yarnpkg.com/@prisma/dev/-/dev-0.20.0.tgz#cdcb1d7f707818b0245d53d98cec4c998fb8ba47"
@@ -1283,12 +1288,12 @@
     valibot "1.2.0"
     zeptomatch "2.1.0"
 
-"@prisma/driver-adapter-utils@7.3.0":
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/@prisma/driver-adapter-utils/-/driver-adapter-utils-7.3.0.tgz#3242f206a8749846db1c611a5cb283c547da7c0f"
-  integrity sha512-Wdlezh1ck0Rq2dDINkfSkwbR53q53//Eo1vVqVLwtiZ0I6fuWDGNPxwq+SNAIHnsU+FD/m3aIJKevH3vF13U3w==
+"@prisma/driver-adapter-utils@7.8.0":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@prisma/driver-adapter-utils/-/driver-adapter-utils-7.8.0.tgz#60f42a5bfb257d01185c27d8022a2a500d71d56b"
+  integrity sha512-/Q13o0ZT0rjc1Xk0Q9KhZYwuq2EW/vSbWUBKfgEKkaCuB/Sg6bqnjmTZqC5cD4d6y1vfFAEwBRzfzoSMIVJ55A==
   dependencies:
-    "@prisma/debug" "7.3.0"
+    "@prisma/debug" "7.8.0"
 
 "@prisma/engines-version@7.3.0-16.9d6ad21cbbceab97458517b147a6a09ff43aa735":
   version "7.3.0-16.9d6ad21cbbceab97458517b147a6a09ff43aa735"
@@ -1864,9 +1869,9 @@
     undici-types "~6.21.0"
 
 "@types/node@^24.0.13":
-  version "24.10.11"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.10.11.tgz#63e8463eec9fb2cdaa9a1ff96e6bf3303268460f"
-  integrity sha512-/Af7O8r1frCVgOz0I62jWUtMohJ0/ZQU/ZoketltOJPZpnb17yoNc9BSoVuV9qlaIXJiPNOpsfq4ByFajSArNQ==
+  version "24.12.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.12.4.tgz#2709745569811dcbdc57c097fafdd387c6330382"
+  integrity sha512-GUUEShf+PBCGW2KaXwcIt3Yk+e3pkKwWKb9GSyM9WQVE+ep2jzmHdGsHzu4wgcZy5fN9FBdVzjpBQsYlpfpgLA==
   dependencies:
     undici-types "~7.16.0"
 
