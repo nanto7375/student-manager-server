@@ -23,7 +23,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:push": "prisma db push",
     "prisma:format": "prisma format",
-    "prisma:format-case": "prisma-case-format -f prisma/schema.prisma"
+    "prisma:format-case": "prisma-case-format -f prisma/schema.prisma",
+    "deploy": "sh deploy.sh"
   },
   "dependencies": {
     "@nestjs/cache-manager": "2.3.0",
