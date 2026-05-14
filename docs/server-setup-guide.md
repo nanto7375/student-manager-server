@@ -279,9 +279,10 @@ mysql -u root -p --host=127.0.0.1 --port=13306 leo_library < "/경로/덤프파�
 
 ## 5. Nginx 설정
 
-Nginx는 리버스 프록시로 동작하여:
-- `/` 요청 → React 정적 파일 서빙
-- `/api/` 요청 → NestJS API 서버로 전달
+Nginx는 도메인별로 요청을 분기한다:
+- `admin.example.com` → React 정적 파일 서빙
+- `api.example.com` → NestJS API 서버로 전달
+- `example.com` → 접속 차단
 
 ### 설정 파일 생성
 
@@ -290,11 +291,19 @@ vi /etc/nginx/sites-available/leo-server
 ```
 
 ```nginx
+# 루트 도메인 → 접속 차단
 server {
     listen 80;
-    server_name 본인도메인;
+    server_name example.com;
+    return 444;
+    # 444: Nginx 전용 코드. 응답 없이 연결을 즉시 끊음
+}
 
-    # React 정적 페이지 (SPA)
+# 클라이언트 (React SPA)
+server {
+    listen 80;
+    server_name admin.example.com;
+
     location / {
         root /var/www/leo-client;
         index index.html;
@@ -302,12 +311,16 @@ server {
         # try_files: 요청된 파일이 없으면 index.html을 반환
         # SPA는 클라이언트에서 라우팅하므로 모든 경로에서 index.html을 반환해야 함
     }
+}
 
-    # API 리버스 프록시
-    location /api/ {
-        proxy_pass http://localhost:3000/;
-        # /api/ 이후의 경로를 localhost:3000으로 전달
-        # 끝의 /가 중요: /api/v1/auth → localhost:3000/v1/auth 로 변환
+# API 서버 리버스 프록시
+server {
+    listen 80;
+    server_name api.example.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        # 요청을 그대로 NestJS 서버로 전달 (prefix 제거 불필요)
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -617,54 +630,17 @@ apt update                   # 패키지 목록 갱신
 - 호스트: `admin`
 - 값: 루트 도메인 (예: `example.com`)
 
+- 호스트: `api`
+- 값: 루트 도메인 (예: `example.com`)
+
 CNAME은 IP를 찾기 위한 별칭이다. `admin.example.com`으로 요청하면 DNS가 `example.com`의 IP를 찾아서 연결해주지만, 실제 HTTP 요청의 Host 헤더는 `admin.example.com`으로 유지된다.
 
 ### DNS 전파 확인
 
 ```bash
 nslookup admin.example.com
+nslookup api.example.com
 # 서버 IP가 나오면 전파 완료 (수 분~수 시간 소요)
-```
-
-### Nginx에서 도메인별 분기
-
-```bash
-vi /etc/nginx/sites-available/student-manager
-```
-
-```nginx
-# 루트 도메인 → 접속 차단
-server {
-    listen 80;
-    server_name example.com;
-    return 444;
-    # 444: Nginx 전용 코드. 응답 없이 연결을 즉시 끊음
-}
-
-# 서브도메인 → 실제 서비스
-server {
-    listen 80;
-    server_name admin.example.com;
-
-    location / {
-        root /var/www/클라이언트폴더;
-        index index.html;
-        try_files $uri $uri/ /index.html;
-    }
-
-    location /api/ {
-        proxy_pass http://localhost:3000/;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}
-```
-
-```bash
-nginx -t
-systemctl restart nginx
 ```
 
 Nginx의 `server_name`은 HTTP 요청의 `Host` 헤더를 확인하여 어떤 server 블록으로 라우팅할지 결정한다. 같은 IP에 여러 도메인을 연결해도 도메인별로 다르게 처리할 수 있는 이유가 이것이다.
@@ -689,9 +665,11 @@ apt install -y certbot python3-certbot-nginx
 # python3-certbot-nginx: Nginx 설정을 자동으로 수정해주는 플러그인
 
 certbot --nginx -d admin.example.com
+certbot --nginx -d api.example.com
 # -d: 인증서를 발급할 도메인 지정
 # --nginx: Nginx 설정에 HTTPS를 자동 적용
 # 이메일 입력 + 약관 동의 필요
+# 서브도메인별로 각각 발급해야 함
 ```
 
 certbot이 자동으로 처리하는 것:
@@ -723,5 +701,5 @@ systemctl start certbot.timer
 
 ### HTTPS 적용 후 할 일
 
-1. GitHub Secrets에서 `VITE_API_URL`을 `https://admin.example.com`으로 변경
+1. GitHub Secrets에서 `VITE_API_URL`을 `https://api.example.com`으로 변경
 2. 클라이언트 재배포 (API 요청이 HTTPS로 나가도록)
