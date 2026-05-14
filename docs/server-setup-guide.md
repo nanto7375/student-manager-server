@@ -600,3 +600,128 @@ pm2 restart leo-api          # 재시작
 apt list --installed         # 설치된 패키지 목록
 apt update                   # 패키지 목록 갱신
 ```
+
+---
+
+## 9. 도메인 설정
+
+### 도메인 구매 후 DNS 설정
+
+도메인 관리 페이지에서 레코드 추가:
+
+**A 레코드 (루트 도메인):**
+- 호스트: `@` (또는 빈칸)
+- 값: 서버 IP
+
+**CNAME 레코드 (서브도메인):**
+- 호스트: `admin`
+- 값: 루트 도메인 (예: `example.com`)
+
+CNAME은 IP를 찾기 위한 별칭이다. `admin.example.com`으로 요청하면 DNS가 `example.com`의 IP를 찾아서 연결해주지만, 실제 HTTP 요청의 Host 헤더는 `admin.example.com`으로 유지된다.
+
+### DNS 전파 확인
+
+```bash
+nslookup admin.example.com
+# 서버 IP가 나오면 전파 완료 (수 분~수 시간 소요)
+```
+
+### Nginx에서 도메인별 분기
+
+```bash
+vi /etc/nginx/sites-available/student-manager
+```
+
+```nginx
+# 루트 도메인 → 접속 차단
+server {
+    listen 80;
+    server_name example.com;
+    return 444;
+    # 444: Nginx 전용 코드. 응답 없이 연결을 즉시 끊음
+}
+
+# 서브도메인 → 실제 서비스
+server {
+    listen 80;
+    server_name admin.example.com;
+
+    location / {
+        root /var/www/클라이언트폴더;
+        index index.html;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://localhost:3000/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+
+```bash
+nginx -t
+systemctl restart nginx
+```
+
+Nginx의 `server_name`은 HTTP 요청의 `Host` 헤더를 확인하여 어떤 server 블록으로 라우팅할지 결정한다. 같은 IP에 여러 도메인을 연결해도 도메인별로 다르게 처리할 수 있는 이유가 이것이다.
+
+---
+
+## 10. HTTPS (SSL) 설정
+
+### Let's Encrypt + certbot
+
+Let's Encrypt는 무료 SSL 인증서를 제공한다. certbot이 발급/갱신/Nginx 설정을 자동으로 처리해준다.
+
+**전제 조건:**
+- 본인 소유 도메인이 있어야 함 (카페24 기본 도메인으로는 발급 불가)
+- DNS가 서버 IP로 전파 완료되어 있어야 함
+
+### 설치 및 인증서 발급
+
+```bash
+apt install -y certbot python3-certbot-nginx
+# certbot: Let's Encrypt 인증서 발급/관리 도구
+# python3-certbot-nginx: Nginx 설정을 자동으로 수정해주는 플러그인
+
+certbot --nginx -d admin.example.com
+# -d: 인증서를 발급할 도메인 지정
+# --nginx: Nginx 설정에 HTTPS를 자동 적용
+# 이메일 입력 + 약관 동의 필요
+```
+
+certbot이 자동으로 처리하는 것:
+- SSL 인증서 발급
+- Nginx에 443(HTTPS) 리스닝 추가
+- HTTP → HTTPS 리다이렉트 설정
+
+### 인증서 자동 갱신
+
+Let's Encrypt 인증서는 90일마다 만료된다. certbot이 하루 2번 갱신 시도하며, 만료 30일 전부터 실제 갱신이 실행된다. 횟수 제한 없이 무한 연장 가능.
+
+**자동 갱신 테스트:**
+```bash
+certbot renew --dry-run
+# 에러 없으면 자동 갱신 정상 동작
+```
+
+**자동 갱신 비활성화 (권장하지 않음):**
+```bash
+systemctl disable certbot.timer
+systemctl stop certbot.timer
+```
+
+**다시 활성화:**
+```bash
+systemctl enable certbot.timer
+systemctl start certbot.timer
+```
+
+### HTTPS 적용 후 할 일
+
+1. GitHub Secrets에서 `VITE_API_URL`을 `https://admin.example.com`으로 변경
+2. 클라이언트 재배포 (API 요청이 HTTPS로 나가도록)
