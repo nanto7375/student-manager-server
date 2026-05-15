@@ -103,13 +103,13 @@ vi ~/.ssh/config
 ```
 
 ```
-Host leo_server
+Host my_server
     HostName 서버IP주소
     User root
     Port {포트}
 ```
 
-이후 `ssh leo_server`만으로 접속 가능.
+이후 `ssh my_server`만으로 접속 가능.
 
 ---
 
@@ -237,16 +237,16 @@ mysql -u root -p
 ```
 
 ```sql
-CREATE DATABASE leo_library;
+CREATE DATABASE my_database;
 -- 애플리케이션용 데이터베이스 생성
 
-CREATE USER 'leo_server'@'localhost' IDENTIFIED BY '비밀번호';
+CREATE USER 'my_user'@'localhost' IDENTIFIED BY '비밀번호';
 -- 애플리케이션 전용 유저 생성
--- 'leo_server'@'localhost': localhost에서만 접속 가능한 유저
+-- 'my_user'@'localhost': localhost에서만 접속 가능한 유저
 
-GRANT ALL PRIVILEGES ON leo_library.* TO 'leo_server'@'localhost';
--- leo_server 유저에게 leo_library DB에 대한 모든 권한 부여
--- leo_library.* : 해당 DB의 모든 테이블에 대해
+GRANT ALL PRIVILEGES ON my_database.* TO 'my_user'@'localhost';
+-- my_user 유저에게 my_database DB에 대한 모든 권한 부여
+-- my_database.* : 해당 DB의 모든 테이블에 대해
 -- 다른 DB나 시스템 설정은 접근 불가
 
 FLUSH PRIVILEGES;
@@ -269,7 +269,7 @@ ssh -p {포트} -L 13306:localhost:3306 root@서버IP주소
 
 **터미널 2 — 리스토어 실행:**
 ```bash
-mysql -u root -p --host=127.0.0.1 --port=13306 leo_library < "/경로/덤프파일.sql"
+mysql -u root -p --host=127.0.0.1 --port=13306 my_database < "/경로/덤프파일.sql"
 # --host=127.0.0.1 --port=13306: 로컬 13306에 접속 → 터널을 통해 서버 MySQL로 전달
 # < 덤프파일.sql: SQL 파일의 내용을 서버 MySQL로 전송
 # 파일 경로에 공백이나 특수문자가 있으면 따옴표로 감싸야 함
@@ -287,7 +287,7 @@ Nginx는 도메인별로 요청을 분기한다:
 ### 설정 파일 생성
 
 ```bash
-vi /etc/nginx/sites-available/leo-server
+vi /etc/nginx/sites-available/my-app
 ```
 
 ```nginx
@@ -305,7 +305,7 @@ server {
     server_name admin.example.com;
 
     location / {
-        root /var/www/leo-client;
+        root /var/www/my-client;
         index index.html;
         try_files $uri $uri/ /index.html;
         # try_files: 요청된 파일이 없으면 index.html을 반환
@@ -333,7 +333,7 @@ server {
 ### 설정 활성화
 
 ```bash
-ln -s /etc/nginx/sites-available/leo-server /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/my-app /etc/nginx/sites-enabled/
 # 심볼릭 링크 생성으로 설정 활성화
 
 rm /etc/nginx/sites-enabled/default
@@ -355,10 +355,10 @@ PM2는 Node.js 애플리케이션을 백그라운드에서 실행하고, 크래�
 ### 애플리케이션 실행
 
 ```bash
-cd /var/www/leo-server
-pm2 start dist/main.js --name leo-server
+cd /var/www/my-server
+pm2 start dist/main.js --name my-server
 # dist/main.js: NestJS 빌드 결과물의 진입점
-# --name leo-api: 프로세스에 이름 부여 (관리 편의)
+# --name my-server: 프로세스에 이름 부여 (관리 편의)
 ```
 
 ### 서버 재부팅 시 자동 시작
@@ -377,10 +377,10 @@ pm2 save
 ```bash
 pm2 status              # 실행 중인 프로세스 상태 확인
 pm2 logs                # 로그 실시간 확인
-pm2 logs leo-api        # 특정 프로세스 로그만 확인
-pm2 restart leo-api     # 재시작
-pm2 stop leo-api        # 중지
-pm2 delete leo-api      # 프로세스 제거
+pm2 logs my-server        # 특정 프로세스 로그만 확인
+pm2 restart my-server     # 재시작
+pm2 stop my-server        # 중지
+pm2 delete my-server      # 프로세스 제거
 ```
 
 ---
@@ -457,7 +457,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "build/client/*"
-          target: "/var/www/leo-client"
+          target: "/var/www/my-client"
           strip_components: 2
           # strip_components: 2 → build/client/ 경로를 제거하고 내용물만 전송
 ```
@@ -495,7 +495,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "dist/*,node_modules/*,package.json,prisma/*"
-          target: "/var/www/leo-server"
+          target: "/var/www/my-server"
           # CI에서 빌드한 결과물만 서버에 전송
           # 서버에서 install/build를 하지 않으므로 메모리 부담 없음
 
@@ -512,8 +512,8 @@ jobs:
             # nvm 환경을 로드 (non-interactive 쉘에서는 자동 로드되지 않음)
             # [ -s 파일 ]: 파일이 존재하고 크기가 0이 아닌지 확인
             # && . 파일: 조건이 참이면 해당 파일을 현재 쉘에 로드 (source와 동일)
-            cd /var/www/leo-server
-            pm2 restart leo-api || pm2 start dist/main.js --name leo-api
+            cd /var/www/my-server
+            pm2 restart my-server || pm2 start dist/main.js --name my-server
             # restart 실패 시(첫 배포) start로 실행
 ```
 
@@ -536,7 +536,7 @@ jobs:
 **Main 탭:**
 - Host: localhost
 - Port: 3306
-- Database: leo_library
+- Database: my_database
 - Username: db user name
 - Password: db user password
 
@@ -546,13 +546,13 @@ jobs:
 
 ```
 /var/www/
-├── leo-server/          ← API 서버 (NestJS 빌드 결과물)
+├── my-server/          ← API 서버 (NestJS 빌드 결과물)
 │   ├── dist/            ← 컴파일된 JS
 │   ├── node_modules/    ← 의존성
 │   ├── prisma/          ← Prisma 스키마
 │   ├── package.json
 │   └── .env             ← 환경변수 (수동 관리, Git에 포함하지 않음)
-└── leo-client/          ← 클라이언트 (React 빌드 결과물)
+└── my-client/          ← 클라이언트 (React 빌드 결과물)
     ├── index.html
     └── assets/          ← JS, CSS, 이미지
 ```
@@ -561,15 +561,15 @@ jobs:
 
 ## .env 파일 (API 서버)
 
-서버의 `/var/www/leo-server/.env`에 수동으로 생성:
+서버의 `/var/www/my-server/.env`에 수동으로 생성:
 
 ```env
 SM_ENV=production
 SM_PORT=3000
 SM_SERVER_VERSION=1
 
-SM_MYSQL_DB=leo_library
-SM_MYSQL_DB_USER=leo_server
+SM_MYSQL_DB=my_database
+SM_MYSQL_DB_USER=my_user
 SM_MYSQL_DB_PASSWORD=
 SM_MYSQL_DB_HOST=
 SM_MYSQL_DB_PORT=
@@ -607,7 +607,7 @@ systemctl restart nginx      # 재시작
 # PM2
 pm2 status                   # 프로세스 상태
 pm2 logs                     # 로그 확인
-pm2 restart leo-api          # 재시작
+pm2 restart my-server          # 재시작
 
 # apt 패키지
 apt list --installed         # 설치된 패키지 목록

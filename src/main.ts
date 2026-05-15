@@ -21,49 +21,50 @@ const initSwagger = (app: NestExpressApplication, version: string) => {
 };
 
 const _throwBadRequestWithExplicitMessage = (errors: ValidationError[]) => {
-  const messages = errors.map((error) => {
-    const target = error.target.constructor.name;
-    const property = error.property;
-    const stringifiedConstraints = Object.values(error.constraints).join(', ');
-    return `[${target}]${property}: ${stringifiedConstraints}`;
-  });
-  return new BadRequestException(messages.join('\n'));
+  const extractMessages = (errors: ValidationError[], parent?: string): string[] =>
+    errors.flatMap((error) => {
+      const property = parent ? `${parent}.${error.property}` : error.property;
+      if (error.constraints) {
+        const target = error.target?.constructor?.name ?? 'Unknown';
+        return [`[${target}]${property}: ${Object.values(error.constraints).join(', ')}`];
+      }
+      return error.children?.length ? extractMessages(error.children, property) : [];
+    });
+  return new BadRequestException(extractMessages(errors).join('\n'));
 };
 
 async function bootstrap() {
-  // TODO: 이후에 origin 특정 도메인으로 변경
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    bodyParser: true,
-    cors: {
-      origin: true,
-      credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-      preflightContinue: false,
-    },
-    logger,
-  });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bodyParser: true, logger });
 
   const configService = app.get(ConfigService);
   const env = configService.get('SM_ENV');
+  const isProd = env === Environment.Production;
+
+  const corsOptions = {
+    origin: isProd ? 'https://admin.leolibrary.store' : true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    preflightContinue: false,
+  };
+  app.enableCors(corsOptions);
 
   const serverVersion = configService.get('SM_SERVER_VERSION');
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: serverVersion,
   });
-  if (env !== Environment.Production) initSwagger(app, serverVersion);
+  if (!isProd) initSwagger(app, serverVersion);
 
   app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      exceptionFactory: (errors) => (env === Environment.Production ? new BadRequestException() : _throwBadRequestWithExplicitMessage(errors)),
+      exceptionFactory: (errors) => (isProd ? new BadRequestException() : _throwBadRequestWithExplicitMessage(errors)),
     }),
   );
 
   const port = configService.get('SM_PORT');
-  await app.listen(port, () => {
-    logger.log(`Server is running on: http://localhost:${port}/v${serverVersion}`);
-  });
+  await app.listen(port);
+  logger.log(`Server is running on: http://localhost:${port}/v${serverVersion}`);
 }
 bootstrap();

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { Transactional } from '@nestjs-cls/transactional';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { ActivityService } from './activity.service';
@@ -20,13 +21,13 @@ export class ActivityTask {
   // TODO: refactoring
   // TODO: queue로 처리?
   @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
+  @Transactional()
   async generateActivityRecordsForAllStudents() {
     try {
       const currentYearMonth = this.date.currentYearMonth();
       const thisMonthARGL = await this.activityService.getARGLsInThisMonth(currentYearMonth);
       if (thisMonthARGL) return;
 
-      // TODO: transaction
       const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
       for (const schedule of schedulesWithStudents) {
         await this.activityService.generateActivityRecordsForSchedule({

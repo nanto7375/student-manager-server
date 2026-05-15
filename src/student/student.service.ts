@@ -9,6 +9,7 @@ import { SchoolLevel } from '@src/common/constant/common.const';
 import { DateService } from '@src/common/utils/date';
 import { PaginationDto } from '@src/common/common.dto';
 import { ActivityService } from '@src/activity/activity.service';
+import { Transactional } from '@nestjs-cls/transactional';
 
 type NoteType = 'assessment' | 'parent-counseling' | 'fixed-memo' | 'temporary-memo';
 
@@ -38,6 +39,7 @@ export class StudentService {
     return await this.studentRepository._.findMany({ where, take: limit, skip: offset, orderBy: { name: 'asc' } });
   }
 
+  @Transactional()
   async register({ registeredAt = this.date.now(), ...studentDto }: RegisterStudentRequestDto & { registeredAt?: Date }) {
     const schedule = studentDto.scheduleId ? await this.scheduleService.getScheduleOrThrow(studentDto.scheduleId) : null;
 
@@ -63,7 +65,6 @@ export class StudentService {
       .setSchedule(schedule?.id)
       .create();
 
-    // TODO: transaction 처리할지 고민
     const savedStudent = await this.studentRepository._.create({ data: newStudent });
     if (schedule) {
       await this.activityService.generateActivityRecordsForSchedule({
@@ -117,6 +118,7 @@ export class StudentService {
     return true;
   }
 
+  @Transactional()
   async executeScheduleChange({ studentId, scheduleId, dateForChange }: ChangeScheduleParams) {
     let student, schedule;
     try {
@@ -130,7 +132,6 @@ export class StudentService {
     const previousSchedule = student.schedule;
     const [yearMonth, day] = [dateForChange.slice(0, 6), dateForChange.slice(6)];
 
-    // TODO: transaction
     await this.activityService.removeActivityRecordsByScheduleChange({ studentId, schedule: previousSchedule, dateForChange });
     await this.activityService.generateActivityRecordsForSchedule({
       students: [student],
