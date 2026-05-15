@@ -3,6 +3,9 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
+import { ClsModule } from 'nestjs-cls';
+import { ClsPluginTransactional } from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 
 import { AppController } from './app.controller';
 import { GlobalExceptionFilter, NotFoundExceptionFilter } from './common/exception-filters';
@@ -24,11 +27,22 @@ import { ActivityModule } from './activity/activity.module';
 import { AppBootstrapService } from './app-bootstrap.service';
 import { UtilsModule } from './common/utils/utils.module';
 import { PrismaModule } from './configs/prisma/prisma.module';
+import { PrismaService } from './configs/prisma/prisma.service';
 import { BookRentalModule } from './book-rental/book-rental.module';
 
 @Module({
   imports: [
     ConfigDynamicModule,
+    ClsModule.forRoot({
+      plugins: [
+        new ClsPluginTransactional({
+          imports: [PrismaModule],
+          adapter: new TransactionalAdapterPrisma({
+            prismaInjectionToken: PrismaService,
+          }),
+        }),
+      ],
+    }),
     ThrottlerModule.forRoot(intializeStandardThrottlers()),
     EventEmitterModule.forRoot(),
     NestScheduleModule.forRoot(),
