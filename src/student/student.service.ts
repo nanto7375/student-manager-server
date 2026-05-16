@@ -41,6 +41,7 @@ export class StudentService {
       where,
       include: {
         schedule: { include: { lesson: true } },
+        scheduleChangeReservations: { where: { completedAt: null }, include: { schedule: true } },
       },
       take: limit,
       skip: offset,
@@ -89,7 +90,7 @@ export class StudentService {
   async updatePersonalInfo({ studentId, studentDto }: UpdatePersonalInfoParams) {
     const student = await this.studentRepository.findOrThrow(studentId);
 
-    const updatedStudent = this.studentBuilder
+    const updatedData = this.studentBuilder
       .editor(student)
       .setBirth({
         birthYear: studentDto.birthYear,
@@ -106,7 +107,7 @@ export class StudentService {
       })
       .edit();
 
-    return await this.studentRepository._.update({ where: { id: studentId }, data: updatedStudent });
+    return await this.studentRepository._.update({ where: { id: studentId }, data: updatedData });
   }
 
   async changeSchedule({ studentId, scheduleId, dateForChange }: ChangeScheduleParams) {

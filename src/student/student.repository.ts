@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { DateService } from '@src/common/utils/date';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
-import { Prisma } from '@src/generated/prisma/client';
 
 @Injectable()
 export class StudentRepository {
@@ -20,7 +19,7 @@ export class StudentRepository {
       include: {
         schedule: { include: { lesson: true } },
         notes: includeNotes ? { where: { deletedAt: null }, include: { lastCommenter: true } } : false,
-        scheduleChangeReservations: includeScheduleChangeReservations ? { where: { completedAt: null } } : false,
+        scheduleChangeReservations: includeScheduleChangeReservations ? { where: { completedAt: null }, include: { schedule: true } } : false,
       },
     });
     if (!student) throw new NotFoundException('not found student');
