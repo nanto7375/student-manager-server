@@ -39,7 +39,7 @@ export class AdminController {
   @ApiOkResponsePaginated(AdminDto)
   async getAdmins(@Query() { limit, offset }: PaginationRequestDto) {
     const [admins, count] = await this.adminService.getAdminList({ offset, limit });
-    return { data: toInstance(AdminDto, admins), count };
+    return { list: toInstance(AdminDto, admins), count };
   }
 
   @Get('me')

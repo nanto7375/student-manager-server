@@ -1,3 +1,4 @@
+import { StudentTask } from './student.task';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { NoteRepository, StudentRepository } from './student.repository';
@@ -36,7 +37,17 @@ export class StudentService {
       ...(!Number.isNaN(schoolLevel) && { schoolLevel }),
       ...(!Number.isNaN(dayOfWeek) && { schedule: { dayOfWeek } }),
     };
-    return await this.studentRepository._.findMany({ where, take: limit, skip: offset, orderBy: { name: 'asc' } });
+    const students = await this.studentRepository._.findMany({
+      where,
+      include: {
+        schedule: { include: { lesson: true } },
+      },
+      take: limit,
+      skip: offset,
+      orderBy: { name: 'asc' },
+    });
+    const count = await this.studentRepository._.count({ where });
+    return [students, count];
   }
 
   @Transactional()
@@ -103,9 +114,7 @@ export class StudentService {
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     if (student.scheduleId === scheduleId) return student;
 
-    if (dateForChange) {
-      await this.scheduleService.reserveScheduleChange({ studentId, scheduleId, date: dateForChange });
-    } else {
+    if (!dateForChange) {
       const savedStudent = await this.studentRepository._.update({
         where: { id: studentId },
         data: { schedule: { connect: { id: schedule.id } } },
@@ -114,6 +123,13 @@ export class StudentService {
         students: [savedStudent],
         dayOfWeek: schedule.dayOfWeek,
       });
+    }
+
+    const now = this.date.format(this.date.now(), 'YYYYMMDD');
+    if (dateForChange === now) {
+      await this.executeScheduleChange({ studentId, scheduleId, dateForChange });
+    } else {
+      await this.scheduleService.reserveScheduleChange({ studentId, scheduleId, date: dateForChange });
     }
     return true;
   }
@@ -143,6 +159,8 @@ export class StudentService {
       where: { id: studentId },
       data: { schedule: { connect: { id: scheduleId } } },
     });
+    await this.scheduleService.completeReservedScheduleChange({ studentId, date: dateForChange, scheduleId });
+    await this.scheduleService.deleteReservedScheduleChange(studentId);
     return true;
   }
 

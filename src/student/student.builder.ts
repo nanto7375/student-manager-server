@@ -116,6 +116,7 @@ class StudentCreator {
 
 class StudentEditor {
   private validate: StudentValidator;
+  private _updatedData: Prisma.StudentUpdateInput = {};
 
   constructor(private _student: Student) {
     this.validate = new StudentValidator(this._student.registeredAt.getFullYear());
@@ -124,42 +125,42 @@ class StudentEditor {
   setBirth({ birthYear, birthDate }: SetBirthParams) {
     if (!isNullish(birthYear)) {
       this.validate.birthYear(birthYear);
-      this._student.birthYear = birthYear;
+      this._updatedData.birthYear = birthYear;
     }
     if (!isNullish(birthDate)) {
       this.validate.birthDate(birthDate);
-      this._student.birthDate = birthDate;
+      this._updatedData.birthDate = birthDate;
     }
     return this;
   }
   setContacts({ phone, parentPhone }: SetContactsParams) {
     if (!isNullish(phone)) {
       this.validate.phone(phone);
-      this._student.phone = phone;
+      this._updatedData.phone = phone;
     }
     if (!isNullish(parentPhone)) {
       this.validate.phone(parentPhone);
-      this._student.parentPhone = parentPhone;
+      this._updatedData.parentPhone = parentPhone;
     }
     return this;
   }
   setSchool({ schoolName, schoolLevel, schoolGrade }: SetSchoolParams) {
     if (!isNullish(schoolName)) {
       this.validate.schoolName(schoolName);
-      this._student.schoolName = schoolName;
+      this._updatedData.schoolName = schoolName;
     }
     if (!isNullish(schoolLevel)) {
       this.validate.schoolLevel(schoolLevel);
-      this._student.schoolLevel = schoolLevel;
+      this._updatedData.schoolLevel = schoolLevel;
     }
     if (!isNullish(schoolGrade)) {
       this.validate.schoolGrade(schoolGrade);
-      this._student.schoolGrade = schoolGrade;
+      this._updatedData.schoolGrade = schoolGrade;
     }
     return this;
   }
   edit() {
-    return this._student;
+    return this._updatedData;
   }
 }
 

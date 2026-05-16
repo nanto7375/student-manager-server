@@ -11,6 +11,7 @@ import { Auth } from '@src/auth/decorator/auth.decorator';
 
 import { StudentService } from './student.service';
 import { PaginationRequestDto } from '@src/common/common.dto';
+import { ApiOkResponsePaginated } from '@src/common/swagger-paginated-response';
 
 @Controller('students')
 @ApiTags('student')
@@ -19,14 +20,15 @@ export class StudentController {
 
   @Get()
   @ApiOperation({ summary: '학생 목록 조회' })
-  @ApiOkResponse({ type: ShortStudentDto })
+  @ApiOkResponsePaginated(ShortStudentDto)
   async getStudents(@Query() { limit, offset, name, schoolLevel, dayOfWeek }: PaginationRequestDto & { name: string; schoolLevel: number; dayOfWeek: number }) {
     // 조회 쿼리스트링 더 추가
-    const students = await this.studentService.getStudents(
+    const [students, count] = await this.studentService.getStudents(
       { name, schoolLevel: +schoolLevel, dayOfWeek: +dayOfWeek }, //
       { limit: +limit, offset },
     );
-    return toInstance(ShortStudentDto, students);
+
+    return { list: toInstance(ShortStudentDto, students), count };
   }
 
   @Get(':studentId')

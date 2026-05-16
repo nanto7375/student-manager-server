@@ -87,6 +87,18 @@ export class ShortStudentDto {
   @ApiProperty({ description: '수업 시간 id' })
   @Expose()
   scheduleId: number;
+
+  @ApiProperty({ type: () => ScheduleDto, description: '수업 시간' })
+  @Expose()
+  schedule: ScheduleDto;
+
+  @ApiProperty({ description: '등록일' })
+  @Expose()
+  registeredAt: Date;
+
+  @ApiProperty({ description: '퇴원일' })
+  @Expose()
+  deletedAt: Date;
 }
 
 export class StudentNoteDto {

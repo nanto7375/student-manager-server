@@ -1,3 +1,4 @@
+import { Transactional } from '@nestjs-cls/transactional';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from '@src/configs/prisma/prisma.service';
@@ -35,7 +36,9 @@ export class ScheduleService {
     return await this.prisma.schedule.findMany({ where: { deletedAt: null }, include: { students: true } });
   }
 
+  @Transactional()
   async reserveScheduleChange({ studentId, scheduleId, date }: ChangeScheduleParams) {
+    await this.prisma.scheduleChangeReservation.deleteMany({ where: { studentId, completedAt: null } });
     await this.prisma.scheduleChangeReservation.create({
       data: {
         studentId,
@@ -50,6 +53,19 @@ export class ScheduleService {
     return await this.prisma.scheduleChangeReservation.findMany({
       where: { date, completedAt: null },
     });
+  }
+
+  async completeReservedScheduleChange({ studentId, scheduleId, date }: { studentId: number; scheduleId: number; date: string }) {
+    await this.prisma.scheduleChangeReservation.updateMany({
+      where: { studentId, scheduleId, date, completedAt: null },
+      data: { completedAt: new Date() },
+    });
+    return true;
+  }
+
+  async deleteReservedScheduleChange(studentId: number) {
+    await this.prisma.scheduleChangeReservation.deleteMany({ where: { studentId, completedAt: null } });
+    return true;
   }
 }
 
