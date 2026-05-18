@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export type PaginationDto = {
   offset: number;
@@ -8,11 +8,11 @@ export type PaginationDto = {
 
 export class PaginationRequestDto {
   @ApiPropertyOptional({ description: '한 페이지에 보여줄 데이터 수' })
-  @Type(() => Number)
+  @Transform(({ value }) => Number(value))
   limit: number = 20;
 
   @ApiPropertyOptional({ description: '페이지 번호' })
-  @Type(() => Number)
+  @Transform(({ value }) => Number(value))
   page: number = 1;
 
   get offset() {

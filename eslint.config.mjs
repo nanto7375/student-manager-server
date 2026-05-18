@@ -43,6 +43,7 @@ export default tseslint.config(
       '@typescript-eslint/restrict-plus-operands': 'off',
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
     },
   },
 );

@@ -5,6 +5,7 @@ import { BcryptService } from '@src/common/utils/bcrypt';
 import { PaginationDto } from '@src/common/common.dto';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
 import { Prisma } from '@src/generated/prisma/client';
+import { Status } from '@src/common/constant/common.const';
 
 export enum AdminRoleType {
   SUPER_ADMIN = 'super_admin',
@@ -48,17 +49,24 @@ export class AdminService {
 
   async updateAdmin(id: number, updateAdminDto: AdminUpdateDto) {
     const admin = await this.getAdminOrThrow(id);
-    admin.isActive = updateAdminDto.isActive;
     admin.role = updateAdminDto.role;
     admin.phone = updateAdminDto.phone;
 
     return this.prisma.admin.update({ where: { id }, data: admin });
   }
 
+  async changePassword(id: number, password: string) {
+    const admin = await this.getAdminOrThrow(id);
+    admin.password = await this.bcryptService.hash(password);
+    await this.prisma.admin.update({ where: { id }, data: admin });
+    return true;
+  }
+
   async removeAdmin(id: number) {
     const admin = await this.getAdminOrThrow(id);
     admin.deletedAt = new Date();
-    return this.prisma.admin.update({ where: { id }, data: admin });
+    await this.prisma.admin.update({ where: { id }, data: admin });
+    return true;
   }
 
   async getAdminOrThrow(id: number) {
@@ -74,13 +82,17 @@ export class AdminService {
     return admin;
   }
 
-  async getAdminList({ offset, limit }: PaginationDto) {
+  async getAdminList({ offset, limit, status }: PaginationDto & { status?: string }) {
+    console.log(status);
     const admins = await this.prisma.admin.findMany({
-      skip: offset,
+      where: {
+        ...(status && status === Status.ACTIVE && { deletedAt: null }),
+      },
       take: limit,
+      skip: offset,
       orderBy: { createdAt: 'desc' },
     });
-    const count = await this.prisma.admin.count();
+    const count = await this.prisma.admin.count({ where: { deletedAt: null } });
 
     const sortedAdmins = admins.sort((a, b) => getAdminRoleLevel(b.role as AdminRoleType) - getAdminRoleLevel(a.role as AdminRoleType));
     return [sortedAdmins, count];

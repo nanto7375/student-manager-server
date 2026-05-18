@@ -41,8 +41,11 @@ export class AdminUpdateDto {
   @ApiProperty({ description: 'role', enum: AdminRoleType })
   @IsEnum(AdminRoleType)
   role: AdminRoleType;
+}
 
-  @ApiProperty({ description: '활성화 여부' })
-  @IsBoolean()
-  isActive: boolean;
+export class ChangePasswordDto {
+  @ApiProperty({ description: '새 비밀번호' })
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }

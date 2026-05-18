@@ -8,3 +8,8 @@ export enum SchoolLevel {
   MIDDLE = 2,
   HIGH = 3,
 }
+
+export enum Status {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}

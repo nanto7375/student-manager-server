@@ -6,7 +6,7 @@ import { StudentBuilder } from './student.builder';
 import { type ScheduleResult, ScheduleService } from '@src/schedule/schedule.service';
 
 import { PatchStudentRequestDto, RegisterStudentRequestDto } from './dto/student-request.dto';
-import { SchoolLevel } from '@src/common/constant/common.const';
+import { SchoolLevel, Status } from '@src/common/constant/common.const';
 import { DateService } from '@src/common/utils/date';
 import { PaginationDto } from '@src/common/common.dto';
 import { ActivityService } from '@src/activity/activity.service';
@@ -29,13 +29,14 @@ export class StudentService {
     return await this.studentRepository.findOrThrow(id, { includeNotes, includeScheduleChangeReservations });
   }
 
-  async getStudents(whereQuery: { name: string; schoolLevel: number; dayOfWeek: number }, { limit, offset }: PaginationDto) {
-    const { name, schoolLevel, dayOfWeek } = whereQuery;
+  async getStudents(whereQuery: { name: string; schoolLevel: number; dayOfWeek: number; status?: string }, { limit, offset }: PaginationDto) {
+    const { name, schoolLevel, dayOfWeek, status = Status.ACTIVE } = whereQuery;
 
     const where = {
       ...(name && { name: { contains: name } }),
       ...(!Number.isNaN(schoolLevel) && { schoolLevel }),
       ...(!Number.isNaN(dayOfWeek) && { schedule: { dayOfWeek } }),
+      ...(status && status === Status.ACTIVE && { deletedAt: null }),
     };
     const students = await this.studentRepository._.findMany({
       where,
@@ -197,6 +198,12 @@ export class StudentService {
       include: { lastCommenter: true },
       orderBy: { id: 'asc' },
     });
+  }
+
+  async deleteStudent(studentId: number) {
+    await this.studentRepository.findOrThrow(studentId);
+    await this.studentRepository._.update({ where: { id: studentId }, data: { deletedAt: this.date.now() } });
+    return true;
   }
 
   async deleteNote(noteId: number) {

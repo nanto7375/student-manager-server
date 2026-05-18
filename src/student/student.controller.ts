@@ -21,11 +21,11 @@ export class StudentController {
   @Get()
   @ApiOperation({ summary: '학생 목록 조회' })
   @ApiOkResponsePaginated(ShortStudentDto)
-  async getStudents(@Query() { limit, offset, name, schoolLevel, dayOfWeek }: PaginationRequestDto & { name: string; schoolLevel: number; dayOfWeek: number }) {
+  async getStudents(@Query() { limit, page }: PaginationRequestDto, @Query() { name, schoolLevel, dayOfWeek, status }: { name: string; schoolLevel: number; dayOfWeek: number; status?: string }) {
     // 조회 쿼리스트링 더 추가
     const [students, count] = await this.studentService.getStudents(
-      { name, schoolLevel: +schoolLevel, dayOfWeek: +dayOfWeek }, //
-      { limit: +limit, offset },
+      { name, schoolLevel: +schoolLevel, dayOfWeek: +dayOfWeek, status }, //
+      { limit: +limit, offset: (page - 1) * limit },
     );
 
     return { list: toInstance(ShortStudentDto, students), count };
@@ -90,6 +90,14 @@ export class StudentController {
     // TODO: adminId
     const note = await this.studentService.updateNote({ noteId, adminId: 1, studentId, value });
     return toInstance(StudentNoteDto, note);
+  }
+
+  @Delete(':studentId')
+  @RequireRole(AdminRoleType.SUPER_ADMIN)
+  @ApiOperation({ summary: '학생 삭제' })
+  async deleteStudent(@Param('studentId', ParseIntPipe) studentId: number) {
+    await this.studentService.deleteStudent(studentId);
+    return true;
   }
 
   @Delete(':studentId/notes/:noteId')
