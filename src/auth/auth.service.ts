@@ -115,8 +115,8 @@ export class AuthService {
   async signin({ email, password, ip, fingerprint, signinDate = new Date() }: SigninParams) {
     const failedSigninCount = await this.failedSigninAttemptCache.get(email);
     if (failedSigninCount >= this._ALLOWED_FAILED_SIGNIN_ATTEMPTS) {
-      this.logger.warn({ message: 'too many failed signin attempts', email, ip });
-      throw new UnauthorizedException();
+      this.logger.warn({ message: 'too-many-failed', email, ip });
+      throw new UnauthorizedException('too-many-failed');
     }
 
     let admin: Admin;
@@ -127,6 +127,11 @@ export class AuthService {
         await this.failedSigninAttemptCache.set(email, failedSigninCount + 1);
       }
       throw e;
+    }
+
+    if (admin.deletedAt) {
+      this.logger.warn({ message: 'signin attempt for deleted admin', email, ip });
+      throw new UnauthorizedException('deleted-account');
     }
 
     const claims = { adminId: admin.id, role: admin.role, fingerprint };

@@ -15,7 +15,7 @@ export class StudentRepository {
 
   async findOrThrow(id: number, { includeNotes = false, includeScheduleChangeReservations = false } = {}) {
     const student = await this.prisma.student.findUnique({
-      where: { id, deletedAt: null },
+      where: { id },
       include: {
         schedule: { include: { lesson: true } },
         notes: includeNotes ? { where: { deletedAt: null }, include: { lastCommenter: true } } : false,
