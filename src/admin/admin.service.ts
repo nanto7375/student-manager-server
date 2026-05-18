@@ -49,6 +49,7 @@ export class AdminService {
 
   async updateAdmin(id: number, updateAdminDto: AdminUpdateDto) {
     const admin = await this.getAdminOrThrow(id);
+    admin.email = updateAdminDto.email;
     admin.role = updateAdminDto.role;
     admin.phone = updateAdminDto.phone;
 
