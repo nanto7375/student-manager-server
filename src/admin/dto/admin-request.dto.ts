@@ -32,6 +32,11 @@ export class AdminCreateDto {
 }
 
 export class AdminUpdateDto {
+  @ApiProperty({ description: '이메일' })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
   @ApiProperty({ description: '전화번호' })
   @Nullable()
   @IsString()

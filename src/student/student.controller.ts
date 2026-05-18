@@ -19,6 +19,7 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Get()
+  @RequireRole(AdminRoleType.MANAGER)
   @ApiOperation({ summary: '학생 목록 조회' })
   @ApiOkResponsePaginated(ShortStudentDto)
   async getStudents(@Query() { limit, page, sort }: PaginationRequestDto, @Query() { name, schoolLevel, dayOfWeek, status }: { name: string; schoolLevel: number; dayOfWeek: number; status?: string }) {
@@ -31,6 +32,7 @@ export class StudentController {
   }
 
   @Get(':studentId')
+  @RequireRole(AdminRoleType.MANAGER)
   @ApiOperation({ summary: '학생 정보 조회' })
   @ApiOkResponse({ type: StudentDto })
   async getStudent(@Param('studentId', ParseIntPipe) studentId: number) {
@@ -48,6 +50,7 @@ export class StudentController {
   }
 
   @Post(':studentId/notes')
+  @RequireRole(AdminRoleType.MANAGER)
   @ApiOperation({ summary: '학생 노트 생성' })
   @ApiOkResponse({ type: StudentNoteDto })
   async createAssessmentRecord(@Body() { value, type }: CreateNoteRequestDto, @Param('studentId', ParseIntPipe) studentId: number) {
@@ -57,7 +60,7 @@ export class StudentController {
   }
 
   @Patch(':studentId')
-  @RequireRole(AdminRoleType.ADMIN)
+  @RequireRole(AdminRoleType.MANAGER)
   @ApiOperation({ summary: '학생 정보 수정' })
   @ApiOkResponse({ type: StudentDto })
   async updatePersonalInfo(@Param('studentId', ParseIntPipe) studentId: number, @Body() patchStudentRequestDto: PatchStudentRequestDto) {
@@ -79,6 +82,7 @@ export class StudentController {
   }
 
   @Patch(':studentId/notes/:noteId')
+  @RequireRole(AdminRoleType.MANAGER)
   @ApiOperation({ summary: '학생 노트 업데이트' })
   @ApiOkResponse({ type: StudentNoteDto })
   async updateAssessment(
@@ -100,6 +104,7 @@ export class StudentController {
   }
 
   @Delete(':studentId/notes/:noteId')
+  @RequireRole(AdminRoleType.MANAGER)
   @ApiOperation({ summary: '학생 노트 제거' })
   @ApiOkResponse({ type: Boolean })
   async deleteNote(@Param('studentId', ParseIntPipe) studentId: number, @Param('noteId', ParseIntPipe) noteId: number) {

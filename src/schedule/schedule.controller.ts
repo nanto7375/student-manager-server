@@ -4,6 +4,8 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { toInstance } from '@src/common/utils/toInstance';
 import { ScheduleDto } from './dto/schedule-response.dto';
 import { ScheduleService } from './schedule.service';
+import { RequireRole } from '@src/admin/decorator/require-role.decorator';
+import { AdminRoleType } from '@src/admin/admin.service';
 
 @Controller('schedules')
 @ApiTags('schedule')
@@ -19,6 +21,7 @@ export class ScheduleController {
   }
 
   @Delete('reserved/:reservationId')
+  @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '예약된 수업 시간 삭제' })
   @ApiOkResponse({ description: '예약 삭제 성공' })
   async deleteReservedSchedule(@Param('reservationId') reservationId: number) {
