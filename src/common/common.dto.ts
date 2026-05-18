@@ -4,6 +4,7 @@ import { Transform, Type } from 'class-transformer';
 export type PaginationDto = {
   offset: number;
   limit: number;
+  sort: string;
 };
 
 export class PaginationRequestDto {
@@ -18,4 +19,8 @@ export class PaginationRequestDto {
   get offset() {
     return (this.page - 1) * this.limit;
   }
+
+  @ApiPropertyOptional({ description: '정렬 기준', example: 'createdAt-desc' })
+  @Transform(({ value }) => value ?? 'createdAt-desc')
+  sort: string = 'createdAt-desc';
 }

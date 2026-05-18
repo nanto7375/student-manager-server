@@ -46,8 +46,8 @@ export class AdminController {
   @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '관리자 조회' })
   @ApiOkResponsePaginated(AdminDto)
-  async getAdmins(@Query() { limit, offset }: PaginationRequestDto, @Query() { status }: { status?: string }) {
-    const [admins, count] = await this.adminService.getAdminList({ offset, limit, status });
+  async getAdmins(@Query() { limit, offset, sort }: PaginationRequestDto, @Query() { status }: { status?: string }) {
+    const [admins, count] = await this.adminService.getAdminList({ offset, limit, sort, status });
     return { list: toInstance(AdminDto, admins), count };
   }
 

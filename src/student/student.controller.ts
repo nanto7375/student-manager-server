@@ -21,11 +21,10 @@ export class StudentController {
   @Get()
   @ApiOperation({ summary: '학생 목록 조회' })
   @ApiOkResponsePaginated(ShortStudentDto)
-  async getStudents(@Query() { limit, page }: PaginationRequestDto, @Query() { name, schoolLevel, dayOfWeek, status }: { name: string; schoolLevel: number; dayOfWeek: number; status?: string }) {
-    // 조회 쿼리스트링 더 추가
+  async getStudents(@Query() { limit, page, sort }: PaginationRequestDto, @Query() { name, schoolLevel, dayOfWeek, status }: { name: string; schoolLevel: number; dayOfWeek: number; status?: string }) {
     const [students, count] = await this.studentService.getStudents(
       { name, schoolLevel: +schoolLevel, dayOfWeek: +dayOfWeek, status }, //
-      { limit: +limit, offset: (page - 1) * limit },
+      { limit: +limit, offset: (page - 1) * limit, sort },
     );
 
     return { list: toInstance(ShortStudentDto, students), count };

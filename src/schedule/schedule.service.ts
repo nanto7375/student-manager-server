@@ -63,8 +63,13 @@ export class ScheduleService {
     return true;
   }
 
-  async deleteReservedScheduleChange(studentId: number) {
+  async deleteReservedScheduleChanges(studentId: number) {
     await this.prisma.scheduleChangeReservation.deleteMany({ where: { studentId, completedAt: null } });
+    return true;
+  }
+
+  async deleteReservedSchedule(reservationId: number) {
+    await this.prisma.scheduleChangeReservation.delete({ where: { id: reservationId } });
     return true;
   }
 }

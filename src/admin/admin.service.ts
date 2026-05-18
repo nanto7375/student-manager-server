@@ -82,15 +82,15 @@ export class AdminService {
     return admin;
   }
 
-  async getAdminList({ offset, limit, status }: PaginationDto & { status?: string }) {
-    console.log(status);
+  async getAdminList({ offset, limit, status, sort }: PaginationDto & { status?: string }) {
+    const [sortKey, sortOrder] = sort.split('-');
     const admins = await this.prisma.admin.findMany({
       where: {
         ...(status && status === Status.ACTIVE && { deletedAt: null }),
       },
       take: limit,
       skip: offset,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { [sortKey]: sortOrder as Prisma.SortOrder },
     });
     const count = await this.prisma.admin.count({ where: { deletedAt: null } });
 

@@ -11,6 +11,7 @@ import { DateService } from '@src/common/utils/date';
 import { PaginationDto } from '@src/common/common.dto';
 import { ActivityService } from '@src/activity/activity.service';
 import { Transactional } from '@nestjs-cls/transactional';
+import { Prisma } from '@src/generated/prisma/client';
 
 type NoteType = 'assessment' | 'parent-counseling' | 'fixed-memo' | 'temporary-memo';
 
@@ -29,15 +30,17 @@ export class StudentService {
     return await this.studentRepository.findOrThrow(id, { includeNotes, includeScheduleChangeReservations });
   }
 
-  async getStudents(whereQuery: { name: string; schoolLevel: number; dayOfWeek: number; status?: string }, { limit, offset }: PaginationDto) {
-    const { name, schoolLevel, dayOfWeek, status = Status.ACTIVE } = whereQuery;
-
+  async getStudents(whereQuery: { name: string; schoolLevel: number; dayOfWeek: number; status?: string }, { limit, offset, sort }: PaginationDto) {
+    const { name, schoolLevel, dayOfWeek, status } = whereQuery;
+    const [sortKey, sortOrder] = sort.split('-');
     const where = {
       ...(name && { name: { contains: name } }),
       ...(!Number.isNaN(schoolLevel) && { schoolLevel }),
       ...(!Number.isNaN(dayOfWeek) && { schedule: { dayOfWeek } }),
       ...(status && status === Status.ACTIVE && { deletedAt: null }),
     };
+
+    console.log(status);
     const students = await this.studentRepository._.findMany({
       where,
       include: {
@@ -46,7 +49,7 @@ export class StudentService {
       },
       take: limit,
       skip: offset,
-      orderBy: { name: 'asc' },
+      orderBy: { [sortKey]: sortOrder as Prisma.SortOrder },
     });
     const count = await this.studentRepository._.count({ where });
     return [students, count];
@@ -162,7 +165,7 @@ export class StudentService {
       data: { schedule: { connect: { id: scheduleId } } },
     });
     await this.scheduleService.completeReservedScheduleChange({ studentId, date: dateForChange, scheduleId });
-    await this.scheduleService.deleteReservedScheduleChange(studentId);
+    await this.scheduleService.deleteReservedScheduleChanges(studentId);
     return true;
   }
 
@@ -200,9 +203,11 @@ export class StudentService {
     });
   }
 
+  @Transactional()
   async deleteStudent(studentId: number) {
     await this.studentRepository.findOrThrow(studentId);
     await this.studentRepository._.update({ where: { id: studentId }, data: { deletedAt: this.date.now() } });
+    await this.scheduleService.deleteReservedScheduleChanges(studentId);
     return true;
   }
 
