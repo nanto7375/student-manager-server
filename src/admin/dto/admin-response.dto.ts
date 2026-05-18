@@ -30,6 +30,10 @@ export class AdminDto {
   @Expose()
   @ApiProperty({ description: '생성일' })
   createdAt: Date;
+
+  @Expose()
+  @ApiProperty({ description: '삭제일' })
+  deletedAt: Date;
 }
 
 export class ShortAdminDto {
