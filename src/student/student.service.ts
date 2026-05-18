@@ -40,7 +40,6 @@ export class StudentService {
       ...(status && status === Status.ACTIVE && { deletedAt: null }),
     };
 
-    console.log(status);
     const students = await this.studentRepository._.findMany({
       where,
       include: {

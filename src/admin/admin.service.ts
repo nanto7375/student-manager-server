@@ -37,7 +37,7 @@ export class AdminService {
   ) {}
 
   async registerAdmin(createAdminDto: AdminCreateDto) {
-    const adminInDb = await this.prisma.admin.findUnique({ where: { email: createAdminDto.email } });
+    const adminInDb = await this.prisma.admin.findUnique({ where: { email: createAdminDto.email, deletedAt: null } });
     if (adminInDb) throw new BadRequestException('이미 존재하는 관리자입니다.');
 
     const admin: Prisma.AdminCreateInput = {
