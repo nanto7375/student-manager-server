@@ -4,6 +4,21 @@ import { SchoolLevel } from '@src/common/constant/common.const';
 import { ScheduleDto } from '@src/schedule/dto/schedule-response.dto';
 import { Expose, Transform, Type } from 'class-transformer';
 
+class ScheduleChangeReservationDto {
+  @ApiProperty({ description: '예약 id' })
+  @Expose()
+  id: number;
+
+  @ApiProperty({ type: () => ScheduleDto, description: '변경 예약된 수업 시간' })
+  @Expose()
+  @Type(() => ScheduleDto)
+  schedule: ScheduleDto;
+
+  @ApiProperty({ description: '변경 예약일' })
+  @Expose()
+  date: Date;
+}
+
 export class ShortStudentDto {
   @ApiProperty({ description: '학생 id' })
   @Expose()
@@ -50,10 +65,10 @@ export class ShortStudentDto {
   schedule: ScheduleDto;
 
   @ApiProperty({ type: () => ScheduleDto, description: '변경 예약된 수업 시간', nullable: true })
-  @Expose()
-  @Transform(({ obj }) => obj.scheduleChangeReservations?.[0]?.schedule ?? null)
-  @Type(() => ScheduleDto)
-  scheduleReserved: ScheduleDto | null;
+  @Expose({ name: 'scheduleChangeReservations' })
+  @Transform(({ obj }) => obj.scheduleChangeReservations?.[0] ?? null)
+  @Type(() => ScheduleChangeReservationDto)
+  scheduleReserved: ScheduleChangeReservationDto | null;
 
   @ApiProperty({ description: '등록일' })
   @Expose()
