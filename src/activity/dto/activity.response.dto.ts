@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { BookRentalDto } from '@src/book-rental/dto/book-rental.response.dto';
-import { ShortStudentDto } from '@src/student/dto/student-response.dto';
+import { StudentInActivityDto } from '@src/student/dto/student-response.dto';
 
 export class ActivityRecordDto {
   @ApiProperty({ description: 'id' })
@@ -9,9 +9,9 @@ export class ActivityRecordDto {
   id: number;
 
   @ApiProperty({ description: '학생 id' })
-  @Type(() => ShortStudentDto)
+  @Type(() => StudentInActivityDto)
   @Expose()
-  student: ShortStudentDto;
+  student: StudentInActivityDto;
 
   @ApiProperty({ description: '날짜' })
   @Expose()

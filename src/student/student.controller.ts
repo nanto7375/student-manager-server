@@ -103,11 +103,11 @@ export class StudentController {
     return true;
   }
 
-  @Delete(':studentId/notes/:noteId')
+  @Patch(':studentId/notes/:noteId/status')
   @RequireRole(AdminRoleType.MANAGER)
-  @ApiOperation({ summary: '학생 노트 제거' })
+  @ApiOperation({ summary: '학생 노트 상태 토글' })
   @ApiOkResponse({ type: Boolean })
-  async deleteNote(@Param('studentId', ParseIntPipe) studentId: number, @Param('noteId', ParseIntPipe) noteId: number) {
-    return await this.studentService.deleteNote(noteId);
+  async toggleNoteStatus(@Param('studentId', ParseIntPipe) studentId: number, @Param('noteId', ParseIntPipe) noteId: number) {
+    return await this.studentService.toggleNoteStatus(noteId);
   }
 }

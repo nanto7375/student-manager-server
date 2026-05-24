@@ -21,7 +21,7 @@ export class ActivityService {
 
   async getActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
     const activityRecords: ActivityRecordWithBorrowedBook[] = await this.activityRepository.findMany({
-      where: { date, scheduleId },
+      where: { date, scheduleId, student: { deletedAt: null } },
       include: {
         student: {
           include: {
@@ -31,7 +31,7 @@ export class ActivityService {
               orderBy: { borrowedAt: 'desc' },
             },
             notes: {
-              where: { type: { in: ['temporary-memo', 'fixed-memo'] } },
+              where: { type: { in: ['temporary-memo', 'fixed-memo'] }, deletedAt: null },
             },
           },
         },

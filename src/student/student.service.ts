@@ -210,9 +210,10 @@ export class StudentService {
     return true;
   }
 
-  async deleteNote(noteId: number) {
-    await this.noteRepository.findOrThrow(noteId);
-    return await this.noteRepository.softDelete(noteId);
+  async toggleNoteStatus(noteId: number) {
+    const note = await this.noteRepository.findOrThrow(noteId, { paranoid: false });
+    const newStatus = note.deletedAt ? null : this.date.now();
+    return await this.noteRepository._.update({ where: { id: noteId }, data: { deletedAt: newStatus } });
   }
 }
 

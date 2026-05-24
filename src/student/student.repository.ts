@@ -41,10 +41,10 @@ export class NoteRepository {
     return this.prismaNote;
   }
 
-  async findOrThrow(id: number) {
+  async findOrThrow(id: number, { paranoid = true } = {}) {
     const note = await this.prismaNote.findUnique({ where: { id } });
     if (!note) throw new NotFoundException();
-    if (note.deletedAt) throw new BadRequestException();
+    if (paranoid && note.deletedAt) throw new BadRequestException();
     return note;
   }
 
