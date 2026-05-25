@@ -16,9 +16,9 @@ export class ActivityController {
   @ApiOperation({ summary: '활동 기록 조회' })
   @ApiOkResponse({ type: [ActivityRecordDto] })
   async getActivityRecords(
-    @Query('scheduleId', ParseIntPipe) scheduleId: number, //
+    @Query('scheduleId', new ParseIntPipe({ optional: true })) scheduleId: number, //
+    @Query('studentId', new ParseIntPipe({ optional: true })) studentId: number,
     @Query('date') date: string,
-    @Query('studentId', ParseIntPipe) studentId: number,
   ) {
     const activityRecords = await this.activityService.getActivityRecords({ scheduleId, date, studentId });
     return toInstance(ActivityRecordDto, activityRecords);
