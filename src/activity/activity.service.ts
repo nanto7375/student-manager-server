@@ -1,3 +1,4 @@
+import { isNullish } from './../common/utils/etc';
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { ActivityRecord, Student, BookRental, Note } from '@src/generated/prisma/client';
@@ -43,6 +44,17 @@ export class ActivityService {
       ...record,
       borrowedBook: record.student.bookRentals?.[0] ? { ...record.student.bookRentals[0] } : null,
     }));
+  }
+
+  async generateActivityRecord({ studentId, scheduleId, date, isMakeup = false, movedAt }: { studentId: number; scheduleId: number; date: string; isMakeup?: boolean; movedAt?: Date }) {
+    const body = {
+      student: { connect: { id: studentId } },
+      scheduleId,
+      date,
+      ...(!isNullish(isMakeup) && { isMakeup }),
+      ...(!isNullish(movedAt) && { movedAt }),
+    };
+    return this.activityRepository.create(body);
   }
 
   async generateActivityRecordsForSchedule({ students, dayOfWeek, yearMonth = this.date.currentYearMonth(), startDay }: { students: Student[]; dayOfWeek: number; yearMonth?: string; startDay?: number }) {

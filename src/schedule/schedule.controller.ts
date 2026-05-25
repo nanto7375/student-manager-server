@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param } from '@nestjs/common';
+import { Controller, Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
@@ -20,11 +20,12 @@ export class ScheduleController {
     return toInstance(ScheduleDto, schedules);
   }
 
+  @Get('reserved')
   @Delete('reserved/:reservationId')
   @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '예약된 수업 시간 삭제' })
   @ApiOkResponse({ description: '예약 삭제 성공' })
-  async deleteReservedSchedule(@Param('reservationId') reservationId: number) {
+  async deleteReservedSchedule(@Param('reservationId', ParseIntPipe) reservationId: number) {
     await this.scheduleService.deleteReservedSchedule(reservationId);
   }
 }

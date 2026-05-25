@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query 
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
-import { ChangeScheduleRequestDto, CreateNoteRequestDto, PatchStudentRequestDto, RegisterStudentRequestDto, UpdateNoteRequestDto } from './dto/student-request.dto';
+import { ChangeScheduleRequestDto, CreateNoteRequestDto, PatchStudentRequestDto, RegisterMakeupScheduleRequestDto, RegisterStudentRequestDto, UpdateNoteRequestDto } from './dto/student-request.dto';
 import { ShortStudentDto, StudentNoteDto, StudentDto } from './dto/student-response.dto';
 
 import { AdminRoleType } from '@src/admin/admin.service';
@@ -57,6 +57,19 @@ export class StudentController {
     // TODO: adminId
     const note = await this.studentService.createNote({ studentId, value, type, adminId: 1 });
     return toInstance(StudentNoteDto, note);
+  }
+
+  @Post(':studentId/schedules/:scheduleId/makeup')
+  @RequireRole(AdminRoleType.ADMIN)
+  @ApiOperation({ summary: '보강 수업 등록' })
+  @ApiOkResponse({ type: Boolean })
+  async registerMakeupSchedule(
+    @Param('studentId', ParseIntPipe) studentId: number, //
+    @Param('scheduleId', ParseIntPipe) scheduleId: number,
+    @Body() { dateForMakeup, movedAt }: RegisterMakeupScheduleRequestDto,
+  ) {
+    await this.studentService.registerMakeupSchedule({ studentId, scheduleId, dateForMakeup, movedAt });
+    return true;
   }
 
   @Patch(':studentId')

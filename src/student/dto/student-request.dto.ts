@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Gender, SchoolLevel } from '@src/common/constant/common.const';
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
 import { Nullable, Optional } from 'class-validator-extended';
@@ -115,4 +115,15 @@ export class UpdateNoteRequestDto {
   @ApiProperty()
   @IsString()
   value: string;
+}
+
+export class RegisterMakeupScheduleRequestDto {
+  @ApiProperty()
+  @IsString()
+  dateForMakeup: string; // YYYYMMDD
+
+  @ApiPropertyOptional()
+  @Optional()
+  @IsDate()
+  movedAt: Date;
 }

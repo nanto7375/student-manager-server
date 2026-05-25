@@ -168,6 +168,13 @@ export class StudentService {
     return true;
   }
 
+  async registerMakeupSchedule({ studentId, scheduleId, dateForMakeup, movedAt }: { studentId: number; scheduleId: number; dateForMakeup: string; movedAt?: Date }) {
+    await this.studentRepository.findOrThrow(studentId);
+    await this.scheduleService.getScheduleOrThrow(scheduleId);
+    await this.activityService.generateActivityRecord({ studentId, scheduleId, date: dateForMakeup, isMakeup: true, movedAt });
+    return true;
+  }
+
   async createNote({ studentId, value, type, adminId }: { studentId: number; value: string; type: NoteType; adminId: number }) {
     if (value.length > 5000) throw new BadRequestException();
 
