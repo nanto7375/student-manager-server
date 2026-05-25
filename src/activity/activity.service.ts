@@ -20,9 +20,14 @@ export class ActivityService {
     private readonly date: DateService,
   ) {}
 
-  async getActivityRecords({ scheduleId, date }: { scheduleId: number; date: string }) {
+  async getActivityRecords({ scheduleId, date, studentId }: { scheduleId: number | null; date: string | null; studentId: number | null }) {
     const activityRecords: ActivityRecordWithBorrowedBook[] = await this.activityRepository.findMany({
-      where: { date, scheduleId, student: { deletedAt: null } },
+      where: {
+        ...(date && { date }),
+        ...(scheduleId && { scheduleId }),
+        ...(studentId && { studentId }),
+        student: { deletedAt: null },
+      },
       include: {
         student: {
           include: {
