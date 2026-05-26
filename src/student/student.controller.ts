@@ -73,7 +73,7 @@ export class StudentController {
   }
 
   @Patch(':studentId')
-  @RequireRole(AdminRoleType.MANAGER)
+  @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '학생 정보 수정' })
   @ApiOkResponse({ type: StudentDto })
   async updatePersonalInfo(@Param('studentId', ParseIntPipe) studentId: number, @Body() patchStudentRequestDto: PatchStudentRequestDto) {
