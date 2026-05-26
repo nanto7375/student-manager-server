@@ -95,6 +95,10 @@ export class PatchStudentRequestDto {
 
 export class ChangeScheduleRequestDto {
   @ApiProperty()
+  @IsNumber()
+  scheduleId: number;
+
+  @ApiProperty()
   @IsString()
   @Nullable()
   dateForChange: string; // YYYYMMDD

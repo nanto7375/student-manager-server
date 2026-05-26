@@ -87,8 +87,7 @@ export class StudentController {
   @ApiOkResponse({ type: StudentDto })
   async changeSchedule(
     @Param('studentId', ParseIntPipe) studentId: number, //
-    @Param('scheduleId', ParseIntPipe) scheduleId: number,
-    @Body() { dateForChange }: ChangeScheduleRequestDto,
+    @Body() { scheduleId, dateForChange }: ChangeScheduleRequestDto,
   ) {
     const student = await this.studentService.changeSchedule({ studentId, scheduleId, dateForChange });
     return toInstance(StudentDto, student);
