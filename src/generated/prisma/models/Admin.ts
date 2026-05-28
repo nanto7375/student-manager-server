@@ -41,7 +41,6 @@ export type AdminMinAggregateOutputType = {
   email: string | null
   phone: string | null
   role: string | null
-  isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -54,7 +53,6 @@ export type AdminMaxAggregateOutputType = {
   email: string | null
   phone: string | null
   role: string | null
-  isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -67,7 +65,6 @@ export type AdminCountAggregateOutputType = {
   email: number
   phone: number
   role: number
-  isActive: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -90,7 +87,6 @@ export type AdminMinAggregateInputType = {
   email?: true
   phone?: true
   role?: true
-  isActive?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -103,7 +99,6 @@ export type AdminMaxAggregateInputType = {
   email?: true
   phone?: true
   role?: true
-  isActive?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -116,7 +111,6 @@ export type AdminCountAggregateInputType = {
   email?: true
   phone?: true
   role?: true
-  isActive?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -216,7 +210,6 @@ export type AdminGroupByOutputType = {
   email: string
   phone: string | null
   role: string
-  isActive: boolean
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -252,7 +245,6 @@ export type AdminWhereInput = {
   email?: Prisma.StringFilter<"Admin"> | string
   phone?: Prisma.StringNullableFilter<"Admin"> | string | null
   role?: Prisma.StringFilter<"Admin"> | string
-  isActive?: Prisma.BoolFilter<"Admin"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Admin"> | Date | string | null
@@ -267,7 +259,6 @@ export type AdminOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -286,7 +277,6 @@ export type AdminWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Admin"> | string
   phone?: Prisma.StringNullableFilter<"Admin"> | string | null
   role?: Prisma.StringFilter<"Admin"> | string
-  isActive?: Prisma.BoolFilter<"Admin"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Admin"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Admin"> | Date | string | null
@@ -301,7 +291,6 @@ export type AdminOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -322,7 +311,6 @@ export type AdminScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"Admin"> | string
   phone?: Prisma.StringNullableWithAggregatesFilter<"Admin"> | string | null
   role?: Prisma.StringWithAggregatesFilter<"Admin"> | string
-  isActive?: Prisma.BoolWithAggregatesFilter<"Admin"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Admin"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Admin"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Admin"> | Date | string | null
@@ -334,7 +322,6 @@ export type AdminCreateInput = {
   email: string
   phone?: string | null
   role?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -349,7 +336,6 @@ export type AdminUncheckedCreateInput = {
   email: string
   phone?: string | null
   role?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -363,7 +349,6 @@ export type AdminUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -378,7 +363,6 @@ export type AdminUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -393,7 +377,6 @@ export type AdminCreateManyInput = {
   email: string
   phone?: string | null
   role?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -405,7 +388,6 @@ export type AdminUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -418,7 +400,6 @@ export type AdminUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -442,7 +423,6 @@ export type AdminCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -459,7 +439,6 @@ export type AdminMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -472,7 +451,6 @@ export type AdminMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -527,7 +505,6 @@ export type AdminCreateWithoutActivityRecordLogsInput = {
   email: string
   phone?: string | null
   role?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -541,7 +518,6 @@ export type AdminUncheckedCreateWithoutActivityRecordLogsInput = {
   email: string
   phone?: string | null
   role?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -570,7 +546,6 @@ export type AdminUpdateWithoutActivityRecordLogsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -584,7 +559,6 @@ export type AdminUncheckedUpdateWithoutActivityRecordLogsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -597,7 +571,6 @@ export type AdminCreateWithoutNotesInput = {
   email: string
   phone?: string | null
   role?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -611,7 +584,6 @@ export type AdminUncheckedCreateWithoutNotesInput = {
   email: string
   phone?: string | null
   role?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -640,7 +612,6 @@ export type AdminUpdateWithoutNotesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -654,7 +625,6 @@ export type AdminUncheckedUpdateWithoutNotesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -708,7 +678,6 @@ export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   email?: boolean
   phone?: boolean
   role?: boolean
-  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -726,13 +695,12 @@ export type AdminSelectScalar = {
   email?: boolean
   phone?: boolean
   role?: boolean
-  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type AdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "password" | "name" | "email" | "phone" | "role" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["admin"]>
+export type AdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "password" | "name" | "email" | "phone" | "role" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["admin"]>
 export type AdminInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activityRecordLogs?: boolean | Prisma.Admin$activityRecordLogsArgs<ExtArgs>
   notes?: boolean | Prisma.Admin$notesArgs<ExtArgs>
@@ -752,7 +720,6 @@ export type $AdminPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     email: string
     phone: string | null
     role: string
-    isActive: boolean
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1133,7 +1100,6 @@ export interface AdminFieldRefs {
   readonly email: Prisma.FieldRef<"Admin", 'String'>
   readonly phone: Prisma.FieldRef<"Admin", 'String'>
   readonly role: Prisma.FieldRef<"Admin", 'String'>
-  readonly isActive: Prisma.FieldRef<"Admin", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Admin", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Admin", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Admin", 'DateTime'>
