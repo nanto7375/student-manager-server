@@ -126,6 +126,10 @@ export class RegisterMakeupScheduleRequestDto {
   @IsString()
   dateForMakeup: string; // YYYYMMDD
 
+  @ApiProperty()
+  @IsNumber()
+  scheduleId: number;
+
   @ApiPropertyOptional()
   @Optional()
   @IsDate()

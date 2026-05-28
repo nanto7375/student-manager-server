@@ -59,14 +59,13 @@ export class StudentController {
     return toInstance(StudentNoteDto, note);
   }
 
-  @Post(':studentId/schedules/:scheduleId/makeup')
+  @Post(':studentId/makeup')
   @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '보강 수업 등록' })
   @ApiOkResponse({ type: Boolean })
   async registerMakeupSchedule(
     @Param('studentId', ParseIntPipe) studentId: number, //
-    @Param('scheduleId', ParseIntPipe) scheduleId: number,
-    @Body() { dateForMakeup, movedAt }: RegisterMakeupScheduleRequestDto,
+    @Body() { dateForMakeup, scheduleId, movedAt }: RegisterMakeupScheduleRequestDto,
   ) {
     await this.studentService.registerMakeupSchedule({ studentId, scheduleId, dateForMakeup, movedAt });
     return true;
