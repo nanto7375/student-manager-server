@@ -12,6 +12,7 @@ import { Auth } from '@src/auth/decorator/auth.decorator';
 import { StudentService } from './student.service';
 import { PaginationRequestDto } from '@src/common/common.dto';
 import { ApiOkResponsePaginated } from '@src/common/swagger-paginated-response';
+import { AdminId } from '@src/admin/decorator/admin.decorators';
 
 @Controller('students')
 @ApiTags('student')
@@ -53,9 +54,8 @@ export class StudentController {
   @RequireRole(AdminRoleType.MANAGER)
   @ApiOperation({ summary: '학생 노트 생성' })
   @ApiOkResponse({ type: StudentNoteDto })
-  async createAssessmentRecord(@Body() { value, type }: CreateNoteRequestDto, @Param('studentId', ParseIntPipe) studentId: number) {
-    // TODO: adminId
-    const note = await this.studentService.createNote({ studentId, value, type, adminId: 1 });
+  async createAssessmentRecord(@AdminId() adminId: number, @Body() { value, type }: CreateNoteRequestDto, @Param('studentId', ParseIntPipe) studentId: number) {
+    const note = await this.studentService.createNote({ studentId, value, type, adminId });
     return toInstance(StudentNoteDto, note);
   }
 
@@ -100,10 +100,10 @@ export class StudentController {
   async updateAssessment(
     @Param('studentId', ParseIntPipe) studentId: number, //
     @Param('noteId', ParseIntPipe) noteId: number,
+    @AdminId() adminId: number,
     @Body() { value }: UpdateNoteRequestDto,
   ) {
-    // TODO: adminId
-    const note = await this.studentService.updateNote({ noteId, adminId: 1, studentId, value });
+    const note = await this.studentService.updateNote({ noteId, adminId, studentId, value });
     return toInstance(StudentNoteDto, note);
   }
 
