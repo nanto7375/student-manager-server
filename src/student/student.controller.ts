@@ -93,7 +93,6 @@ export class StudentController {
   }
 
   @Patch(':studentId/classroom')
-  @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '학생 학급 변경' })
   @ApiOkResponse({ type: Boolean })
   async changeClassroom(
