@@ -393,7 +393,8 @@ export const ModelName = {
   Lesson: 'Lesson',
   Schedule: 'Schedule',
   Student: 'Student',
-  Note: 'Note'
+  Note: 'Note',
+  classroom: 'classroom'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "activityRecord" | "activityRecordGenerationLog" | "scheduleChangeReservation" | "activityRecordLog" | "admin" | "bookRental" | "lesson" | "schedule" | "student" | "note"
+    modelProps: "activityRecord" | "activityRecordGenerationLog" | "scheduleChangeReservation" | "activityRecordLog" | "admin" | "bookRental" | "lesson" | "schedule" | "student" | "note" | "classroom"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1073,6 +1074,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    classroom: {
+      payload: Prisma.$classroomPayload<ExtArgs>
+      fields: Prisma.classroomFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.classroomFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.classroomFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+        }
+        findFirst: {
+          args: Prisma.classroomFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.classroomFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+        }
+        findMany: {
+          args: Prisma.classroomFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>[]
+        }
+        create: {
+          args: Prisma.classroomCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+        }
+        createMany: {
+          args: Prisma.classroomCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.classroomDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+        }
+        update: {
+          args: Prisma.classroomUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+        }
+        deleteMany: {
+          args: Prisma.classroomDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.classroomUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.classroomUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+        }
+        aggregate: {
+          args: Prisma.ClassroomAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateClassroom>
+        }
+        groupBy: {
+          args: Prisma.classroomGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClassroomGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.classroomCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClassroomCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1228,6 +1295,7 @@ export const StudentScalarFieldEnum = {
   schoolName: 'schoolName',
   note: 'note',
   scheduleId: 'scheduleId',
+  classroomId: 'classroomId',
   phone: 'phone',
   parentPhone: 'parentPhone',
   registeredAt: 'registeredAt',
@@ -1250,6 +1318,17 @@ export const NoteScalarFieldEnum = {
 } as const
 
 export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
+
+
+export const ClassroomScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ClassroomScalarFieldEnum = (typeof ClassroomScalarFieldEnum)[keyof typeof ClassroomScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1350,6 +1429,13 @@ export const NoteOrderByRelevanceFieldEnum = {
 } as const
 
 export type NoteOrderByRelevanceFieldEnum = (typeof NoteOrderByRelevanceFieldEnum)[keyof typeof NoteOrderByRelevanceFieldEnum]
+
+
+export const classroomOrderByRelevanceFieldEnum = {
+  name: 'name'
+} as const
+
+export type classroomOrderByRelevanceFieldEnum = (typeof classroomOrderByRelevanceFieldEnum)[keyof typeof classroomOrderByRelevanceFieldEnum]
 
 
 
@@ -1497,6 +1583,7 @@ export type GlobalOmitConfig = {
   schedule?: Prisma.ScheduleOmit
   student?: Prisma.StudentOmit
   note?: Prisma.NoteOmit
+  classroom?: Prisma.classroomOmit
 }
 
 /* Types for Logging */

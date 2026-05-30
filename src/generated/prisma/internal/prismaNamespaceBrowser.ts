@@ -60,7 +60,8 @@ export const ModelName = {
   Lesson: 'Lesson',
   Schedule: 'Schedule',
   Student: 'Student',
-  Note: 'Note'
+  Note: 'Note',
+  classroom: 'classroom'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -195,6 +196,7 @@ export const StudentScalarFieldEnum = {
   schoolName: 'schoolName',
   note: 'note',
   scheduleId: 'scheduleId',
+  classroomId: 'classroomId',
   phone: 'phone',
   parentPhone: 'parentPhone',
   registeredAt: 'registeredAt',
@@ -217,6 +219,17 @@ export const NoteScalarFieldEnum = {
 } as const
 
 export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
+
+
+export const ClassroomScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ClassroomScalarFieldEnum = (typeof ClassroomScalarFieldEnum)[keyof typeof ClassroomScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -317,4 +330,11 @@ export const NoteOrderByRelevanceFieldEnum = {
 } as const
 
 export type NoteOrderByRelevanceFieldEnum = (typeof NoteOrderByRelevanceFieldEnum)[keyof typeof NoteOrderByRelevanceFieldEnum]
+
+
+export const classroomOrderByRelevanceFieldEnum = {
+  name: 'name'
+} as const
+
+export type classroomOrderByRelevanceFieldEnum = (typeof classroomOrderByRelevanceFieldEnum)[keyof typeof classroomOrderByRelevanceFieldEnum]
 

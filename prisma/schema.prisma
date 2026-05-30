@@ -142,6 +142,7 @@ model Student {
   schoolName      String?          @map("school_name") @db.VarChar(30)
   note            String?          @db.VarChar(255)
   scheduleId      Int?             @map("schedule_id")
+  classroomId     Int?             @map("classroom_id")
   phone           String?          @db.VarChar(20)
   parentPhone     String?          @map("parent_phone") @db.VarChar(20)
   registeredAt    DateTime?        @map("registered_at") @db.Timestamp(0)
@@ -150,6 +151,7 @@ model Student {
   activityRecords ActivityRecord[]
   bookRentals     BookRental[]
   schedule        Schedule?        @relation(fields: [scheduleId], references: [id], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
+  classroom       classroom?       @relation(fields: [classroomId], references: [id], map: "FK_student_classroom")
   notes     Note[]
   scheduleChangeReservations ScheduleChangeReservation[]
 
@@ -171,4 +173,13 @@ model Note {
 
   @@index([studentId])
   @@map("note")
+}
+
+model classroom {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(30)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
+  students  Student[]
 }
