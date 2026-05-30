@@ -140,3 +140,9 @@ export class RegisterMakeupScheduleRequestDto {
   @IsDate()
   movedAt: Date;
 }
+
+export class ChangeClassroomRequestDto {
+  @ApiProperty()
+  @IsNumber()
+  classroomId: number;
+}

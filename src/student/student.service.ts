@@ -1,4 +1,3 @@
-import { StudentTask } from './student.task';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { NoteRepository, StudentRepository } from './student.repository';
@@ -222,6 +221,14 @@ export class StudentService {
     const note = await this.noteRepository.findOrThrow(noteId, { paranoid: false });
     const newStatus = note.deletedAt ? null : this.date.now();
     return await this.noteRepository._.update({ where: { id: noteId }, data: { deletedAt: newStatus } });
+  }
+
+  async changeClassroom({ studentId, classroomId }: { studentId: number; classroomId: number }) {
+    const classroomIds = [1, 2, 3, 4];
+    if (!classroomIds.includes(classroomId)) throw new BadRequestException();
+    await this.studentRepository.findOrThrow(studentId);
+    await this.studentRepository._.update({ where: { id: studentId }, data: { classroom: { connect: { id: classroomId } } } });
+    return true;
   }
 }
 

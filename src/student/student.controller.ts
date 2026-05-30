@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query 
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { toInstance } from '@src/common/utils/toInstance';
-import { ChangeScheduleRequestDto, CreateNoteRequestDto, PatchStudentRequestDto, RegisterMakeupScheduleRequestDto, RegisterStudentRequestDto, UpdateNoteRequestDto } from './dto/student-request.dto';
+import { ChangeClassroomRequestDto, ChangeScheduleRequestDto, CreateNoteRequestDto, PatchStudentRequestDto, RegisterMakeupScheduleRequestDto, RegisterStudentRequestDto, UpdateNoteRequestDto } from './dto/student-request.dto';
 import { ShortStudentDto, StudentNoteDto, StudentDto } from './dto/student-response.dto';
 
 import { AdminRoleType } from '@src/admin/admin.service';
@@ -80,7 +80,7 @@ export class StudentController {
     return toInstance(StudentDto, student);
   }
 
-  @Patch(':studentId/schedules/:scheduleId')
+  @Patch(':studentId/schedule')
   @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '학생 스케줄 변경' })
   @ApiOkResponse({ type: StudentDto })
@@ -89,6 +89,18 @@ export class StudentController {
     @Body() { scheduleId, dateForChange }: ChangeScheduleRequestDto,
   ) {
     const student = await this.studentService.changeSchedule({ studentId, scheduleId, dateForChange });
+    return toInstance(StudentDto, student);
+  }
+
+  @Patch(':studentId/classroom')
+  @RequireRole(AdminRoleType.ADMIN)
+  @ApiOperation({ summary: '학생 학급 변경' })
+  @ApiOkResponse({ type: Boolean })
+  async changeClassroom(
+    @Param('studentId', ParseIntPipe) studentId: number, //
+    @Body() { classroomId }: ChangeClassroomRequestDto,
+  ) {
+    const student = await this.studentService.changeClassroom({ studentId, classroomId });
     return toInstance(StudentDto, student);
   }
 

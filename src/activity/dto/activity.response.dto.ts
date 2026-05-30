@@ -35,7 +35,7 @@ export class ActivityRecordDto {
 
   @ApiProperty({ description: '월간 프로젝트 참여 여부' })
   @Expose()
-  monthlyProject: boolean;
+  monthlyProject: Date | null;
 
   @ApiProperty({ description: '월간 프로젝트 개요 제출 여부' })
   @Expose()

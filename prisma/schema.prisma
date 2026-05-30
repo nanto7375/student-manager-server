@@ -16,14 +16,14 @@ model ActivityRecord {
   date               String              @db.Char(8)  //YYYYMMDD
   isMakeup           Boolean             @default(false) @map("is_makeup")
   attendance         Boolean             @default(false) /// 출석 여부
-  monthlyProject     Boolean             @default(false) @map("monthly_project") /// 월간 프로젝트 참여 여부
+  monthlyProject     DateTime?           @map("monthly_project") @db.Timestamp() /// 월간 프로젝트 참여 날짜
   monthlyPreview     Boolean             @default(false) @map("monthly_preview") /// 월간 레오 개요 제출 여부
   monthlyReport      Boolean             @default(false) @map("monthly_report") /// 월간 레오 감상문 제출 여부
   report1            Boolean             @default(false) /// 감상문 제출
   report2            Boolean             @default(false) /// 주간 레오 제출
-  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp(6)
-  movedAt            DateTime?           @map("moved_at")  @db.Timestamp(6)
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp()
+  movedAt            DateTime?           @map("moved_at")  @db.Timestamp()
   student            Student             @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_af5423ecbecaf2606b909307ca8")
   activityRecordLogs ActivityRecordLog[]
 
@@ -36,7 +36,7 @@ model ActivityRecord {
 model ActivityRecordGenerationLog {
   id                         Int      @id @default(autoincrement())
   generatedActivityYearMonth String   @map("generated_activity_year_month") @db.Char(6) //YYYYMM
-  createdAt                  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt                  DateTime @default(now()) @map("created_at") @db.Timestamp()
 
   @@map("activity_record_generation_log")
 }
@@ -46,8 +46,8 @@ model ScheduleChangeReservation {
   studentId   Int         @map("student_id")
   scheduleId  Int         @map("schedule_id")
   date        String      @db.Char(8)  //YYYYMMDD
-  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
-  completedAt DateTime?   @map("completed_at") @db.Timestamp(6)
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamp()
+  completedAt DateTime?   @map("completed_at") @db.Timestamp()
 
   student     Student     @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_schedule_change_reservation_student")
   schedule    Schedule    @relation(fields: [scheduleId], references: [id], map: "FK_schedule_change_reservation_schedule")
@@ -61,7 +61,7 @@ model ActivityRecordLog {
   adminId          Int            @map("admin_id")
   key              String         @db.VarChar(255)
   value            String         @db.VarChar(255)
-  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamp()
   activityRecord   ActivityRecord @relation(fields: [activityRecordId], references: [id], map: "FK_19c9c39aa43bdb5ef49ed5fefca")
   admin            Admin          @relation(fields: [adminId], references: [id], map: "FK_b5267e703f03876c725e05a2e01")
 
@@ -78,9 +78,9 @@ model Admin {
   email              String              @unique(map: "IDX_de87485f6489f5d0995f584195") @db.VarChar(255)
   phone              String?             @db.VarChar(20)
   role               String              @default("staff") @db.VarChar(20)
-  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp(6)
-  deletedAt          DateTime?           @map("deleted_at") @db.Timestamp(6)
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp()
+  deletedAt          DateTime?           @map("deleted_at") @db.Timestamp()
   activityRecordLogs ActivityRecordLog[]
   notes        Note[]
 
@@ -92,9 +92,9 @@ model BookRental {
   id         Int       @id @default(autoincrement())
   studentId  Int       @map("student_id")
   bookTitle  String?   @db.VarChar(255)
-  borrowedAt DateTime  @default(now()) @map("borrowed_at") @db.Timestamp(0)
-  returnedAt DateTime? @map("returned_at") @db.Timestamp(0)
-  updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+  borrowedAt DateTime  @default(now()) @map("borrowed_at") @db.Timestamp()
+  returnedAt DateTime? @map("returned_at") @db.Timestamp()
+  updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamp()
   student    Student   @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_book_rental_student")
 
   @@index([studentId], map: "FK_book_rental_student")
@@ -105,9 +105,9 @@ model Lesson {
   id        Int        @id @default(autoincrement())
   code      String     @db.Char(3)
   name      String     @db.VarChar(30)
-  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamp(6)
-  deletedAt DateTime?  @map("deleted_at") @db.Timestamp(6)
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamp()
+  deletedAt DateTime?  @map("deleted_at") @db.Timestamp()
   schedules Schedule[]
 
   @@map("lesson")
@@ -119,9 +119,9 @@ model Schedule {
   startTime String    @map("start_time") @db.Char(4)
   endTime   String    @map("end_time") @db.Char(4)
   lessonId  Int?      @map("lesson_id")
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
-  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamp()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamp()
   dayOfWeek Int       @map("day_of_week") @db.UnsignedInt // 0: 일 ~ 6: 토
   lesson    Lesson?   @relation(fields: [lessonId], references: [id], map: "FK_6c8c0c369dc1fa673c88bb6381a")
   students  Student[]
@@ -145,9 +145,9 @@ model Student {
   classroomId     Int?             @map("classroom_id")
   phone           String?          @db.VarChar(20)
   parentPhone     String?          @map("parent_phone") @db.VarChar(20)
-  registeredAt    DateTime?        @map("registered_at") @db.Timestamp(0)
-  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamp(6)
-  deletedAt       DateTime?        @map("deleted_at") @db.Timestamp(6)
+  registeredAt    DateTime?        @map("registered_at") @db.Timestamp()
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamp()
+  deletedAt       DateTime?        @map("deleted_at") @db.Timestamp()
   activityRecords ActivityRecord[]
   bookRentals     BookRental[]
   schedule        Schedule?        @relation(fields: [scheduleId], references: [id], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
@@ -165,9 +165,9 @@ model Note {
   lastCommenterId Int       @map("last_commenter_id")
   type            String    @db.VarChar(50) @default("assessment") // assessment, parent-counseling, fixed-memo, temporary-memo
   value           String    @default("") @db.VarChar(5000)
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamp()
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamp()
   student         Student?  @relation(fields: [studentId], references: [id])
   lastCommenter   Admin?    @relation(fields: [lastCommenterId], references: [id])
 
@@ -178,9 +178,9 @@ model Note {
 model Classroom {
   id        Int       @id @default(autoincrement())
   name      String    @db.VarChar(30)
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
-  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamp()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamp()
   students  Student[]
 
   @@map("classroom")
