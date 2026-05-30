@@ -39,11 +39,11 @@ export class ActivityRecordDto {
 
   @ApiProperty({ description: '월간 프로젝트 개요 제출 여부' })
   @Expose()
-  monthlyPreview: boolean;
+  monthlyPreview: Date | null;
 
   @ApiProperty({ description: '월간 프로젝트 감상문 제출 여부' })
   @Expose()
-  monthlyReport: boolean;
+  monthlyReport: Date | null;
 
   @ApiProperty({ description: '대출 중인 책 정보', required: false })
   @Type(() => BookRentalDto)
