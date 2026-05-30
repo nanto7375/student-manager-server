@@ -107,7 +107,7 @@ export class ActivityService {
 
     const outOfMonthlyProject = monthlyProject === undefined ? !activityRecord.monthlyProject : monthlyProject === null;
     const body = outOfMonthlyProject
-      ? { monthlyProject: null, monthlyPreview: false, monthlyReport: false }
+      ? { monthlyProject: null, monthlyPreview: null, monthlyReport: null }
       : {
           ...(monthlyProject !== undefined && { monthlyProject }),
           ...(monthlyPreview !== undefined && { monthlyPreview }),

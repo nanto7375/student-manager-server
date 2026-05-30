@@ -17,8 +17,8 @@ model ActivityRecord {
   isMakeup           Boolean             @default(false) @map("is_makeup")
   attendance         Boolean             @default(false) /// 출석 여부
   monthlyProject     DateTime?           @map("monthly_project") @db.Timestamp() /// 월간 프로젝트 참여 날짜
-  monthlyPreview     Boolean             @default(false) @map("monthly_preview") /// 월간 레오 개요 제출 여부
-  monthlyReport      Boolean             @default(false) @map("monthly_report") /// 월간 레오 감상문 제출 여부
+  monthlyPreview     DateTime?           @map("monthly_preview") @db.Timestamp() /// 월간 레오 개요 제출 날짜
+  monthlyReport      DateTime?           @map("monthly_report") @db.Timestamp() /// 월간 레오 감상문 제출 날짜
   report1            Boolean             @default(false) /// 감상문 제출
   report2            Boolean             @default(false) /// 주간 레오 제출
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp()

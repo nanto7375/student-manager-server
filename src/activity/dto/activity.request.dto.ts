@@ -26,11 +26,11 @@ export class UpdateMonthlyActivityRecordRequestDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsBoolean()
-  monthlyPreview?: boolean;
+  @IsString()
+  monthlyPreview?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsBoolean()
-  monthlyReport?: boolean;
+  @IsString()
+  monthlyReport?: string;
 }
