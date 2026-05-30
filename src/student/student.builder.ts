@@ -97,9 +97,12 @@ class StudentCreator {
     }
     return this;
   }
-  setSchedule(scheduleId: number) {
+  setSchedule(scheduleId: number, classroomId?: number) {
     if (!isNullish(scheduleId)) {
       this._student.schedule = { connect: { id: scheduleId } };
+    }
+    if (!isNullish(classroomId)) {
+      this._student.classroom = { connect: { id: classroomId } };
     }
     return this;
   }

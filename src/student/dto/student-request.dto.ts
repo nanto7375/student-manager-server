@@ -52,6 +52,11 @@ export class RegisterStudentRequestDto {
   @Nullable()
   @IsString()
   note: string;
+
+  @ApiProperty({ description: '학급 id', nullable: true })
+  @Nullable()
+  @IsNumber()
+  classroomId?: number;
 }
 
 export class PatchStudentRequestDto {

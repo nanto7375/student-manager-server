@@ -61,7 +61,7 @@ export const ModelName = {
   Schedule: 'Schedule',
   Student: 'Student',
   Note: 'Note',
-  classroom: 'classroom'
+  Classroom: 'Classroom'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -332,9 +332,9 @@ export const NoteOrderByRelevanceFieldEnum = {
 export type NoteOrderByRelevanceFieldEnum = (typeof NoteOrderByRelevanceFieldEnum)[keyof typeof NoteOrderByRelevanceFieldEnum]
 
 
-export const classroomOrderByRelevanceFieldEnum = {
+export const ClassroomOrderByRelevanceFieldEnum = {
   name: 'name'
 } as const
 
-export type classroomOrderByRelevanceFieldEnum = (typeof classroomOrderByRelevanceFieldEnum)[keyof typeof classroomOrderByRelevanceFieldEnum]
+export type ClassroomOrderByRelevanceFieldEnum = (typeof ClassroomOrderByRelevanceFieldEnum)[keyof typeof ClassroomOrderByRelevanceFieldEnum]
 

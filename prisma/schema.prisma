@@ -151,7 +151,7 @@ model Student {
   activityRecords ActivityRecord[]
   bookRentals     BookRental[]
   schedule        Schedule?        @relation(fields: [scheduleId], references: [id], map: "FK_e81b27777dd4e1ee3ad42e3aea4")
-  classroom       classroom?       @relation(fields: [classroomId], references: [id], map: "FK_student_classroom")
+  classroom       Classroom?       @relation(fields: [classroomId], references: [id], map: "FK_student_classroom")
   notes     Note[]
   scheduleChangeReservations ScheduleChangeReservation[]
 
@@ -175,11 +175,13 @@ model Note {
   @@map("note")
 }
 
-model classroom {
+model Classroom {
   id        Int       @id @default(autoincrement())
   name      String    @db.VarChar(30)
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
   deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
   students  Student[]
+
+  @@map("classroom")
 }

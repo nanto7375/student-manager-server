@@ -19,6 +19,16 @@ class ScheduleChangeReservationDto {
   date: Date;
 }
 
+class ClassroomDto {
+  @ApiProperty({ description: '학급 id' })
+  @Expose()
+  id: number;
+
+  @ApiProperty({ description: '학급명' })
+  @Expose()
+  name: string;
+}
+
 export class ShortStudentDto {
   @ApiProperty({ description: '학생 id' })
   @Expose()
@@ -77,6 +87,11 @@ export class ShortStudentDto {
   @ApiProperty({ description: '퇴원일' })
   @Expose()
   deletedAt: Date;
+
+  @ApiProperty({ type: () => ClassroomDto, description: '학급 정보', nullable: true })
+  @Expose()
+  @Type(() => ClassroomDto)
+  classroom: ClassroomDto | null;
 }
 
 export class StudentDto extends ShortStudentDto {
@@ -150,4 +165,9 @@ export class StudentInActivityDto {
   @ApiProperty({ description: '퇴원일' })
   @Expose()
   deletedAt: Date;
+
+  @ApiProperty({ type: () => ClassroomDto, description: '학급 정보', nullable: true })
+  @Expose()
+  @Type(() => ClassroomDto)
+  classroom: ClassroomDto | null;
 }

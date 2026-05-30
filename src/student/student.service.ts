@@ -44,6 +44,7 @@ export class StudentService {
       where,
       include: {
         schedule: { include: { lesson: true } },
+        classroom: true,
         scheduleChangeReservations: { where: { completedAt: null }, include: { schedule: true } },
       },
       take: limit,
@@ -77,7 +78,7 @@ export class StudentService {
         schoolGrade: studentDto.schoolGrade,
       })
       .setNote(studentDto.note)
-      .setSchedule(schedule?.id)
+      .setSchedule(schedule?.id, studentDto.classroomId)
       .create();
 
     const savedStudent = await this.studentRepository._.create({ data: newStudent });

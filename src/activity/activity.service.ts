@@ -1,7 +1,7 @@
 import { isNullish } from './../common/utils/etc';
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { ActivityRecord, Student, BookRental, Note } from '@src/generated/prisma/client';
+import { ActivityRecord, Student, BookRental, Note, Classroom } from '@src/generated/prisma/client';
 import { ActivityRecordGenerationLogRepository, ActivityRepository } from './activity.repository';
 
 import { DateService } from '@src/common/utils/date';
@@ -31,6 +31,7 @@ export class ActivityService {
       include: {
         student: {
           include: {
+            classroom: true,
             bookRentals: {
               where: { returnedAt: null },
               take: 1,
@@ -121,4 +122,4 @@ export class ActivityService {
   }
 }
 
-type ActivityRecordWithBorrowedBook = ActivityRecord & { student: Student & { bookRentals: BookRental[]; notes: Note[] } };
+type ActivityRecordWithBorrowedBook = ActivityRecord & { student: Student & { bookRentals: BookRental[]; notes: Note[]; classroom: Classroom } };

@@ -315,7 +315,7 @@ export type StudentWhereInput = {
   activityRecords?: Prisma.ActivityRecordListRelationFilter
   bookRentals?: Prisma.BookRentalListRelationFilter
   schedule?: Prisma.XOR<Prisma.ScheduleNullableScalarRelationFilter, Prisma.ScheduleWhereInput> | null
-  classroom?: Prisma.XOR<Prisma.ClassroomNullableScalarRelationFilter, Prisma.classroomWhereInput> | null
+  classroom?: Prisma.XOR<Prisma.ClassroomNullableScalarRelationFilter, Prisma.ClassroomWhereInput> | null
   notes?: Prisma.NoteListRelationFilter
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationListRelationFilter
 }
@@ -339,7 +339,7 @@ export type StudentOrderByWithRelationInput = {
   activityRecords?: Prisma.ActivityRecordOrderByRelationAggregateInput
   bookRentals?: Prisma.BookRentalOrderByRelationAggregateInput
   schedule?: Prisma.ScheduleOrderByWithRelationInput
-  classroom?: Prisma.classroomOrderByWithRelationInput
+  classroom?: Prisma.ClassroomOrderByWithRelationInput
   notes?: Prisma.NoteOrderByRelationAggregateInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationOrderByRelationAggregateInput
   _relevance?: Prisma.StudentOrderByRelevanceInput
@@ -367,7 +367,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   activityRecords?: Prisma.ActivityRecordListRelationFilter
   bookRentals?: Prisma.BookRentalListRelationFilter
   schedule?: Prisma.XOR<Prisma.ScheduleNullableScalarRelationFilter, Prisma.ScheduleWhereInput> | null
-  classroom?: Prisma.XOR<Prisma.ClassroomNullableScalarRelationFilter, Prisma.classroomWhereInput> | null
+  classroom?: Prisma.XOR<Prisma.ClassroomNullableScalarRelationFilter, Prisma.ClassroomWhereInput> | null
   notes?: Prisma.NoteListRelationFilter
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationListRelationFilter
 }, "id">
@@ -432,7 +432,7 @@ export type StudentCreateInput = {
   activityRecords?: Prisma.ActivityRecordCreateNestedManyWithoutStudentInput
   bookRentals?: Prisma.BookRentalCreateNestedManyWithoutStudentInput
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudentsInput
-  classroom?: Prisma.classroomCreateNestedOneWithoutStudentsInput
+  classroom?: Prisma.ClassroomCreateNestedOneWithoutStudentsInput
   notes?: Prisma.NoteCreateNestedManyWithoutStudentInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationCreateNestedManyWithoutStudentInput
 }
@@ -475,7 +475,7 @@ export type StudentUpdateInput = {
   activityRecords?: Prisma.ActivityRecordUpdateManyWithoutStudentNestedInput
   bookRentals?: Prisma.BookRentalUpdateManyWithoutStudentNestedInput
   schedule?: Prisma.ScheduleUpdateOneWithoutStudentsNestedInput
-  classroom?: Prisma.classroomUpdateOneWithoutStudentsNestedInput
+  classroom?: Prisma.ClassroomUpdateOneWithoutStudentsNestedInput
   notes?: Prisma.NoteUpdateManyWithoutStudentNestedInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationUpdateManyWithoutStudentNestedInput
 }
@@ -806,7 +806,7 @@ export type StudentCreateWithoutActivityRecordsInput = {
   deletedAt?: Date | string | null
   bookRentals?: Prisma.BookRentalCreateNestedManyWithoutStudentInput
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudentsInput
-  classroom?: Prisma.classroomCreateNestedOneWithoutStudentsInput
+  classroom?: Prisma.ClassroomCreateNestedOneWithoutStudentsInput
   notes?: Prisma.NoteCreateNestedManyWithoutStudentInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationCreateNestedManyWithoutStudentInput
 }
@@ -863,7 +863,7 @@ export type StudentUpdateWithoutActivityRecordsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookRentals?: Prisma.BookRentalUpdateManyWithoutStudentNestedInput
   schedule?: Prisma.ScheduleUpdateOneWithoutStudentsNestedInput
-  classroom?: Prisma.classroomUpdateOneWithoutStudentsNestedInput
+  classroom?: Prisma.ClassroomUpdateOneWithoutStudentsNestedInput
   notes?: Prisma.NoteUpdateManyWithoutStudentNestedInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationUpdateManyWithoutStudentNestedInput
 }
@@ -905,7 +905,7 @@ export type StudentCreateWithoutScheduleChangeReservationsInput = {
   activityRecords?: Prisma.ActivityRecordCreateNestedManyWithoutStudentInput
   bookRentals?: Prisma.BookRentalCreateNestedManyWithoutStudentInput
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudentsInput
-  classroom?: Prisma.classroomCreateNestedOneWithoutStudentsInput
+  classroom?: Prisma.ClassroomCreateNestedOneWithoutStudentsInput
   notes?: Prisma.NoteCreateNestedManyWithoutStudentInput
 }
 
@@ -962,7 +962,7 @@ export type StudentUpdateWithoutScheduleChangeReservationsInput = {
   activityRecords?: Prisma.ActivityRecordUpdateManyWithoutStudentNestedInput
   bookRentals?: Prisma.BookRentalUpdateManyWithoutStudentNestedInput
   schedule?: Prisma.ScheduleUpdateOneWithoutStudentsNestedInput
-  classroom?: Prisma.classroomUpdateOneWithoutStudentsNestedInput
+  classroom?: Prisma.ClassroomUpdateOneWithoutStudentsNestedInput
   notes?: Prisma.NoteUpdateManyWithoutStudentNestedInput
 }
 
@@ -1002,7 +1002,7 @@ export type StudentCreateWithoutBookRentalsInput = {
   deletedAt?: Date | string | null
   activityRecords?: Prisma.ActivityRecordCreateNestedManyWithoutStudentInput
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudentsInput
-  classroom?: Prisma.classroomCreateNestedOneWithoutStudentsInput
+  classroom?: Prisma.ClassroomCreateNestedOneWithoutStudentsInput
   notes?: Prisma.NoteCreateNestedManyWithoutStudentInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationCreateNestedManyWithoutStudentInput
 }
@@ -1059,7 +1059,7 @@ export type StudentUpdateWithoutBookRentalsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecords?: Prisma.ActivityRecordUpdateManyWithoutStudentNestedInput
   schedule?: Prisma.ScheduleUpdateOneWithoutStudentsNestedInput
-  classroom?: Prisma.classroomUpdateOneWithoutStudentsNestedInput
+  classroom?: Prisma.ClassroomUpdateOneWithoutStudentsNestedInput
   notes?: Prisma.NoteUpdateManyWithoutStudentNestedInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationUpdateManyWithoutStudentNestedInput
 }
@@ -1100,7 +1100,7 @@ export type StudentCreateWithoutScheduleInput = {
   deletedAt?: Date | string | null
   activityRecords?: Prisma.ActivityRecordCreateNestedManyWithoutStudentInput
   bookRentals?: Prisma.BookRentalCreateNestedManyWithoutStudentInput
-  classroom?: Prisma.classroomCreateNestedOneWithoutStudentsInput
+  classroom?: Prisma.ClassroomCreateNestedOneWithoutStudentsInput
   notes?: Prisma.NoteCreateNestedManyWithoutStudentInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationCreateNestedManyWithoutStudentInput
 }
@@ -1189,7 +1189,7 @@ export type StudentCreateWithoutNotesInput = {
   activityRecords?: Prisma.ActivityRecordCreateNestedManyWithoutStudentInput
   bookRentals?: Prisma.BookRentalCreateNestedManyWithoutStudentInput
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudentsInput
-  classroom?: Prisma.classroomCreateNestedOneWithoutStudentsInput
+  classroom?: Prisma.ClassroomCreateNestedOneWithoutStudentsInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationCreateNestedManyWithoutStudentInput
 }
 
@@ -1246,7 +1246,7 @@ export type StudentUpdateWithoutNotesInput = {
   activityRecords?: Prisma.ActivityRecordUpdateManyWithoutStudentNestedInput
   bookRentals?: Prisma.BookRentalUpdateManyWithoutStudentNestedInput
   schedule?: Prisma.ScheduleUpdateOneWithoutStudentsNestedInput
-  classroom?: Prisma.classroomUpdateOneWithoutStudentsNestedInput
+  classroom?: Prisma.ClassroomUpdateOneWithoutStudentsNestedInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationUpdateManyWithoutStudentNestedInput
 }
 
@@ -1370,7 +1370,7 @@ export type StudentUpdateWithoutScheduleInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activityRecords?: Prisma.ActivityRecordUpdateManyWithoutStudentNestedInput
   bookRentals?: Prisma.BookRentalUpdateManyWithoutStudentNestedInput
-  classroom?: Prisma.classroomUpdateOneWithoutStudentsNestedInput
+  classroom?: Prisma.ClassroomUpdateOneWithoutStudentsNestedInput
   notes?: Prisma.NoteUpdateManyWithoutStudentNestedInput
   scheduleChangeReservations?: Prisma.ScheduleChangeReservationUpdateManyWithoutStudentNestedInput
 }
@@ -1608,7 +1608,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     activityRecords: Prisma.$ActivityRecordPayload<ExtArgs>[]
     bookRentals: Prisma.$BookRentalPayload<ExtArgs>[]
     schedule: Prisma.$SchedulePayload<ExtArgs> | null
-    classroom: Prisma.$classroomPayload<ExtArgs> | null
+    classroom: Prisma.$ClassroomPayload<ExtArgs> | null
     notes: Prisma.$NotePayload<ExtArgs>[]
     scheduleChangeReservations: Prisma.$ScheduleChangeReservationPayload<ExtArgs>[]
   }
@@ -1971,7 +1971,7 @@ export interface Prisma__StudentClient<T, Null = never, ExtArgs extends runtime.
   activityRecords<T extends Prisma.Student$activityRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$activityRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bookRentals<T extends Prisma.Student$bookRentalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$bookRentalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookRentalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   schedule<T extends Prisma.Student$scheduleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$scheduleArgs<ExtArgs>>): Prisma.Prisma__ScheduleClient<runtime.Types.Result.GetResult<Prisma.$SchedulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  classroom<T extends Prisma.Student$classroomArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$classroomArgs<ExtArgs>>): Prisma.Prisma__classroomClient<runtime.Types.Result.GetResult<Prisma.$classroomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  classroom<T extends Prisma.Student$classroomArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$classroomArgs<ExtArgs>>): Prisma.Prisma__ClassroomClient<runtime.Types.Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   notes<T extends Prisma.Student$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   scheduleChangeReservations<T extends Prisma.Student$scheduleChangeReservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$scheduleChangeReservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ScheduleChangeReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2432,18 +2432,18 @@ export type Student$scheduleArgs<ExtArgs extends runtime.Types.Extensions.Intern
  */
 export type Student$classroomArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
-  where?: Prisma.classroomWhereInput
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
+  where?: Prisma.ClassroomWhereInput
 }
 
 /**

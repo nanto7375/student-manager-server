@@ -88,7 +88,7 @@ export type Student = Prisma.StudentModel
  */
 export type Note = Prisma.NoteModel
 /**
- * Model classroom
+ * Model Classroom
  * 
  */
-export type classroom = Prisma.classroomModel
+export type Classroom = Prisma.ClassroomModel

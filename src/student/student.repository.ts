@@ -18,6 +18,7 @@ export class StudentRepository {
       where: { id },
       include: {
         schedule: { include: { lesson: true } },
+        classroom: true,
         notes: includeNotes ? { where: { deletedAt: null }, include: { lastCommenter: true } } : false,
         scheduleChangeReservations: includeScheduleChangeReservations ? { where: { completedAt: null }, include: { schedule: true } } : false,
       },

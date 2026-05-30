@@ -394,7 +394,7 @@ export const ModelName = {
   Schedule: 'Schedule',
   Student: 'Student',
   Note: 'Note',
-  classroom: 'classroom'
+  Classroom: 'Classroom'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1074,68 +1074,68 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    classroom: {
-      payload: Prisma.$classroomPayload<ExtArgs>
-      fields: Prisma.classroomFieldRefs
+    Classroom: {
+      payload: Prisma.$ClassroomPayload<ExtArgs>
+      fields: Prisma.ClassroomFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.classroomFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload> | null
+          args: Prisma.ClassroomFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassroomPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.classroomFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+          args: Prisma.ClassroomFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassroomPayload>
         }
         findFirst: {
-          args: Prisma.classroomFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload> | null
+          args: Prisma.ClassroomFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassroomPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.classroomFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+          args: Prisma.ClassroomFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassroomPayload>
         }
         findMany: {
-          args: Prisma.classroomFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>[]
+          args: Prisma.ClassroomFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassroomPayload>[]
         }
         create: {
-          args: Prisma.classroomCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+          args: Prisma.ClassroomCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassroomPayload>
         }
         createMany: {
-          args: Prisma.classroomCreateManyArgs<ExtArgs>
+          args: Prisma.ClassroomCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         delete: {
-          args: Prisma.classroomDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+          args: Prisma.ClassroomDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassroomPayload>
         }
         update: {
-          args: Prisma.classroomUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+          args: Prisma.ClassroomUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassroomPayload>
         }
         deleteMany: {
-          args: Prisma.classroomDeleteManyArgs<ExtArgs>
+          args: Prisma.ClassroomDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.classroomUpdateManyArgs<ExtArgs>
+          args: Prisma.ClassroomUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         upsert: {
-          args: Prisma.classroomUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$classroomPayload>
+          args: Prisma.ClassroomUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClassroomPayload>
         }
         aggregate: {
           args: Prisma.ClassroomAggregateArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AggregateClassroom>
         }
         groupBy: {
-          args: Prisma.classroomGroupByArgs<ExtArgs>
+          args: Prisma.ClassroomGroupByArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ClassroomGroupByOutputType>[]
         }
         count: {
-          args: Prisma.classroomCountArgs<ExtArgs>
+          args: Prisma.ClassroomCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ClassroomCountAggregateOutputType> | number
         }
       }
@@ -1431,11 +1431,11 @@ export const NoteOrderByRelevanceFieldEnum = {
 export type NoteOrderByRelevanceFieldEnum = (typeof NoteOrderByRelevanceFieldEnum)[keyof typeof NoteOrderByRelevanceFieldEnum]
 
 
-export const classroomOrderByRelevanceFieldEnum = {
+export const ClassroomOrderByRelevanceFieldEnum = {
   name: 'name'
 } as const
 
-export type classroomOrderByRelevanceFieldEnum = (typeof classroomOrderByRelevanceFieldEnum)[keyof typeof classroomOrderByRelevanceFieldEnum]
+export type ClassroomOrderByRelevanceFieldEnum = (typeof ClassroomOrderByRelevanceFieldEnum)[keyof typeof ClassroomOrderByRelevanceFieldEnum]
 
 
 
@@ -1583,7 +1583,7 @@ export type GlobalOmitConfig = {
   schedule?: Prisma.ScheduleOmit
   student?: Prisma.StudentOmit
   note?: Prisma.NoteOmit
-  classroom?: Prisma.classroomOmit
+  classroom?: Prisma.ClassroomOmit
 }
 
 /* Types for Logging */

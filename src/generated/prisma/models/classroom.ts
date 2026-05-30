@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `classroom` model and its related types.
+ * This file exports the `Classroom` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
 /**
- * Model classroom
+ * Model Classroom
  * 
  */
-export type classroomModel = runtime.Types.Result.DefaultSelection<Prisma.$classroomPayload>
+export type ClassroomModel = runtime.Types.Result.DefaultSelection<Prisma.$ClassroomPayload>
 
 export type AggregateClassroom = {
   _count: ClassroomCountAggregateOutputType | null
@@ -95,37 +95,37 @@ export type ClassroomCountAggregateInputType = {
 
 export type ClassroomAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which classroom to aggregate.
+   * Filter which Classroom to aggregate.
    */
-  where?: Prisma.classroomWhereInput
+  where?: Prisma.ClassroomWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of classrooms to fetch.
+   * Determine the order of Classrooms to fetch.
    */
-  orderBy?: Prisma.classroomOrderByWithRelationInput | Prisma.classroomOrderByWithRelationInput[]
+  orderBy?: Prisma.ClassroomOrderByWithRelationInput | Prisma.ClassroomOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.classroomWhereUniqueInput
+  cursor?: Prisma.ClassroomWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` classrooms from the position of the cursor.
+   * Take `±n` Classrooms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` classrooms.
+   * Skip the first `n` Classrooms.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned classrooms
+   * Count returned Classrooms
   **/
   _count?: true | ClassroomCountAggregateInputType
   /**
@@ -165,11 +165,11 @@ export type GetClassroomAggregateType<T extends ClassroomAggregateArgs> = {
 
 
 
-export type classroomGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.classroomWhereInput
-  orderBy?: Prisma.classroomOrderByWithAggregationInput | Prisma.classroomOrderByWithAggregationInput[]
+export type ClassroomGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ClassroomWhereInput
+  orderBy?: Prisma.ClassroomOrderByWithAggregationInput | Prisma.ClassroomOrderByWithAggregationInput[]
   by: Prisma.ClassroomScalarFieldEnum[] | Prisma.ClassroomScalarFieldEnum
-  having?: Prisma.classroomScalarWhereWithAggregatesInput
+  having?: Prisma.ClassroomScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: ClassroomCountAggregateInputType | true
@@ -192,7 +192,7 @@ export type ClassroomGroupByOutputType = {
   _max: ClassroomMaxAggregateOutputType | null
 }
 
-type GetClassroomGroupByPayload<T extends classroomGroupByArgs> = Prisma.PrismaPromise<
+type GetClassroomGroupByPayload<T extends ClassroomGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ClassroomGroupByOutputType, T['by']> &
       {
@@ -207,65 +207,65 @@ type GetClassroomGroupByPayload<T extends classroomGroupByArgs> = Prisma.PrismaP
 
 
 
-export type classroomWhereInput = {
-  AND?: Prisma.classroomWhereInput | Prisma.classroomWhereInput[]
-  OR?: Prisma.classroomWhereInput[]
-  NOT?: Prisma.classroomWhereInput | Prisma.classroomWhereInput[]
-  id?: Prisma.IntFilter<"classroom"> | number
-  name?: Prisma.StringFilter<"classroom"> | string
-  createdAt?: Prisma.DateTimeFilter<"classroom"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"classroom"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"classroom"> | Date | string | null
+export type ClassroomWhereInput = {
+  AND?: Prisma.ClassroomWhereInput | Prisma.ClassroomWhereInput[]
+  OR?: Prisma.ClassroomWhereInput[]
+  NOT?: Prisma.ClassroomWhereInput | Prisma.ClassroomWhereInput[]
+  id?: Prisma.IntFilter<"Classroom"> | number
+  name?: Prisma.StringFilter<"Classroom"> | string
+  createdAt?: Prisma.DateTimeFilter<"Classroom"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Classroom"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Classroom"> | Date | string | null
   students?: Prisma.StudentListRelationFilter
 }
 
-export type classroomOrderByWithRelationInput = {
+export type ClassroomOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   students?: Prisma.StudentOrderByRelationAggregateInput
-  _relevance?: Prisma.classroomOrderByRelevanceInput
+  _relevance?: Prisma.ClassroomOrderByRelevanceInput
 }
 
-export type classroomWhereUniqueInput = Prisma.AtLeast<{
+export type ClassroomWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  AND?: Prisma.classroomWhereInput | Prisma.classroomWhereInput[]
-  OR?: Prisma.classroomWhereInput[]
-  NOT?: Prisma.classroomWhereInput | Prisma.classroomWhereInput[]
-  name?: Prisma.StringFilter<"classroom"> | string
-  createdAt?: Prisma.DateTimeFilter<"classroom"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"classroom"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"classroom"> | Date | string | null
+  AND?: Prisma.ClassroomWhereInput | Prisma.ClassroomWhereInput[]
+  OR?: Prisma.ClassroomWhereInput[]
+  NOT?: Prisma.ClassroomWhereInput | Prisma.ClassroomWhereInput[]
+  name?: Prisma.StringFilter<"Classroom"> | string
+  createdAt?: Prisma.DateTimeFilter<"Classroom"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Classroom"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Classroom"> | Date | string | null
   students?: Prisma.StudentListRelationFilter
 }, "id">
 
-export type classroomOrderByWithAggregationInput = {
+export type ClassroomOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.classroomCountOrderByAggregateInput
-  _avg?: Prisma.classroomAvgOrderByAggregateInput
-  _max?: Prisma.classroomMaxOrderByAggregateInput
-  _min?: Prisma.classroomMinOrderByAggregateInput
-  _sum?: Prisma.classroomSumOrderByAggregateInput
+  _count?: Prisma.ClassroomCountOrderByAggregateInput
+  _avg?: Prisma.ClassroomAvgOrderByAggregateInput
+  _max?: Prisma.ClassroomMaxOrderByAggregateInput
+  _min?: Prisma.ClassroomMinOrderByAggregateInput
+  _sum?: Prisma.ClassroomSumOrderByAggregateInput
 }
 
-export type classroomScalarWhereWithAggregatesInput = {
-  AND?: Prisma.classroomScalarWhereWithAggregatesInput | Prisma.classroomScalarWhereWithAggregatesInput[]
-  OR?: Prisma.classroomScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.classroomScalarWhereWithAggregatesInput | Prisma.classroomScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"classroom"> | number
-  name?: Prisma.StringWithAggregatesFilter<"classroom"> | string
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"classroom"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"classroom"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"classroom"> | Date | string | null
+export type ClassroomScalarWhereWithAggregatesInput = {
+  AND?: Prisma.ClassroomScalarWhereWithAggregatesInput | Prisma.ClassroomScalarWhereWithAggregatesInput[]
+  OR?: Prisma.ClassroomScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.ClassroomScalarWhereWithAggregatesInput | Prisma.ClassroomScalarWhereWithAggregatesInput[]
+  id?: Prisma.IntWithAggregatesFilter<"Classroom"> | number
+  name?: Prisma.StringWithAggregatesFilter<"Classroom"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Classroom"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Classroom"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Classroom"> | Date | string | null
 }
 
-export type classroomCreateInput = {
+export type ClassroomCreateInput = {
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -273,7 +273,7 @@ export type classroomCreateInput = {
   students?: Prisma.StudentCreateNestedManyWithoutClassroomInput
 }
 
-export type classroomUncheckedCreateInput = {
+export type ClassroomUncheckedCreateInput = {
   id?: number
   name: string
   createdAt?: Date | string
@@ -282,7 +282,7 @@ export type classroomUncheckedCreateInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutClassroomInput
 }
 
-export type classroomUpdateInput = {
+export type ClassroomUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -290,7 +290,7 @@ export type classroomUpdateInput = {
   students?: Prisma.StudentUpdateManyWithoutClassroomNestedInput
 }
 
-export type classroomUncheckedUpdateInput = {
+export type ClassroomUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -299,7 +299,7 @@ export type classroomUncheckedUpdateInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutClassroomNestedInput
 }
 
-export type classroomCreateManyInput = {
+export type ClassroomCreateManyInput = {
   id?: number
   name: string
   createdAt?: Date | string
@@ -307,14 +307,14 @@ export type classroomCreateManyInput = {
   deletedAt?: Date | string | null
 }
 
-export type classroomUpdateManyMutationInput = {
+export type ClassroomUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type classroomUncheckedUpdateManyInput = {
+export type ClassroomUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -323,17 +323,17 @@ export type classroomUncheckedUpdateManyInput = {
 }
 
 export type ClassroomNullableScalarRelationFilter = {
-  is?: Prisma.classroomWhereInput | null
-  isNot?: Prisma.classroomWhereInput | null
+  is?: Prisma.ClassroomWhereInput | null
+  isNot?: Prisma.ClassroomWhereInput | null
 }
 
-export type classroomOrderByRelevanceInput = {
-  fields: Prisma.classroomOrderByRelevanceFieldEnum | Prisma.classroomOrderByRelevanceFieldEnum[]
+export type ClassroomOrderByRelevanceInput = {
+  fields: Prisma.ClassroomOrderByRelevanceFieldEnum | Prisma.ClassroomOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type classroomCountOrderByAggregateInput = {
+export type ClassroomCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -341,19 +341,11 @@ export type classroomCountOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder
 }
 
-export type classroomAvgOrderByAggregateInput = {
+export type ClassroomAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
-export type classroomMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrder
-}
-
-export type classroomMinOrderByAggregateInput = {
+export type ClassroomMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -361,34 +353,42 @@ export type classroomMinOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder
 }
 
-export type classroomSumOrderByAggregateInput = {
+export type ClassroomMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+}
+
+export type ClassroomSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
-export type classroomCreateNestedOneWithoutStudentsInput = {
-  create?: Prisma.XOR<Prisma.classroomCreateWithoutStudentsInput, Prisma.classroomUncheckedCreateWithoutStudentsInput>
-  connectOrCreate?: Prisma.classroomCreateOrConnectWithoutStudentsInput
-  connect?: Prisma.classroomWhereUniqueInput
+export type ClassroomCreateNestedOneWithoutStudentsInput = {
+  create?: Prisma.XOR<Prisma.ClassroomCreateWithoutStudentsInput, Prisma.ClassroomUncheckedCreateWithoutStudentsInput>
+  connectOrCreate?: Prisma.ClassroomCreateOrConnectWithoutStudentsInput
+  connect?: Prisma.ClassroomWhereUniqueInput
 }
 
-export type classroomUpdateOneWithoutStudentsNestedInput = {
-  create?: Prisma.XOR<Prisma.classroomCreateWithoutStudentsInput, Prisma.classroomUncheckedCreateWithoutStudentsInput>
-  connectOrCreate?: Prisma.classroomCreateOrConnectWithoutStudentsInput
-  upsert?: Prisma.classroomUpsertWithoutStudentsInput
-  disconnect?: Prisma.classroomWhereInput | boolean
-  delete?: Prisma.classroomWhereInput | boolean
-  connect?: Prisma.classroomWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.classroomUpdateToOneWithWhereWithoutStudentsInput, Prisma.classroomUpdateWithoutStudentsInput>, Prisma.classroomUncheckedUpdateWithoutStudentsInput>
+export type ClassroomUpdateOneWithoutStudentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClassroomCreateWithoutStudentsInput, Prisma.ClassroomUncheckedCreateWithoutStudentsInput>
+  connectOrCreate?: Prisma.ClassroomCreateOrConnectWithoutStudentsInput
+  upsert?: Prisma.ClassroomUpsertWithoutStudentsInput
+  disconnect?: Prisma.ClassroomWhereInput | boolean
+  delete?: Prisma.ClassroomWhereInput | boolean
+  connect?: Prisma.ClassroomWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClassroomUpdateToOneWithWhereWithoutStudentsInput, Prisma.ClassroomUpdateWithoutStudentsInput>, Prisma.ClassroomUncheckedUpdateWithoutStudentsInput>
 }
 
-export type classroomCreateWithoutStudentsInput = {
+export type ClassroomCreateWithoutStudentsInput = {
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
 }
 
-export type classroomUncheckedCreateWithoutStudentsInput = {
+export type ClassroomUncheckedCreateWithoutStudentsInput = {
   id?: number
   name: string
   createdAt?: Date | string
@@ -396,30 +396,30 @@ export type classroomUncheckedCreateWithoutStudentsInput = {
   deletedAt?: Date | string | null
 }
 
-export type classroomCreateOrConnectWithoutStudentsInput = {
-  where: Prisma.classroomWhereUniqueInput
-  create: Prisma.XOR<Prisma.classroomCreateWithoutStudentsInput, Prisma.classroomUncheckedCreateWithoutStudentsInput>
+export type ClassroomCreateOrConnectWithoutStudentsInput = {
+  where: Prisma.ClassroomWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClassroomCreateWithoutStudentsInput, Prisma.ClassroomUncheckedCreateWithoutStudentsInput>
 }
 
-export type classroomUpsertWithoutStudentsInput = {
-  update: Prisma.XOR<Prisma.classroomUpdateWithoutStudentsInput, Prisma.classroomUncheckedUpdateWithoutStudentsInput>
-  create: Prisma.XOR<Prisma.classroomCreateWithoutStudentsInput, Prisma.classroomUncheckedCreateWithoutStudentsInput>
-  where?: Prisma.classroomWhereInput
+export type ClassroomUpsertWithoutStudentsInput = {
+  update: Prisma.XOR<Prisma.ClassroomUpdateWithoutStudentsInput, Prisma.ClassroomUncheckedUpdateWithoutStudentsInput>
+  create: Prisma.XOR<Prisma.ClassroomCreateWithoutStudentsInput, Prisma.ClassroomUncheckedCreateWithoutStudentsInput>
+  where?: Prisma.ClassroomWhereInput
 }
 
-export type classroomUpdateToOneWithWhereWithoutStudentsInput = {
-  where?: Prisma.classroomWhereInput
-  data: Prisma.XOR<Prisma.classroomUpdateWithoutStudentsInput, Prisma.classroomUncheckedUpdateWithoutStudentsInput>
+export type ClassroomUpdateToOneWithWhereWithoutStudentsInput = {
+  where?: Prisma.ClassroomWhereInput
+  data: Prisma.XOR<Prisma.ClassroomUpdateWithoutStudentsInput, Prisma.ClassroomUncheckedUpdateWithoutStudentsInput>
 }
 
-export type classroomUpdateWithoutStudentsInput = {
+export type ClassroomUpdateWithoutStudentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type classroomUncheckedUpdateWithoutStudentsInput = {
+export type ClassroomUncheckedUpdateWithoutStudentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -458,19 +458,19 @@ export type ClassroomCountOutputTypeCountStudentsArgs<ExtArgs extends runtime.Ty
 }
 
 
-export type classroomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type ClassroomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  students?: boolean | Prisma.classroom$studentsArgs<ExtArgs>
+  students?: boolean | Prisma.Classroom$studentsArgs<ExtArgs>
   _count?: boolean | Prisma.ClassroomCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["classroom"]>
 
 
 
-export type classroomSelectScalar = {
+export type ClassroomSelectScalar = {
   id?: boolean
   name?: boolean
   createdAt?: boolean
@@ -478,14 +478,14 @@ export type classroomSelectScalar = {
   deletedAt?: boolean
 }
 
-export type classroomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["classroom"]>
-export type classroomInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  students?: boolean | Prisma.classroom$studentsArgs<ExtArgs>
+export type ClassroomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["classroom"]>
+export type ClassroomInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  students?: boolean | Prisma.Classroom$studentsArgs<ExtArgs>
   _count?: boolean | Prisma.ClassroomCountOutputTypeDefaultArgs<ExtArgs>
 }
 
-export type $classroomPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "classroom"
+export type $ClassroomPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "Classroom"
   objects: {
     students: Prisma.$StudentPayload<ExtArgs>[]
   }
@@ -499,18 +499,18 @@ export type $classroomPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   composites: {}
 }
 
-export type classroomGetPayload<S extends boolean | null | undefined | classroomDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$classroomPayload, S>
+export type ClassroomGetPayload<S extends boolean | null | undefined | ClassroomDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$ClassroomPayload, S>
 
-export type classroomCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<classroomFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type ClassroomCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<ClassroomFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: ClassroomCountAggregateInputType | true
   }
 
-export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['classroom'], meta: { name: 'classroom' } }
+export interface ClassroomDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Classroom'], meta: { name: 'Classroom' } }
   /**
    * Find zero or one Classroom that matches the filter.
-   * @param {classroomFindUniqueArgs} args - Arguments to find a Classroom
+   * @param {ClassroomFindUniqueArgs} args - Arguments to find a Classroom
    * @example
    * // Get one Classroom
    * const classroom = await prisma.classroom.findUnique({
@@ -519,12 +519,12 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findUnique<T extends classroomFindUniqueArgs>(args: Prisma.SelectSubset<T, classroomFindUniqueArgs<ExtArgs>>): Prisma.Prisma__classroomClient<runtime.Types.Result.GetResult<Prisma.$classroomPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends ClassroomFindUniqueArgs>(args: Prisma.SelectSubset<T, ClassroomFindUniqueArgs<ExtArgs>>): Prisma.Prisma__ClassroomClient<runtime.Types.Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Classroom that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {classroomFindUniqueOrThrowArgs} args - Arguments to find a Classroom
+   * @param {ClassroomFindUniqueOrThrowArgs} args - Arguments to find a Classroom
    * @example
    * // Get one Classroom
    * const classroom = await prisma.classroom.findUniqueOrThrow({
@@ -533,13 +533,13 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findUniqueOrThrow<T extends classroomFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, classroomFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__classroomClient<runtime.Types.Result.GetResult<Prisma.$classroomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends ClassroomFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, ClassroomFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__ClassroomClient<runtime.Types.Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Classroom that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {classroomFindFirstArgs} args - Arguments to find a Classroom
+   * @param {ClassroomFindFirstArgs} args - Arguments to find a Classroom
    * @example
    * // Get one Classroom
    * const classroom = await prisma.classroom.findFirst({
@@ -548,14 +548,14 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findFirst<T extends classroomFindFirstArgs>(args?: Prisma.SelectSubset<T, classroomFindFirstArgs<ExtArgs>>): Prisma.Prisma__classroomClient<runtime.Types.Result.GetResult<Prisma.$classroomPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends ClassroomFindFirstArgs>(args?: Prisma.SelectSubset<T, ClassroomFindFirstArgs<ExtArgs>>): Prisma.Prisma__ClassroomClient<runtime.Types.Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Classroom that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {classroomFindFirstOrThrowArgs} args - Arguments to find a Classroom
+   * @param {ClassroomFindFirstOrThrowArgs} args - Arguments to find a Classroom
    * @example
    * // Get one Classroom
    * const classroom = await prisma.classroom.findFirstOrThrow({
@@ -564,13 +564,13 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findFirstOrThrow<T extends classroomFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, classroomFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__classroomClient<runtime.Types.Result.GetResult<Prisma.$classroomPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends ClassroomFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, ClassroomFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__ClassroomClient<runtime.Types.Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Classrooms that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {classroomFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {ClassroomFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Classrooms
    * const classrooms = await prisma.classroom.findMany()
@@ -582,11 +582,11 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * const classroomWithIdOnly = await prisma.classroom.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends classroomFindManyArgs>(args?: Prisma.SelectSubset<T, classroomFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$classroomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends ClassroomFindManyArgs>(args?: Prisma.SelectSubset<T, ClassroomFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Classroom.
-   * @param {classroomCreateArgs} args - Arguments to create a Classroom.
+   * @param {ClassroomCreateArgs} args - Arguments to create a Classroom.
    * @example
    * // Create one Classroom
    * const Classroom = await prisma.classroom.create({
@@ -596,11 +596,11 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  create<T extends classroomCreateArgs>(args: Prisma.SelectSubset<T, classroomCreateArgs<ExtArgs>>): Prisma.Prisma__classroomClient<runtime.Types.Result.GetResult<Prisma.$classroomPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends ClassroomCreateArgs>(args: Prisma.SelectSubset<T, ClassroomCreateArgs<ExtArgs>>): Prisma.Prisma__ClassroomClient<runtime.Types.Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Classrooms.
-   * @param {classroomCreateManyArgs} args - Arguments to create many Classrooms.
+   * @param {ClassroomCreateManyArgs} args - Arguments to create many Classrooms.
    * @example
    * // Create many Classrooms
    * const classroom = await prisma.classroom.createMany({
@@ -610,11 +610,11 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    *     
    */
-  createMany<T extends classroomCreateManyArgs>(args?: Prisma.SelectSubset<T, classroomCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends ClassroomCreateManyArgs>(args?: Prisma.SelectSubset<T, ClassroomCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Delete a Classroom.
-   * @param {classroomDeleteArgs} args - Arguments to delete one Classroom.
+   * @param {ClassroomDeleteArgs} args - Arguments to delete one Classroom.
    * @example
    * // Delete one Classroom
    * const Classroom = await prisma.classroom.delete({
@@ -624,11 +624,11 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  delete<T extends classroomDeleteArgs>(args: Prisma.SelectSubset<T, classroomDeleteArgs<ExtArgs>>): Prisma.Prisma__classroomClient<runtime.Types.Result.GetResult<Prisma.$classroomPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends ClassroomDeleteArgs>(args: Prisma.SelectSubset<T, ClassroomDeleteArgs<ExtArgs>>): Prisma.Prisma__ClassroomClient<runtime.Types.Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Classroom.
-   * @param {classroomUpdateArgs} args - Arguments to update one Classroom.
+   * @param {ClassroomUpdateArgs} args - Arguments to update one Classroom.
    * @example
    * // Update one Classroom
    * const classroom = await prisma.classroom.update({
@@ -641,11 +641,11 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  update<T extends classroomUpdateArgs>(args: Prisma.SelectSubset<T, classroomUpdateArgs<ExtArgs>>): Prisma.Prisma__classroomClient<runtime.Types.Result.GetResult<Prisma.$classroomPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends ClassroomUpdateArgs>(args: Prisma.SelectSubset<T, ClassroomUpdateArgs<ExtArgs>>): Prisma.Prisma__ClassroomClient<runtime.Types.Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Classrooms.
-   * @param {classroomDeleteManyArgs} args - Arguments to filter Classrooms to delete.
+   * @param {ClassroomDeleteManyArgs} args - Arguments to filter Classrooms to delete.
    * @example
    * // Delete a few Classrooms
    * const { count } = await prisma.classroom.deleteMany({
@@ -655,13 +655,13 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  deleteMany<T extends classroomDeleteManyArgs>(args?: Prisma.SelectSubset<T, classroomDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends ClassroomDeleteManyArgs>(args?: Prisma.SelectSubset<T, ClassroomDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Classrooms.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {classroomUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {ClassroomUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Classrooms
    * const classroom = await prisma.classroom.updateMany({
@@ -674,11 +674,11 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  updateMany<T extends classroomUpdateManyArgs>(args: Prisma.SelectSubset<T, classroomUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends ClassroomUpdateManyArgs>(args: Prisma.SelectSubset<T, ClassroomUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create or update one Classroom.
-   * @param {classroomUpsertArgs} args - Arguments to update or create a Classroom.
+   * @param {ClassroomUpsertArgs} args - Arguments to update or create a Classroom.
    * @example
    * // Update or create a Classroom
    * const classroom = await prisma.classroom.upsert({
@@ -693,14 +693,14 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  upsert<T extends classroomUpsertArgs>(args: Prisma.SelectSubset<T, classroomUpsertArgs<ExtArgs>>): Prisma.Prisma__classroomClient<runtime.Types.Result.GetResult<Prisma.$classroomPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends ClassroomUpsertArgs>(args: Prisma.SelectSubset<T, ClassroomUpsertArgs<ExtArgs>>): Prisma.Prisma__ClassroomClient<runtime.Types.Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Classrooms.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {classroomCountArgs} args - Arguments to filter Classrooms to count.
+   * @param {ClassroomCountArgs} args - Arguments to filter Classrooms to count.
    * @example
    * // Count the number of Classrooms
    * const count = await prisma.classroom.count({
@@ -709,8 +709,8 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
   **/
-  count<T extends classroomCountArgs>(
-    args?: Prisma.Subset<T, classroomCountArgs>,
+  count<T extends ClassroomCountArgs>(
+    args?: Prisma.Subset<T, ClassroomCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -749,7 +749,7 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * Group by Classroom.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {classroomGroupByArgs} args - Group by arguments.
+   * @param {ClassroomGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -764,14 +764,14 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * 
   **/
   groupBy<
-    T extends classroomGroupByArgs,
+    T extends ClassroomGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: classroomGroupByArgs['orderBy'] }
-      : { orderBy?: classroomGroupByArgs['orderBy'] },
+      ? { orderBy: ClassroomGroupByArgs['orderBy'] }
+      : { orderBy?: ClassroomGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -820,22 +820,22 @@ export interface classroomDelegate<ExtArgs extends runtime.Types.Extensions.Inte
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, classroomGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClassroomGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, ClassroomGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClassroomGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the classroom model
+ * Fields of the Classroom model
  */
-readonly fields: classroomFieldRefs;
+readonly fields: ClassroomFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for classroom.
+ * The delegate class that acts as a "Promise-like" for Classroom.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__classroomClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__ClassroomClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  students<T extends Prisma.classroom$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.classroom$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  students<T extends Prisma.Classroom$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Classroom$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -862,360 +862,360 @@ export interface Prisma__classroomClient<T, Null = never, ExtArgs extends runtim
 
 
 /**
- * Fields of the classroom model
+ * Fields of the Classroom model
  */
-export interface classroomFieldRefs {
-  readonly id: Prisma.FieldRef<"classroom", 'Int'>
-  readonly name: Prisma.FieldRef<"classroom", 'String'>
-  readonly createdAt: Prisma.FieldRef<"classroom", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"classroom", 'DateTime'>
-  readonly deletedAt: Prisma.FieldRef<"classroom", 'DateTime'>
+export interface ClassroomFieldRefs {
+  readonly id: Prisma.FieldRef<"Classroom", 'Int'>
+  readonly name: Prisma.FieldRef<"Classroom", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Classroom", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Classroom", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Classroom", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * classroom findUnique
+ * Classroom findUnique
  */
-export type classroomFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
   /**
-   * Filter, which classroom to fetch.
+   * Filter, which Classroom to fetch.
    */
-  where: Prisma.classroomWhereUniqueInput
+  where: Prisma.ClassroomWhereUniqueInput
 }
 
 /**
- * classroom findUniqueOrThrow
+ * Classroom findUniqueOrThrow
  */
-export type classroomFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
   /**
-   * Filter, which classroom to fetch.
+   * Filter, which Classroom to fetch.
    */
-  where: Prisma.classroomWhereUniqueInput
+  where: Prisma.ClassroomWhereUniqueInput
 }
 
 /**
- * classroom findFirst
+ * Classroom findFirst
  */
-export type classroomFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
   /**
-   * Filter, which classroom to fetch.
+   * Filter, which Classroom to fetch.
    */
-  where?: Prisma.classroomWhereInput
+  where?: Prisma.ClassroomWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of classrooms to fetch.
+   * Determine the order of Classrooms to fetch.
    */
-  orderBy?: Prisma.classroomOrderByWithRelationInput | Prisma.classroomOrderByWithRelationInput[]
+  orderBy?: Prisma.ClassroomOrderByWithRelationInput | Prisma.ClassroomOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for classrooms.
+   * Sets the position for searching for Classrooms.
    */
-  cursor?: Prisma.classroomWhereUniqueInput
+  cursor?: Prisma.ClassroomWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` classrooms from the position of the cursor.
+   * Take `±n` Classrooms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` classrooms.
+   * Skip the first `n` Classrooms.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of classrooms.
+   * Filter by unique combinations of Classrooms.
    */
   distinct?: Prisma.ClassroomScalarFieldEnum | Prisma.ClassroomScalarFieldEnum[]
 }
 
 /**
- * classroom findFirstOrThrow
+ * Classroom findFirstOrThrow
  */
-export type classroomFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
   /**
-   * Filter, which classroom to fetch.
+   * Filter, which Classroom to fetch.
    */
-  where?: Prisma.classroomWhereInput
+  where?: Prisma.ClassroomWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of classrooms to fetch.
+   * Determine the order of Classrooms to fetch.
    */
-  orderBy?: Prisma.classroomOrderByWithRelationInput | Prisma.classroomOrderByWithRelationInput[]
+  orderBy?: Prisma.ClassroomOrderByWithRelationInput | Prisma.ClassroomOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for classrooms.
+   * Sets the position for searching for Classrooms.
    */
-  cursor?: Prisma.classroomWhereUniqueInput
+  cursor?: Prisma.ClassroomWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` classrooms from the position of the cursor.
+   * Take `±n` Classrooms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` classrooms.
+   * Skip the first `n` Classrooms.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of classrooms.
+   * Filter by unique combinations of Classrooms.
    */
   distinct?: Prisma.ClassroomScalarFieldEnum | Prisma.ClassroomScalarFieldEnum[]
 }
 
 /**
- * classroom findMany
+ * Classroom findMany
  */
-export type classroomFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
   /**
-   * Filter, which classrooms to fetch.
+   * Filter, which Classrooms to fetch.
    */
-  where?: Prisma.classroomWhereInput
+  where?: Prisma.ClassroomWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of classrooms to fetch.
+   * Determine the order of Classrooms to fetch.
    */
-  orderBy?: Prisma.classroomOrderByWithRelationInput | Prisma.classroomOrderByWithRelationInput[]
+  orderBy?: Prisma.ClassroomOrderByWithRelationInput | Prisma.ClassroomOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing classrooms.
+   * Sets the position for listing Classrooms.
    */
-  cursor?: Prisma.classroomWhereUniqueInput
+  cursor?: Prisma.ClassroomWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` classrooms from the position of the cursor.
+   * Take `±n` Classrooms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` classrooms.
+   * Skip the first `n` Classrooms.
    */
   skip?: number
   distinct?: Prisma.ClassroomScalarFieldEnum | Prisma.ClassroomScalarFieldEnum[]
 }
 
 /**
- * classroom create
+ * Classroom create
  */
-export type classroomCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
   /**
-   * The data needed to create a classroom.
+   * The data needed to create a Classroom.
    */
-  data: Prisma.XOR<Prisma.classroomCreateInput, Prisma.classroomUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.ClassroomCreateInput, Prisma.ClassroomUncheckedCreateInput>
 }
 
 /**
- * classroom createMany
+ * Classroom createMany
  */
-export type classroomCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many classrooms.
+   * The data used to create many Classrooms.
    */
-  data: Prisma.classroomCreateManyInput | Prisma.classroomCreateManyInput[]
+  data: Prisma.ClassroomCreateManyInput | Prisma.ClassroomCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * classroom update
+ * Classroom update
  */
-export type classroomUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
   /**
-   * The data needed to update a classroom.
+   * The data needed to update a Classroom.
    */
-  data: Prisma.XOR<Prisma.classroomUpdateInput, Prisma.classroomUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.ClassroomUpdateInput, Prisma.ClassroomUncheckedUpdateInput>
   /**
-   * Choose, which classroom to update.
+   * Choose, which Classroom to update.
    */
-  where: Prisma.classroomWhereUniqueInput
+  where: Prisma.ClassroomWhereUniqueInput
 }
 
 /**
- * classroom updateMany
+ * Classroom updateMany
  */
-export type classroomUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update classrooms.
+   * The data used to update Classrooms.
    */
-  data: Prisma.XOR<Prisma.classroomUpdateManyMutationInput, Prisma.classroomUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.ClassroomUpdateManyMutationInput, Prisma.ClassroomUncheckedUpdateManyInput>
   /**
-   * Filter which classrooms to update
+   * Filter which Classrooms to update
    */
-  where?: Prisma.classroomWhereInput
+  where?: Prisma.ClassroomWhereInput
   /**
-   * Limit how many classrooms to update.
+   * Limit how many Classrooms to update.
    */
   limit?: number
 }
 
 /**
- * classroom upsert
+ * Classroom upsert
  */
-export type classroomUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
   /**
-   * The filter to search for the classroom to update in case it exists.
+   * The filter to search for the Classroom to update in case it exists.
    */
-  where: Prisma.classroomWhereUniqueInput
+  where: Prisma.ClassroomWhereUniqueInput
   /**
-   * In case the classroom found by the `where` argument doesn't exist, create a new classroom with this data.
+   * In case the Classroom found by the `where` argument doesn't exist, create a new Classroom with this data.
    */
-  create: Prisma.XOR<Prisma.classroomCreateInput, Prisma.classroomUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.ClassroomCreateInput, Prisma.ClassroomUncheckedCreateInput>
   /**
-   * In case the classroom was found with the provided `where` argument, update it with this data.
+   * In case the Classroom was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.classroomUpdateInput, Prisma.classroomUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.ClassroomUpdateInput, Prisma.ClassroomUncheckedUpdateInput>
 }
 
 /**
- * classroom delete
+ * Classroom delete
  */
-export type classroomDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
   /**
-   * Filter which classroom to delete.
+   * Filter which Classroom to delete.
    */
-  where: Prisma.classroomWhereUniqueInput
+  where: Prisma.ClassroomWhereUniqueInput
 }
 
 /**
- * classroom deleteMany
+ * Classroom deleteMany
  */
-export type classroomDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which classrooms to delete
+   * Filter which Classrooms to delete
    */
-  where?: Prisma.classroomWhereInput
+  where?: Prisma.ClassroomWhereInput
   /**
-   * Limit how many classrooms to delete.
+   * Limit how many Classrooms to delete.
    */
   limit?: number
 }
 
 /**
- * classroom.students
+ * Classroom.students
  */
-export type classroom$studentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Classroom$studentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Student
    */
@@ -1237,19 +1237,19 @@ export type classroom$studentsArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * classroom without action
+ * Classroom without action
  */
-export type classroomDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClassroomDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the classroom
+   * Select specific fields to fetch from the Classroom
    */
-  select?: Prisma.classroomSelect<ExtArgs> | null
+  select?: Prisma.ClassroomSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the classroom
+   * Omit specific fields from the Classroom
    */
-  omit?: Prisma.classroomOmit<ExtArgs> | null
+  omit?: Prisma.ClassroomOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.classroomInclude<ExtArgs> | null
+  include?: Prisma.ClassroomInclude<ExtArgs> | null
 }
