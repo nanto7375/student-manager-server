@@ -105,7 +105,7 @@ export class ActivityService {
       throw new BadRequestException('monthly project is not participated');
     }
 
-    const outOfMonthlyProject = !monthlyProject;
+    const outOfMonthlyProject = monthlyProject === undefined ? !activityRecord.monthlyProject : monthlyProject === null;
     const body = outOfMonthlyProject
       ? { monthlyProject: null, monthlyPreview: false, monthlyReport: false }
       : {

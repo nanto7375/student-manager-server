@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsDate, IsOptional } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class UpdateActivityRecordRequestDto {
   @ApiPropertyOptional()
@@ -21,8 +21,8 @@ export class UpdateActivityRecordRequestDto {
 export class UpdateMonthlyActivityRecordRequestDto {
   @ApiPropertyOptional()
   @IsOptional()
-  @IsDate()
-  monthlyProject?: Date;
+  @IsString()
+  monthlyProject?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
