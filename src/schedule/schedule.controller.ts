@@ -20,7 +20,6 @@ export class ScheduleController {
     return toInstance(ScheduleDto, schedules);
   }
 
-  @Get('reserved')
   @Delete('reserved/:reservationId')
   @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '예약된 수업 시간 삭제' })
