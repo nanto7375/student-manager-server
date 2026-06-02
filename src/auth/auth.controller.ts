@@ -19,7 +19,7 @@ import { throttleNames } from '@src/common/guards';
 @ApiTags('auth')
 export class AuthController {
   private readonly isDevelopment: boolean;
-  private readonly doamin: string;
+  private readonly domain: string;
 
   constructor(
     private readonly authService: AuthService,
@@ -27,14 +27,14 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {
     this.isDevelopment = this.configService.get('NODE_ENV') !== 'production';
-    this.doamin = this.configService.get('SM_DOMAIN');
+    this.domain = this.configService.get('SM_DOMAIN');
     this.logger.setContext('AuthController');
   }
 
   // // TODO: 배포할 때 업데이트 필요
   private _getTokenCookieOptions(): CookieOptions {
     return {
-      ...(this.isDevelopment ? {} : { domain: 'jsu7375.cafe24.com' }),
+      ...(this.isDevelopment ? {} : { domain: this.domain }),
       httpOnly: true,
       secure: !this.isDevelopment,
       sameSite: this.isDevelopment ? 'lax' : 'none', //

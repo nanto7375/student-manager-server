@@ -48,25 +48,26 @@ export class AdminService {
   }
 
   async updateAdmin(id: number, updateAdminDto: AdminUpdateDto) {
-    const admin = await this.getAdminOrThrow(id);
-    admin.email = updateAdminDto.email;
-    admin.role = updateAdminDto.role;
-    admin.phone = updateAdminDto.phone;
-
-    return this.prisma.admin.update({ where: { id }, data: admin });
+    await this.getAdminOrThrow(id);
+    const data = {
+      email: updateAdminDto.email,
+      role: updateAdminDto.role,
+      phone: updateAdminDto.phone,
+    };
+    return this.prisma.admin.update({ where: { id }, data });
   }
 
   async changePassword(id: number, password: string) {
-    const admin = await this.getAdminOrThrow(id);
-    admin.password = await this.bcryptService.hash(password);
-    await this.prisma.admin.update({ where: { id }, data: admin });
+    await this.getAdminOrThrow(id);
+    const data = { password: await this.bcryptService.hash(password) };
+    await this.prisma.admin.update({ where: { id }, data });
     return true;
   }
 
   async removeAdmin(id: number) {
-    const admin = await this.getAdminOrThrow(id);
-    admin.deletedAt = new Date();
-    await this.prisma.admin.update({ where: { id }, data: admin });
+    await this.getAdminOrThrow(id);
+    const data = { deletedAt: new Date() };
+    await this.prisma.admin.update({ where: { id }, data });
     return true;
   }
 

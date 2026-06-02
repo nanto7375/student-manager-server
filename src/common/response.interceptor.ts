@@ -9,9 +9,12 @@ export class ResponseInterceptor implements NestInterceptor {
   }
 
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
+    const now = Date.now();
+    const req = context.switchToHttp().getRequest();
+
     return next.handle().pipe(
       map((data) => {
-        this.logger.log(data);
+        this.logger.log({ method: req.method, url: req.url, duration: `${Date.now() - now}ms` });
         return { message: data };
       }),
     );

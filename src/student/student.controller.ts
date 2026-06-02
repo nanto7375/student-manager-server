@@ -83,13 +83,13 @@ export class StudentController {
   @Patch(':studentId/schedule')
   @RequireRole(AdminRoleType.ADMIN)
   @ApiOperation({ summary: '학생 스케줄 변경' })
-  @ApiOkResponse({ type: StudentDto })
+  @ApiOkResponse({ type: Boolean })
   async changeSchedule(
     @Param('studentId', ParseIntPipe) studentId: number, //
     @Body() { scheduleId, dateForChange }: ChangeScheduleRequestDto,
   ) {
-    const student = await this.studentService.changeSchedule({ studentId, scheduleId, dateForChange });
-    return toInstance(StudentDto, student);
+    const result = await this.studentService.changeSchedule({ studentId, scheduleId, dateForChange });
+    return result;
   }
 
   @Patch(':studentId/classroom')
@@ -99,8 +99,8 @@ export class StudentController {
     @Param('studentId', ParseIntPipe) studentId: number, //
     @Body() { classroomId }: ChangeClassroomRequestDto,
   ) {
-    const student = await this.studentService.changeClassroom({ studentId, classroomId });
-    return toInstance(StudentDto, student);
+    const result = await this.studentService.changeClassroom({ studentId, classroomId });
+    return result;
   }
 
   @Patch(':studentId/notes/:noteId')
