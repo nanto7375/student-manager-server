@@ -118,7 +118,7 @@ export class StudentService {
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     if (student.scheduleId === scheduleId) return student;
 
-    if (!dateForChange) {
+    if (!student.scheduleId) {
       const savedStudent = await this.studentRepository._.update({
         where: { id: studentId },
         data: { schedule: { connect: { id: schedule.id } } },
