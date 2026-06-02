@@ -1,8 +1,8 @@
 import { isNullish } from './../common/utils/etc';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { ActivityRecord, Student, BookRental, Note, Classroom } from '@src/generated/prisma/client';
-import { ActivityRecordGenerationLogRepository, ActivityRepository } from './activity.repository';
+import { PrismaService } from '@src/configs/prisma/prisma.service';
 
 import { DateService } from '@src/common/utils/date';
 
@@ -15,13 +15,12 @@ import { ScheduleResult } from '@src/schedule/schedule.service';
 @Injectable()
 export class ActivityService {
   constructor(
-    private readonly activityRepository: ActivityRepository,
-    private readonly activityRecordGenerationLogRepository: ActivityRecordGenerationLogRepository,
+    private readonly prisma: PrismaService,
     private readonly date: DateService,
   ) {}
 
   async getActivityRecords({ scheduleId, date, studentId }: { scheduleId: number | null; date: string | null; studentId: number | null }) {
-    const activityRecords: ActivityRecordWithBorrowedBook[] = await this.activityRepository.findMany({
+    const activityRecords: ActivityRecordWithBorrowedBook[] = await this.prisma.activityRecord.findMany({
       where: {
         ...(date && { date }),
         ...(scheduleId && { scheduleId }),
@@ -53,38 +52,38 @@ export class ActivityService {
   }
 
   async generateActivityRecord({ studentId, scheduleId, date, isMakeup = false, movedAt }: { studentId: number; scheduleId: number; date: string; isMakeup?: boolean; movedAt?: Date }) {
-    const body = {
-      student: { connect: { id: studentId } },
-      scheduleId,
-      date,
-      ...(!isNullish(isMakeup) && { isMakeup }),
-      ...(!isNullish(movedAt) && { movedAt }),
-    };
-    return this.activityRepository.create(body);
+    return this.prisma.activityRecord.create({
+      data: {
+        student: { connect: { id: studentId } },
+        scheduleId,
+        date,
+        ...(!isNullish(isMakeup) && { isMakeup }),
+        ...(!isNullish(movedAt) && { movedAt }),
+      },
+    });
   }
 
   async generateActivityRecordsForSchedule({ studentIds, scheduleId, dayOfWeek, yearMonth = this.date.currentYearMonth(), startDay }: { studentIds: number[]; scheduleId: number; dayOfWeek: number; yearMonth?: string; startDay?: number }) {
     const dates = this.date.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek, startDay });
     const activityRecords = studentIds.flatMap((studentId) => dates.map((date) => ({ studentId, date, scheduleId })));
-    return await this.activityRepository.createMany(activityRecords);
+    return await this.prisma.activityRecord.createMany({ data: activityRecords });
   }
 
   async removeActivityRecordsByScheduleChange({ studentId, schedule, dateForChange }: { studentId: number; schedule: ScheduleResult; dateForChange: string }) {
     const dates = this.date.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth: dateForChange.slice(0, 6), dayOfWeek: schedule.dayOfWeek, startDay: Number(dateForChange.slice(6)) });
-    await this.activityRepository.deleteMany({ studentId, date: { in: dates } });
+    await this.prisma.activityRecord.deleteMany({ where: { studentId, date: { in: dates } } });
   }
 
   async generateARGLs({ yearMonth }: { yearMonth: string }) {
-    return await this.activityRecordGenerationLogRepository.create({ generatedActivityYearMonth: yearMonth });
+    return await this.prisma.activityRecordGenerationLog.create({ data: { generatedActivityYearMonth: yearMonth } });
   }
 
   async getARGLsInThisMonth(yearMonth: string) {
-    const activityGenerationLogs = await this.activityRecordGenerationLogRepository.findBy({ generatedActivityYearMonth: yearMonth });
-    return activityGenerationLogs;
+    return await this.prisma.activityRecordGenerationLog.findFirst({ where: { generatedActivityYearMonth: yearMonth } });
   }
 
   async updateActivityRecord({ activityRecordId, activityRecordDto }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto }) {
-    const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
+    const activityRecord = await this.findActivityRecordOrThrow(activityRecordId);
     const { attendance, report1, report2 } = activityRecordDto;
 
     const body = {
@@ -92,12 +91,12 @@ export class ActivityService {
       ...(report1 !== undefined && { report1 }),
       ...(report2 !== undefined && { report2 }),
     };
-    await this.activityRepository.update(activityRecord.id, body);
+    await this.prisma.activityRecord.update({ where: { id: activityRecord.id }, data: body });
     return true;
   }
 
   async updateMonthlyActivityRecord({ activityRecordId, activityRecordDto }: { activityRecordId: number; activityRecordDto: UpdateMonthlyActivityRecordRequestDto }) {
-    const activityRecord = await this.activityRepository.findOrThrow(activityRecordId);
+    const activityRecord = await this.findActivityRecordOrThrow(activityRecordId);
     const { monthlyProject, monthlyPreview, monthlyReport } = activityRecordDto;
 
     const notParticipatedIn = !activityRecord.monthlyProject;
@@ -114,11 +113,17 @@ export class ActivityService {
           ...(monthlyReport !== undefined && { monthlyReport }),
         };
     const yearMonth = activityRecord.date.substring(0, 6);
-    await this.activityRepository.updateMany({
-      body,
+    await this.prisma.activityRecord.updateMany({
       where: { studentId: activityRecord.studentId, date: { startsWith: yearMonth } },
+      data: body,
     });
     return true;
+  }
+
+  private async findActivityRecordOrThrow(id: number) {
+    const activityRecord = await this.prisma.activityRecord.findUnique({ where: { id } });
+    if (!activityRecord) throw new NotFoundException('not found activity record');
+    return activityRecord;
   }
 }
 

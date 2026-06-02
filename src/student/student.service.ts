@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { NoteRepository, StudentRepository } from './student.repository';
 import { StudentBuilder } from './student.builder';
 import { type ScheduleResult, ScheduleService } from '@src/schedule/schedule.service';
 
@@ -11,22 +10,32 @@ import { PaginationDto } from '@src/common/common.dto';
 import { ActivityService } from '@src/activity/activity.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma } from '@src/generated/prisma/client';
+import { PrismaService } from '@src/configs/prisma/prisma.service';
 
 type NoteType = 'assessment' | 'parent-counseling' | 'fixed-memo' | 'temporary-memo';
 
 @Injectable()
 export class StudentService {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly studentBuilder: StudentBuilder,
-    private readonly studentRepository: StudentRepository,
-    private readonly noteRepository: NoteRepository,
     private readonly scheduleService: ScheduleService,
     private readonly activityService: ActivityService,
     private readonly date: DateService,
   ) {}
 
   async getStudentOrThrow(id: number, { includeNotes = false, includeScheduleChangeReservations = false } = {}) {
-    return await this.studentRepository.findOrThrow(id, { includeNotes, includeScheduleChangeReservations });
+    const student = await this.prisma.student.findUnique({
+      where: { id },
+      include: {
+        schedule: { include: { lesson: true } },
+        classroom: true,
+        notes: includeNotes ? { where: { deletedAt: null }, include: { lastCommenter: true } } : false,
+        scheduleChangeReservations: includeScheduleChangeReservations ? { where: { completedAt: null }, include: { schedule: true } } : false,
+      },
+    });
+    if (!student) throw new NotFoundException('not found student');
+    return student;
   }
 
   async getStudents(whereQuery: { name: string; schoolLevel: number; dayOfWeek: number; status?: string }, { limit, offset, sort }: PaginationDto) {
@@ -39,7 +48,7 @@ export class StudentService {
       ...(status && status === Status.ACTIVE && { deletedAt: null }),
     };
 
-    const students = await this.studentRepository._.findMany({
+    const students = await this.prisma.student.findMany({
       where,
       include: {
         schedule: { include: { lesson: true } },
@@ -50,7 +59,7 @@ export class StudentService {
       skip: offset,
       orderBy: { [sortKey]: sortOrder as Prisma.SortOrder },
     });
-    const count = await this.studentRepository._.count({ where });
+    const count = await this.prisma.student.count({ where });
     return [students, count];
   }
 
@@ -80,7 +89,7 @@ export class StudentService {
       .setSchedule(schedule?.id, studentDto.classroomId)
       .create();
 
-    const savedStudent = await this.studentRepository._.create({ data: newStudent });
+    const savedStudent = await this.prisma.student.create({ data: newStudent });
     if (schedule) {
       await this.activityService.generateActivityRecordsForSchedule({
         studentIds: [savedStudent.id],
@@ -92,7 +101,7 @@ export class StudentService {
   }
 
   async updatePersonalInfo({ studentId, studentDto }: UpdatePersonalInfoParams) {
-    const student = await this.studentRepository.findOrThrow(studentId);
+    const student = await this.getStudentOrThrow(studentId);
 
     const updatedData = this.studentBuilder
       .editor(student)
@@ -111,16 +120,16 @@ export class StudentService {
       })
       .edit();
 
-    return await this.studentRepository._.update({ where: { id: studentId }, data: updatedData });
+    return await this.prisma.student.update({ where: { id: studentId }, data: updatedData });
   }
 
   async changeSchedule({ studentId, scheduleId, dateForChange }: ChangeScheduleParams) {
-    const student = await this.studentRepository.findOrThrow(studentId);
+    const student = await this.getStudentOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
     if (student.scheduleId === scheduleId) return true;
 
     if (!student.scheduleId) {
-      const savedStudent = await this.studentRepository._.update({
+      const savedStudent = await this.prisma.student.update({
         where: { id: studentId },
         data: { schedule: { connect: { id: schedule.id } } },
       });
@@ -162,7 +171,7 @@ export class StudentService {
       yearMonth,
       startDay: Number(day),
     });
-    await this.studentRepository._.update({
+    await this.prisma.student.update({
       where: { id: studentId },
       data: { schedule: { connect: { id: scheduleId } } },
     });
@@ -173,7 +182,7 @@ export class StudentService {
   }
 
   async registerMakeupSchedule({ studentId, scheduleId, dateForMakeup, movedAt }: { studentId: number; scheduleId: number; dateForMakeup: string; movedAt?: Date }) {
-    await this.studentRepository.findOrThrow(studentId);
+    await this.getStudentOrThrow(studentId);
     await this.scheduleService.getScheduleOrThrow(scheduleId);
     await this.activityService.generateActivityRecord({ studentId, scheduleId, date: dateForMakeup, isMakeup: true, movedAt });
     return true;
@@ -182,7 +191,7 @@ export class StudentService {
   async createNote({ studentId, value, type, adminId }: { studentId: number; value: string; type: NoteType; adminId: number }) {
     if (value.length > 5000) throw new BadRequestException();
 
-    return await this.noteRepository._.create({
+    return await this.prisma.note.create({
       data: {
         value,
         type,
@@ -193,20 +202,17 @@ export class StudentService {
   }
 
   async updateNote({ noteId, adminId, studentId, value }: UpdateNoteParams) {
-    const note = await this.noteRepository.findOrThrow(noteId);
-    if (note.studentId !== studentId) throw new BadRequestException(); // 필요한가
+    const note = await this.findNoteOrThrow(noteId);
+    if (note.studentId !== studentId) throw new BadRequestException();
 
-    // TODO: 다른 admin에 의해 수정중이면 접근 못함
-
-    const updated = await this.noteRepository._.update({
+    return await this.prisma.note.update({
       where: { id: noteId },
       data: { value, lastCommenter: { connect: { id: adminId } } },
     });
-    return updated;
   }
 
   async getNotes(studentId: number) {
-    return await this.noteRepository._.findMany({
+    return await this.prisma.note.findMany({
       where: { studentId, deletedAt: null },
       include: { lastCommenter: true },
       orderBy: { id: 'asc' },
@@ -215,24 +221,31 @@ export class StudentService {
 
   @Transactional()
   async deleteStudent(studentId: number) {
-    await this.studentRepository.findOrThrow(studentId);
-    await this.studentRepository._.update({ where: { id: studentId }, data: { deletedAt: this.date.now() } });
+    await this.getStudentOrThrow(studentId);
+    await this.prisma.student.update({ where: { id: studentId }, data: { deletedAt: this.date.now() } });
     await this.scheduleService.deleteReservedScheduleChanges(studentId);
     return true;
   }
 
   async toggleNoteStatus(noteId: number) {
-    const note = await this.noteRepository.findOrThrow(noteId, { paranoid: false });
+    const note = await this.findNoteOrThrow(noteId, { paranoid: false });
     const newStatus = note.deletedAt ? null : this.date.now();
-    return await this.noteRepository._.update({ where: { id: noteId }, data: { deletedAt: newStatus } });
+    return await this.prisma.note.update({ where: { id: noteId }, data: { deletedAt: newStatus } });
   }
 
   async changeClassroom({ studentId, classroomId }: { studentId: number; classroomId: number }) {
     const classroomIds = [1, 2, 3, 4];
     if (!classroomIds.includes(classroomId)) throw new BadRequestException();
-    await this.studentRepository.findOrThrow(studentId);
-    await this.studentRepository._.update({ where: { id: studentId }, data: { classroom: { connect: { id: classroomId } } } });
+    await this.getStudentOrThrow(studentId);
+    await this.prisma.student.update({ where: { id: studentId }, data: { classroom: { connect: { id: classroomId } } } });
     return true;
+  }
+
+  private async findNoteOrThrow(id: number, { paranoid = true } = {}) {
+    const note = await this.prisma.note.findUnique({ where: { id } });
+    if (!note) throw new NotFoundException();
+    if (paranoid && note.deletedAt) throw new BadRequestException();
+    return note;
   }
 }
 

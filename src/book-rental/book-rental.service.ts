@@ -1,37 +1,45 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { BookRentalRepository } from './book-rental.repository';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '@src/configs/prisma/prisma.service';
 import { StudentService } from '@src/student/student.service';
 
 @Injectable()
 export class BookRentalService {
   constructor(
-    private readonly bookRentalRepository: BookRentalRepository,
+    private readonly prisma: PrismaService,
     private readonly studentService: StudentService,
   ) {}
 
   async borrowBook({ studentId, bookTitle }: { studentId: number; bookTitle: string }) {
     await this.studentService.getStudentOrThrow(studentId);
-    const activeBorrow = await this.bookRentalRepository.findActiveByStudentId(studentId);
+    const activeBorrow = await this.prisma.bookRental.findFirst({
+      where: { studentId, returnedAt: null },
+      orderBy: { borrowedAt: 'desc' },
+    });
     if (activeBorrow) throw new BadRequestException('이미 대여 중인 책이 있습니다');
 
-    return await this.bookRentalRepository.create({
-      student: { connect: { id: studentId } },
-      bookTitle,
+    return await this.prisma.bookRental.create({
+      data: { student: { connect: { id: studentId } }, bookTitle },
     });
   }
 
   async returnBook(bookRentalId: number) {
-    const bookRental = await this.bookRentalRepository.findOrThrow(bookRentalId);
+    const bookRental = await this.findBookRentalOrThrow(bookRentalId);
     if (bookRental.returnedAt) throw new BadRequestException('이미 반납된 책입니다');
 
-    await this.bookRentalRepository.returnBook(bookRentalId);
+    await this.prisma.bookRental.update({ where: { id: bookRentalId }, data: { returnedAt: new Date() } });
     return true;
   }
 
   async recordBorrowedBookTitle(bookRentalId: number, bookTitle: string) {
-    const bookRental = await this.bookRentalRepository.findOrThrow(bookRentalId);
+    const bookRental = await this.findBookRentalOrThrow(bookRentalId);
     if (bookRental.returnedAt) throw new BadRequestException('이미 반납된 책입니다');
 
-    return await this.bookRentalRepository.update(bookRentalId, { bookTitle });
+    return await this.prisma.bookRental.update({ where: { id: bookRentalId }, data: { bookTitle } });
+  }
+
+  private async findBookRentalOrThrow(id: number) {
+    const bookRental = await this.prisma.bookRental.findUnique({ where: { id } });
+    if (!bookRental) throw new NotFoundException('책 대여 기록을 찾을 수 없습니다');
+    return bookRental;
   }
 }
