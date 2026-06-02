@@ -83,7 +83,8 @@ export class StudentService {
     const savedStudent = await this.studentRepository._.create({ data: newStudent });
     if (schedule) {
       await this.activityService.generateActivityRecordsForSchedule({
-        students: [savedStudent],
+        studentIds: [savedStudent.id],
+        scheduleId: schedule.id,
         dayOfWeek: schedule.dayOfWeek,
       });
     }
@@ -116,7 +117,7 @@ export class StudentService {
   async changeSchedule({ studentId, scheduleId, dateForChange }: ChangeScheduleParams) {
     const student = await this.studentRepository.findOrThrow(studentId);
     const schedule = await this.scheduleService.getScheduleOrThrow(scheduleId);
-    if (student.scheduleId === scheduleId) return student;
+    if (student.scheduleId === scheduleId) return true;
 
     if (!student.scheduleId) {
       const savedStudent = await this.studentRepository._.update({
@@ -124,16 +125,17 @@ export class StudentService {
         data: { schedule: { connect: { id: schedule.id } } },
       });
       await this.activityService.generateActivityRecordsForSchedule({
-        students: [savedStudent],
+        studentIds: [savedStudent.id],
+        scheduleId: schedule.id,
         dayOfWeek: schedule.dayOfWeek,
       });
-    }
-
-    const now = this.date.format(this.date.now(), 'YYYYMMDD');
-    if (dateForChange === now) {
-      await this.executeScheduleChange({ studentId, scheduleId, dateForChange });
     } else {
-      await this.scheduleService.reserveScheduleChange({ studentId, scheduleId, date: dateForChange });
+      const now = this.date.format(this.date.now(), 'YYYYMMDD');
+      if (dateForChange === now) {
+        await this.executeScheduleChange({ studentId, scheduleId, dateForChange });
+      } else {
+        await this.scheduleService.reserveScheduleChange({ studentId, scheduleId, date: dateForChange });
+      }
     }
     return true;
   }
@@ -154,8 +156,9 @@ export class StudentService {
 
     await this.activityService.removeActivityRecordsByScheduleChange({ studentId, schedule: previousSchedule, dateForChange });
     await this.activityService.generateActivityRecordsForSchedule({
-      students: [student],
+      studentIds: [student.id],
       dayOfWeek: schedule.dayOfWeek,
+      scheduleId,
       yearMonth,
       startDay: Number(day),
     });
@@ -163,6 +166,7 @@ export class StudentService {
       where: { id: studentId },
       data: { schedule: { connect: { id: scheduleId } } },
     });
+
     await this.scheduleService.completeReservedScheduleChange({ studentId, date: dateForChange, scheduleId });
     await this.scheduleService.deleteReservedScheduleChanges(studentId);
     return true;

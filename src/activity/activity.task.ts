@@ -31,7 +31,8 @@ export class ActivityTask {
       const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
       for (const schedule of schedulesWithStudents) {
         await this.activityService.generateActivityRecordsForSchedule({
-          students: schedule.students,
+          studentIds: schedule.students.map((student) => student.id),
+          scheduleId: schedule.id,
           dayOfWeek: schedule.dayOfWeek,
           yearMonth: currentYearMonth,
         });

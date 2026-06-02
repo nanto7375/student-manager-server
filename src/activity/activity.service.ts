@@ -63,9 +63,9 @@ export class ActivityService {
     return this.activityRepository.create(body);
   }
 
-  async generateActivityRecordsForSchedule({ students, dayOfWeek, yearMonth = this.date.currentYearMonth(), startDay }: { students: Student[]; dayOfWeek: number; yearMonth?: string; startDay?: number }) {
+  async generateActivityRecordsForSchedule({ studentIds, scheduleId, dayOfWeek, yearMonth = this.date.currentYearMonth(), startDay }: { studentIds: number[]; scheduleId: number; dayOfWeek: number; yearMonth?: string; startDay?: number }) {
     const dates = this.date.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek, startDay });
-    const activityRecords = students.flatMap((student) => dates.map((date) => ({ studentId: student.id, date, scheduleId: student.scheduleId })));
+    const activityRecords = studentIds.flatMap((studentId) => dates.map((date) => ({ studentId, date, scheduleId })));
     return await this.activityRepository.createMany(activityRecords);
   }
 
