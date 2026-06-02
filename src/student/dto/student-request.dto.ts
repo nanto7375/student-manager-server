@@ -105,7 +105,6 @@ export class ChangeScheduleRequestDto {
 
   @ApiProperty()
   @IsString()
-  @Nullable()
   dateForChange: string; // YYYYMMDD
 }
 
