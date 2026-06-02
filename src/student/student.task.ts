@@ -7,6 +7,9 @@ import { StudentService } from './student.service';
 
 @Injectable()
 export class StudentTask {
+  private changeScheduleRetryCount = 0;
+  private static readonly MAX_RETRIES = 5;
+
   constructor(
     private readonly scheduleService: ScheduleService,
     private readonly studentService: StudentService,
@@ -30,12 +33,19 @@ export class StudentTask {
 
       // TODO: results 확인 후 실패 별도 처리
 
+      this.changeScheduleRetryCount = 0;
       this.logger.log(`Executed schedule changes for ${reservedChanges.length} students`);
     } catch (error) {
       this.logger.error(error);
-      setTimeout(() => {
-        this.changeSchedule();
-      }, 1000 * 60); // 1분 후 재시도
+      if (this.changeScheduleRetryCount < StudentTask.MAX_RETRIES) {
+        this.changeScheduleRetryCount++;
+        setTimeout(() => {
+          this.changeSchedule();
+        }, 1000 * 60);
+      } else {
+        this.logger.error(`Schedule change failed after ${StudentTask.MAX_RETRIES} retries`);
+        this.changeScheduleRetryCount = 0;
+      }
     }
   }
 }

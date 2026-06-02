@@ -9,6 +9,9 @@ import { DateService } from '@src/common/utils/date';
 
 @Injectable()
 export class ActivityTask {
+  private generateRetryCount = 0;
+  private static readonly MAX_RETRIES = 5;
+
   constructor(
     private readonly activityService: ActivityService,
     private readonly scheduleService: ScheduleService,
@@ -38,15 +41,19 @@ export class ActivityTask {
         });
       }
       await this.activityService.generateARGLs({ yearMonth: currentYearMonth });
+      this.generateRetryCount = 0;
       this.logger.log(`Activity records generated for ${currentYearMonth}`);
     } catch (error) {
       this.logger.error(error);
-      setTimeout(
-        () => {
+      if (this.generateRetryCount < ActivityTask.MAX_RETRIES) {
+        this.generateRetryCount++;
+        setTimeout(() => {
           this.generateActivityRecordsForAllStudents();
-        },
-        1000 * 60 * 5,
-      );
+        }, 1000 * 60 * 5);
+      } else {
+        this.logger.error(`Activity record generation failed after ${ActivityTask.MAX_RETRIES} retries`);
+        this.generateRetryCount = 0;
+      }
     }
   }
 }

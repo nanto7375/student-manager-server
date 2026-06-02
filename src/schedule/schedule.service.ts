@@ -33,7 +33,7 @@ export class ScheduleService {
   }
 
   async getSchedulesWithStudents() {
-    return await this.prisma.schedule.findMany({ where: { deletedAt: null }, include: { students: true } });
+    return await this.prisma.schedule.findMany({ where: { deletedAt: null }, include: { students: { where: { deletedAt: null } } } });
   }
 
   @Transactional()
