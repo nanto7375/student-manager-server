@@ -47,9 +47,12 @@ export class ActivityTask {
       this.logger.error(error);
       if (this.generateRetryCount < ActivityTask.MAX_RETRIES) {
         this.generateRetryCount++;
-        setTimeout(() => {
-          this.generateActivityRecordsForAllStudents();
-        }, 1000 * 60 * 5);
+        setTimeout(
+          () => {
+            this.generateActivityRecordsForAllStudents();
+          },
+          1000 * 60 * 5,
+        );
       } else {
         this.logger.error(`Activity record generation failed after ${ActivityTask.MAX_RETRIES} retries`);
         this.generateRetryCount = 0;
