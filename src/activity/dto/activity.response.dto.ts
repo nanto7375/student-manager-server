@@ -37,8 +37,8 @@ export class ActivityRecordDto {
   @Expose()
   monthlyProject: string;
 
-  @ApiProperty({ description: '대출 중인 책 정보', required: false })
+  @ApiProperty({ description: '대출 중인 책 목록', type: [BookRentalDto] })
   @Type(() => BookRentalDto)
   @Expose()
-  borrowedBook?: BookRentalDto;
+  borrowedBooks: BookRentalDto[];
 }

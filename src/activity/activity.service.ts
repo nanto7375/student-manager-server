@@ -33,7 +33,6 @@ export class ActivityService {
             classroom: true,
             bookRentals: {
               where: { returnedAt: null },
-              take: 1,
               orderBy: { borrowedAt: 'desc' },
             },
             notes: {
@@ -47,7 +46,7 @@ export class ActivityService {
 
     return activityRecords.map((record) => ({
       ...record,
-      borrowedBook: record.student.bookRentals?.[0] ? { ...record.student.bookRentals[0] } : null,
+      borrowedBooks: record.student.bookRentals ?? [],
     }));
   }
 

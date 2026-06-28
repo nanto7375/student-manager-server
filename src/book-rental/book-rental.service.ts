@@ -11,12 +11,6 @@ export class BookRentalService {
 
   async borrowBook({ studentId, bookTitle }: { studentId: number; bookTitle: string }) {
     await this.studentService.getStudentOrThrow(studentId);
-    const activeBorrow = await this.prisma.bookRental.findFirst({
-      where: { studentId, returnedAt: null },
-      orderBy: { borrowedAt: 'desc' },
-    });
-    if (activeBorrow) throw new BadRequestException('이미 대여 중인 책이 있습니다');
-
     return await this.prisma.bookRental.create({
       data: { student: { connect: { id: studentId } }, bookTitle },
     });
