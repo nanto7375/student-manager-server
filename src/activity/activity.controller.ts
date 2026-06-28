@@ -30,5 +30,4 @@ export class ActivityController {
   async updateActivityRecord(@Param('activityRecordId', ParseIntPipe) activityRecordId: number, @Body() activityRecordDto: UpdateActivityRecordRequestDto) {
     return await this.activityService.updateActivityRecord({ activityRecordId, activityRecordDto });
   }
-
 }

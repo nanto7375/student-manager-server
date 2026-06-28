@@ -3,6 +3,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { Transactional } from '@nestjs-cls/transactional';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
+import { MailService } from '@src/mail/mail.service';
 import { ActivityService } from './activity.service';
 import { ScheduleService } from '@src/schedule/schedule.service';
 import { DateService } from '@src/common/utils/date';
@@ -17,6 +18,7 @@ export class ActivityTask {
     private readonly scheduleService: ScheduleService,
     private readonly logger: MyLogger,
     private readonly date: DateService,
+    private readonly mailService: MailService,
   ) {
     this.logger.setContext('ActivityTask');
   }
@@ -55,6 +57,10 @@ export class ActivityTask {
         );
       } else {
         this.logger.error(`Activity record generation failed after ${ActivityTask.MAX_RETRIES} retries`);
+        this.mailService.sendErrorAlert({
+          subject: 'ActivityTask: 활동 기록 생성 실패',
+          body: `활동 기록 자동 생성이 ${ActivityTask.MAX_RETRIES}회 재시도 후 실패했습니다.\n\nError: ${error?.message ?? error}\nStack: ${error?.stack ?? 'N/A'}`,
+        });
         this.generateRetryCount = 0;
       }
     }

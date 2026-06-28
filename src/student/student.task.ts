@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { DateService } from '@src/common/utils/date';
 import { MyLogger } from '@src/configs/logger/my-logger';
+import { MailService } from '@src/mail/mail.service';
 import { ScheduleService } from '@src/schedule/schedule.service';
 import { StudentService } from './student.service';
 
@@ -15,6 +16,7 @@ export class StudentTask {
     private readonly studentService: StudentService,
     private readonly date: DateService,
     private readonly logger: MyLogger,
+    private readonly mailService: MailService,
   ) {}
 
   @Cron('1 0 * * *') // 매일 00:01에 실행
@@ -44,6 +46,10 @@ export class StudentTask {
         }, 1000 * 60);
       } else {
         this.logger.error(`Schedule change failed after ${StudentTask.MAX_RETRIES} retries`);
+        this.mailService.sendErrorAlert({
+          subject: 'StudentTask: 스케줄 변경 실패',
+          body: `스케줄 자동 변경이 ${StudentTask.MAX_RETRIES}회 재시도 후 실패했습니다.\n\nError: ${error?.message ?? error}\nStack: ${error?.stack ?? 'N/A'}`,
+        });
         this.changeScheduleRetryCount = 0;
       }
     }

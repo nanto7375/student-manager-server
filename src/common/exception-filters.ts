@@ -1,9 +1,13 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { MyLogger } from '@src/configs/logger/my-logger';
+import { MailService } from '@src/mail/mail.service';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
-  constructor(protected readonly logger: MyLogger) {
+  constructor(
+    protected readonly logger: MyLogger,
+    private readonly mailService: MailService,
+  ) {
     this.logger.setContext('GlobalExceptionFilter');
   }
 
@@ -14,6 +18,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const { message, stack } = httpException;
     const status = httpException.getStatus();
     this.logger[status >= 500 ? 'error' : 'warn']({ message, status }, stack);
+
+    if (status >= 500) {
+      const req = host.switchToHttp().getRequest();
+      this.mailService.sendErrorAlert({
+        subject: `${req?.method ?? ''} ${req?.url ?? ''} - ${message}`,
+        body: `[${new Date().toISOString()}]\n\nURL: ${req?.method} ${req?.url}\nMessage: ${message}\n\nStack:\n${stack ?? exception?.['stack'] ?? 'N/A'}`,
+      });
+    }
 
     host
       .switchToHttp()

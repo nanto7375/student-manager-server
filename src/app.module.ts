@@ -29,6 +29,7 @@ import { UtilsModule } from './common/utils/utils.module';
 import { PrismaModule } from './configs/prisma/prisma.module';
 import { PrismaService } from './configs/prisma/prisma.service';
 import { BookRentalModule } from './book-rental/book-rental.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { BookRentalModule } from './book-rental/book-rental.module';
     UtilsModule,
     PrismaModule,
     BookRentalModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [

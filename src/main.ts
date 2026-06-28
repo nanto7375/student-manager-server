@@ -8,6 +8,7 @@ import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { logger } from './configs/logger/winston-logger';
 import { Environment } from './configs/config.service';
+import { MailService } from './mail/mail.service';
 import { ValidationError } from 'class-validator';
 
 const initSwagger = (app: NestExpressApplication, version: string) => {
@@ -66,5 +67,15 @@ async function bootstrap() {
   const port = configService.get('SM_PORT');
   await app.listen(port);
   logger.log(`Server is running on: http://localhost:${port}/v${serverVersion}`);
+
+  const mailService = app.get(MailService);
+  process.on('unhandledRejection', (reason: any) => {
+    logger.error(`Unhandled Rejection: ${reason?.message ?? reason}`, reason?.stack);
+    mailService.sendErrorAlert({ subject: 'Unhandled Rejection', body: `${reason?.message ?? reason}\n\nStack:\n${reason?.stack ?? 'N/A'}` });
+  });
+  process.on('uncaughtException', (error) => {
+    logger.error(`Uncaught Exception: ${error.message}`, error.stack);
+    mailService.sendErrorAlert({ subject: 'Uncaught Exception', body: `${error.message}\n\nStack:\n${error.stack ?? 'N/A'}` });
+  });
 }
 bootstrap();
