@@ -21,29 +21,21 @@ export class ActivityRecordDto {
   @Expose()
   isMakeup: boolean;
 
-  @ApiProperty({ description: '출석 여부' })
+  @ApiProperty({ description: '출석 상태' })
   @Expose()
-  attendance: boolean;
+  attendance: string;
 
-  @ApiProperty({ description: '감상문 제출 여부' })
+  @ApiProperty({ description: '감상문 상태' })
   @Expose()
-  report1: boolean;
+  report1: string;
 
-  @ApiProperty({ description: '주간 레오(과제2) 제출 여부' })
+  @ApiProperty({ description: '주간 레오 상태' })
   @Expose()
-  report2: boolean;
+  report2: string;
 
-  @ApiProperty({ description: '월간 프로젝트 참여 여부' })
+  @ApiProperty({ description: '월간 상태' })
   @Expose()
-  monthlyProject: Date | null;
-
-  @ApiProperty({ description: '월간 프로젝트 개요 제출 여부' })
-  @Expose()
-  monthlyPreview: Date | null;
-
-  @ApiProperty({ description: '월간 프로젝트 감상문 제출 여부' })
-  @Expose()
-  monthlyReport: Date | null;
+  monthlyProject: string;
 
   @ApiProperty({ description: '대출 중인 책 정보', required: false })
   @Type(() => BookRentalDto)

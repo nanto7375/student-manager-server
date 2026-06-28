@@ -15,12 +15,10 @@ model ActivityRecord {
   scheduleId         Int                 @map("schedule_id")
   date               String              @db.Char(8)  //YYYYMMDD
   isMakeup           Boolean             @default(false) @map("is_makeup")
-  attendance         Boolean             @default(false) /// 출석 여부
-  monthlyProject     DateTime?           @map("monthly_project") @db.Timestamp() /// 월간 프로젝트 참여 날짜
-  monthlyPreview     DateTime?           @map("monthly_preview") @db.Timestamp() /// 월간 레오 개요 제출 날짜
-  monthlyReport      DateTime?           @map("monthly_report") @db.Timestamp() /// 월간 레오 감상문 제출 날짜
-  report1            Boolean             @default(false) /// 감상문 제출
-  report2            Boolean             @default(false) /// 주간 레오 제출
+  attendance         String              @default("pending") @db.VarChar(20) /// 출석 상태 (pending/completed/failed)
+  monthlyProject     String              @default("pending") @map("monthly_status") @db.VarChar(20) /// 월간 상태 (pending/participated/preview/completed/failed/none)
+  report1            String              @default("pending") @db.VarChar(20) /// 감상문 상태 (pending/completed/failed)
+  report2            String              @default("pending") @db.VarChar(20) /// 주간 레오 상태 (pending/completed/failed)
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp()
   updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp()
   movedAt            DateTime?           @map("moved_at")  @db.Timestamp()

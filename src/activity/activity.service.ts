@@ -1,12 +1,12 @@
 import { isNullish } from './../common/utils/etc';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { ActivityRecord, Student, BookRental, Note, Classroom } from '@src/generated/prisma/client';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
 
 import { DateService } from '@src/common/utils/date';
 
-import { UpdateActivityRecordRequestDto, UpdateMonthlyActivityRecordRequestDto } from './dto/activity.request.dto';
+import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 import { ScheduleResult } from '@src/schedule/schedule.service';
 
 /**
@@ -84,39 +84,22 @@ export class ActivityService {
 
   async updateActivityRecord({ activityRecordId, activityRecordDto }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto }) {
     const activityRecord = await this.findActivityRecordOrThrow(activityRecordId);
-    const { attendance, report1, report2 } = activityRecordDto;
+    const { monthlyProject, ...weeklyFields } = activityRecordDto;
 
-    const body = {
-      ...(attendance !== undefined && { attendance }),
-      ...(report1 !== undefined && { report1 }),
-      ...(report2 !== undefined && { report2 }),
-    };
-    await this.prisma.activityRecord.update({ where: { id: activityRecord.id }, data: body });
-    return true;
-  }
-
-  async updateMonthlyActivityRecord({ activityRecordId, activityRecordDto }: { activityRecordId: number; activityRecordDto: UpdateMonthlyActivityRecordRequestDto }) {
-    const activityRecord = await this.findActivityRecordOrThrow(activityRecordId);
-    const { monthlyProject, monthlyPreview, monthlyReport } = activityRecordDto;
-
-    const notParticipatedIn = !activityRecord.monthlyProject;
-    if (notParticipatedIn && (monthlyPreview !== undefined || monthlyReport !== undefined)) {
-      throw new BadRequestException('monthly project is not participated');
+    // monthlyProject는 해당 월 전체에 일괄 적용
+    if (monthlyProject !== undefined) {
+      const yearMonth = activityRecord.date.substring(0, 6);
+      await this.prisma.activityRecord.updateMany({
+        where: { studentId: activityRecord.studentId, date: { startsWith: yearMonth } },
+        data: { monthlyProject },
+      });
     }
 
-    const outOfMonthlyProject = monthlyProject === undefined ? !activityRecord.monthlyProject : monthlyProject === null;
-    const body = outOfMonthlyProject
-      ? { monthlyProject: null, monthlyPreview: null, monthlyReport: null }
-      : {
-          ...(monthlyProject !== undefined && { monthlyProject }),
-          ...(monthlyPreview !== undefined && { monthlyPreview }),
-          ...(monthlyReport !== undefined && { monthlyReport }),
-        };
-    const yearMonth = activityRecord.date.substring(0, 6);
-    await this.prisma.activityRecord.updateMany({
-      where: { studentId: activityRecord.studentId, date: { startsWith: yearMonth } },
-      data: body,
-    });
+    // 주간 필드(attendance, report1, report2)는 해당 레코드만 업데이트
+    if (Object.values(weeklyFields).some((v) => v !== undefined)) {
+      await this.prisma.activityRecord.update({ where: { id: activityRecord.id }, data: weeklyFields });
+    }
+
     return true;
   }
 

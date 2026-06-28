@@ -1,36 +1,31 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsIn, IsOptional, IsString } from 'class-validator';
+
+const ACTIVITY_STATUSES = ['pending', 'completed', 'failed'] as const;
+const MONTHLY_STATUSES = ['pending', 'participated', 'preview', 'completed', 'failed', 'none'] as const;
 
 export class UpdateActivityRecordRequestDto {
   @ApiPropertyOptional()
   @IsOptional()
-  @IsBoolean()
-  attendance?: boolean;
+  @IsString()
+  @IsIn(ACTIVITY_STATUSES)
+  attendance?: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsBoolean()
-  report1?: boolean;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsBoolean()
-  report2?: boolean;
-}
-
-export class UpdateMonthlyActivityRecordRequestDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  @IsIn(ACTIVITY_STATUSES)
+  report1?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @IsIn(ACTIVITY_STATUSES)
+  report2?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @IsIn(MONTHLY_STATUSES)
   monthlyProject?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  monthlyPreview?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  monthlyReport?: string;
 }

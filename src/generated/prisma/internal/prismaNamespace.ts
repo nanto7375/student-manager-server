@@ -1187,8 +1187,6 @@ export const ActivityRecordScalarFieldEnum = {
   isMakeup: 'isMakeup',
   attendance: 'attendance',
   monthlyProject: 'monthlyProject',
-  monthlyPreview: 'monthlyPreview',
-  monthlyReport: 'monthlyReport',
   report1: 'report1',
   report2: 'report2',
   createdAt: 'createdAt',
@@ -1348,7 +1346,11 @@ export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 export const ActivityRecordOrderByRelevanceFieldEnum = {
-  date: 'date'
+  date: 'date',
+  attendance: 'attendance',
+  monthlyProject: 'monthlyProject',
+  report1: 'report1',
+  report2: 'report2'
 } as const
 
 export type ActivityRecordOrderByRelevanceFieldEnum = (typeof ActivityRecordOrderByRelevanceFieldEnum)[keyof typeof ActivityRecordOrderByRelevanceFieldEnum]
