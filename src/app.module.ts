@@ -40,6 +40,10 @@ import { MailModule } from './mail/mail.module';
           imports: [PrismaModule],
           adapter: new TransactionalAdapterPrisma({
             prismaInjectionToken: PrismaService,
+            defaultTxOptions: {
+              maxWait: 30000,
+              timeout: 30000,
+            },
           }),
         }),
       ],
