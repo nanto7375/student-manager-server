@@ -1,21 +1,23 @@
 import { DateService } from '@src/common/utils/date';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
+import { Prisma } from '@src/generated/prisma/client';
 
+import { DuplicateActivityRecordException, DUPLICATE_ACTIVITY_RECORD_ERROR } from './activity.exception';
 import { ActivityService } from './activity.service';
 
 describe('ActivityService', () => {
   let service: ActivityService;
   let activityRecord: {
     create: jest.Mock;
+    createMany: jest.Mock;
     findFirst: jest.Mock;
-    upsert: jest.Mock;
   };
 
   beforeEach(() => {
     activityRecord = {
       create: jest.fn(),
+      createMany: jest.fn(),
       findFirst: jest.fn(),
-      upsert: jest.fn(),
     };
     const prisma = { activityRecord } as unknown as PrismaService;
     service = new ActivityService(prisma, new DateService());
@@ -25,72 +27,90 @@ describe('ActivityService', () => {
     expect(service).toBeDefined();
   });
 
-  it.each([false, true])('uses isMakeup as part of the database unique key when it is %s', async (isMakeup) => {
-    await service.generateActivityRecord({
+  describe('createMakeupActivityRecord', () => {
+    const params = {
       studentId: 1,
       scheduleId: 2,
       date: '20260728',
-      isMakeup,
+    };
+
+    it('rejects creation when any record already exists for the same student, schedule, and date', async () => {
+      activityRecord.findFirst.mockResolvedValue({ id: 10 });
+
+      await expect(service.createMakeupActivityRecord(params)).rejects.toBeInstanceOf(DuplicateActivityRecordException);
+      expect(activityRecord.findFirst).toHaveBeenCalledWith({
+        where: params,
+        select: { id: true },
+      });
+      expect(activityRecord.create).not.toHaveBeenCalled();
     });
 
-    expect(activityRecord.upsert).toHaveBeenCalledWith({
-      where: {
-        studentId_scheduleId_date_isMakeup: {
-          studentId: 1,
+    it('creates a makeup record after the availability check', async () => {
+      const movedAt = new Date('2026-07-20T00:00:00.000Z');
+      activityRecord.findFirst.mockResolvedValue(null);
+
+      await service.createMakeupActivityRecord({ ...params, movedAt });
+
+      expect(activityRecord.create).toHaveBeenCalledWith({
+        data: {
+          student: { connect: { id: 1 } },
           scheduleId: 2,
           date: '20260728',
-          isMakeup,
+          isMakeup: true,
+          movedAt,
         },
-      },
-      create: {
-        student: { connect: { id: 1 } },
-        scheduleId: 2,
-        date: '20260728',
-        isMakeup,
-      },
-      update: {},
+      });
+    });
+
+    it('translates a concurrent duplicate into a dedicated conflict error', async () => {
+      activityRecord.findFirst.mockResolvedValue(null);
+      activityRecord.create.mockRejectedValue(
+        new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+          code: 'P2002',
+          clientVersion: 'test',
+        }),
+      );
+
+      const request = service.createMakeupActivityRecord(params);
+
+      await expect(request).rejects.toBeInstanceOf(DuplicateActivityRecordException);
+      await expect(request).rejects.toMatchObject({
+        status: 409,
+        message: DUPLICATE_ACTIVITY_RECORD_ERROR,
+      });
+    });
+
+    it('does not replace non-unique database errors', async () => {
+      const databaseError = new Error('database unavailable');
+      activityRecord.findFirst.mockResolvedValue(null);
+      activityRecord.create.mockRejectedValue(databaseError);
+
+      await expect(service.createMakeupActivityRecord(params)).rejects.toBe(databaseError);
     });
   });
 
-  it.each([
-    [{ id: 1 }, true],
-    [null, false],
-  ])('checks for an existing record without using isMakeup', async (record, expected) => {
-    activityRecord.findFirst.mockResolvedValue(record);
-
-    await expect(
-      service.hasActivityRecord({
-        studentId: 1,
+  describe('ensureScheduledActivityRecords', () => {
+    it('creates regular records in bulk and skips existing regular records', async () => {
+      await service.ensureScheduledActivityRecords({
+        studentIds: [1, 3],
         scheduleId: 2,
-        date: '20260728',
-      }),
-    ).resolves.toBe(expected);
+        dayOfWeek: 2,
+        yearMonth: '202607',
+      });
 
-    expect(activityRecord.findFirst).toHaveBeenCalledWith({
-      where: {
-        studentId: 1,
-        scheduleId: 2,
-        date: '20260728',
-      },
-      select: { id: true },
-    });
-  });
-
-  it('strictly creates an activity record so the database can reject duplicates', async () => {
-    await service.createActivityRecord({
-      studentId: 1,
-      scheduleId: 2,
-      date: '20260728',
-      isMakeup: true,
-    });
-
-    expect(activityRecord.create).toHaveBeenCalledWith({
-      data: {
-        student: { connect: { id: 1 } },
-        scheduleId: 2,
-        date: '20260728',
-        isMakeup: true,
-      },
+      expect(activityRecord.createMany).toHaveBeenCalledWith({
+        data: [
+          { studentId: 1, scheduleId: 2, date: '20260707' },
+          { studentId: 1, scheduleId: 2, date: '20260714' },
+          { studentId: 1, scheduleId: 2, date: '20260721' },
+          { studentId: 1, scheduleId: 2, date: '20260728' },
+          { studentId: 3, scheduleId: 2, date: '20260707' },
+          { studentId: 3, scheduleId: 2, date: '20260714' },
+          { studentId: 3, scheduleId: 2, date: '20260721' },
+          { studentId: 3, scheduleId: 2, date: '20260728' },
+        ],
+        skipDuplicates: true,
+      });
     });
   });
 });

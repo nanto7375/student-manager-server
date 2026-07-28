@@ -1,17 +1,13 @@
-import { isNullish } from './../common/utils/etc';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { ActivityRecord, Student, BookRental, Note, Classroom } from '@src/generated/prisma/client';
+import { ActivityRecord, Student, BookRental, Note, Classroom, Prisma } from '@src/generated/prisma/client';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
 
 import { DateService } from '@src/common/utils/date';
 
 import { UpdateActivityRecordRequestDto } from './dto/activity.request.dto';
 import { ScheduleResult } from '@src/schedule/schedule.service';
-
-/**
- * @description ARGL: ActivityRecordGenerationLog
- */
+import { DuplicateActivityRecordException } from './activity.exception';
 @Injectable()
 export class ActivityService {
   constructor(
@@ -50,83 +46,45 @@ export class ActivityService {
     }));
   }
 
-  async generateActivityRecord({ studentId, scheduleId, date, isMakeup = false, movedAt }: { studentId: number; scheduleId: number; date: string; isMakeup?: boolean; movedAt?: Date }) {
-    return this.prisma.activityRecord.upsert({
-      where: {
-        studentId_scheduleId_date_isMakeup: {
-          studentId,
-          scheduleId,
-          date,
-          isMakeup,
-        },
-      },
-      create: {
-        student: { connect: { id: studentId } },
-        scheduleId,
-        date,
-        ...(!isNullish(isMakeup) && { isMakeup }),
-        ...(!isNullish(movedAt) && { movedAt }),
-      },
-      update: {},
-    });
-  }
-
-  async hasActivityRecord({ studentId, scheduleId, date }: { studentId: number; scheduleId: number; date: string }) {
-    const activityRecord = await this.prisma.activityRecord.findFirst({
+  async createMakeupActivityRecord({ studentId, scheduleId, date, movedAt }: CreateMakeupActivityRecordParams) {
+    const existingActivityRecord = await this.prisma.activityRecord.findFirst({
       where: { studentId, scheduleId, date },
       select: { id: true },
     });
-    return !!activityRecord;
-  }
+    if (existingActivityRecord) throw new DuplicateActivityRecordException();
 
-  async createActivityRecord({ studentId, scheduleId, date, isMakeup = false, movedAt }: { studentId: number; scheduleId: number; date: string; isMakeup?: boolean; movedAt?: Date }) {
-    return this.prisma.activityRecord.create({
-      data: {
-        student: { connect: { id: studentId } },
-        scheduleId,
-        date,
-        ...(!isNullish(isMakeup) && { isMakeup }),
-        ...(!isNullish(movedAt) && { movedAt }),
-      },
-    });
-  }
-
-  async generateActivityRecordsForSchedule({
-    studentIds,
-    scheduleId,
-    dayOfWeek,
-    yearMonth = this.date.currentYearMonth(),
-    startDay,
-    monthsToGenerate = 1,
-  }: {
-    studentIds: number[];
-    scheduleId: number;
-    dayOfWeek: number;
-    yearMonth?: string;
-    startDay?: number;
-    monthsToGenerate?: number;
-  }) {
-    const dates = Array.from({ length: monthsToGenerate }, (_, monthOffset) => {
-      const targetYearMonth = this.date.addMonthsToYearMonth(yearMonth, monthOffset);
-      return this.date.getDatesInMonthCorrespondingToDayOfWeek({
-        yearMonth: targetYearMonth,
-        dayOfWeek,
-        startDay: monthOffset === 0 ? startDay : undefined,
+    try {
+      return await this.prisma.activityRecord.create({
+        data: {
+          student: { connect: { id: studentId } },
+          scheduleId,
+          date,
+          isMakeup: true,
+          ...(movedAt && { movedAt }),
+        },
       });
-    }).flat();
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new DuplicateActivityRecordException();
+      }
+      throw error;
+    }
+  }
+
+  async ensureScheduledActivityRecords({ studentIds, scheduleId, dayOfWeek, yearMonth = this.date.currentYearMonth(), startDay, monthsToGenerate = 1 }: EnsureScheduledActivityRecordsParams) {
+    const dates = this.getScheduleDates({ yearMonth, dayOfWeek, startDay, months: monthsToGenerate });
     const activityRecords = studentIds.flatMap((studentId) => dates.map((date) => ({ studentId, date, scheduleId })));
-    return await this.prisma.activityRecord.createMany({ data: activityRecords, skipDuplicates: true });
+    return this.prisma.activityRecord.createMany({ data: activityRecords, skipDuplicates: true });
   }
 
   async removeActivityRecordsByScheduleChange({ studentId, schedule, dateForChange }: { studentId: number; schedule: ScheduleResult; dateForChange: string }) {
     const yearMonth = dateForChange.slice(0, 6);
-    const dates = Array.from({ length: 2 }, (_, monthOffset) =>
-      this.date.getDatesInMonthCorrespondingToDayOfWeek({
-        yearMonth: this.date.addMonthsToYearMonth(yearMonth, monthOffset),
-        dayOfWeek: schedule.dayOfWeek,
-        startDay: monthOffset === 0 ? Number(dateForChange.slice(6)) : undefined,
-      }),
-    ).flat();
+    const dates = this.getScheduleDates({
+      yearMonth,
+      dayOfWeek: schedule.dayOfWeek,
+      startDay: Number(dateForChange.slice(6)),
+      months: 2,
+    });
     await this.prisma.activityRecord.deleteMany({
       where: {
         studentId,
@@ -137,12 +95,12 @@ export class ActivityService {
     });
   }
 
-  async generateARGLs({ yearMonth }: { yearMonth: string }) {
-    return await this.prisma.activityRecordGenerationLog.create({ data: { generatedActivityYearMonth: yearMonth } });
+  async createActivityRecordGenerationLog(yearMonth: string) {
+    return this.prisma.activityRecordGenerationLog.create({ data: { generatedActivityYearMonth: yearMonth } });
   }
 
-  async getARGLsInThisMonth(yearMonth: string) {
-    return await this.prisma.activityRecordGenerationLog.findFirst({ where: { generatedActivityYearMonth: yearMonth } });
+  async findActivityRecordGenerationLog(yearMonth: string) {
+    return this.prisma.activityRecordGenerationLog.findFirst({ where: { generatedActivityYearMonth: yearMonth } });
   }
 
   async updateActivityRecord({ activityRecordId, activityRecordDto }: { activityRecordId: number; activityRecordDto: UpdateActivityRecordRequestDto }) {
@@ -171,6 +129,39 @@ export class ActivityService {
     if (!activityRecord) throw new NotFoundException('not found activity record');
     return activityRecord;
   }
+
+  private getScheduleDates({ yearMonth, dayOfWeek, startDay, months }: ScheduleDateRangeParams) {
+    return Array.from({ length: months }, (_, monthOffset) => {
+      const targetYearMonth = this.date.addMonthsToYearMonth(yearMonth, monthOffset);
+      return this.date.getDatesInMonthCorrespondingToDayOfWeek({
+        yearMonth: targetYearMonth,
+        dayOfWeek,
+        startDay: monthOffset === 0 ? startDay : undefined,
+      });
+    }).flat();
+  }
 }
 
 type ActivityRecordWithBorrowedBook = ActivityRecord & { student: Student & { bookRentals: BookRental[]; notes: Note[]; classroom: Classroom } };
+type ActivityRecordIdentity = {
+  studentId: number;
+  scheduleId: number;
+  date: string;
+};
+type CreateMakeupActivityRecordParams = ActivityRecordIdentity & {
+  movedAt?: Date;
+};
+type EnsureScheduledActivityRecordsParams = {
+  studentIds: number[];
+  scheduleId: number;
+  dayOfWeek: number;
+  yearMonth?: string;
+  startDay?: number;
+  monthsToGenerate?: number;
+};
+type ScheduleDateRangeParams = {
+  yearMonth: string;
+  dayOfWeek: number;
+  startDay?: number;
+  months: number;
+};

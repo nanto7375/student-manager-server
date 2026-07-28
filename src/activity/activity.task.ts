@@ -23,7 +23,6 @@ export class ActivityTask {
     this.logger.setContext('ActivityTask');
   }
 
-  // TODO: refactoring
   // TODO: queue로 처리?
   @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
   @Transactional()
@@ -34,7 +33,7 @@ export class ActivityTask {
       const yearMonthsToGenerate: string[] = [];
 
       for (const yearMonth of targetYearMonths) {
-        const generationLog = await this.activityService.getARGLsInThisMonth(yearMonth);
+        const generationLog = await this.activityService.findActivityRecordGenerationLog(yearMonth);
         if (!generationLog) yearMonthsToGenerate.push(yearMonth);
       }
       if (!yearMonthsToGenerate.length) return;
@@ -42,14 +41,14 @@ export class ActivityTask {
       const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
       for (const yearMonth of yearMonthsToGenerate) {
         for (const schedule of schedulesWithStudents) {
-          await this.activityService.generateActivityRecordsForSchedule({
+          await this.activityService.ensureScheduledActivityRecords({
             studentIds: schedule.students.map((student) => student.id),
             scheduleId: schedule.id,
             dayOfWeek: schedule.dayOfWeek,
             yearMonth,
           });
         }
-        await this.activityService.generateARGLs({ yearMonth });
+        await this.activityService.createActivityRecordGenerationLog(yearMonth);
         this.logger.log(`Activity records generated for ${yearMonth}`);
       }
 

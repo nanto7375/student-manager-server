@@ -11,7 +11,6 @@ import { ActivityService } from '@src/activity/activity.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma } from '@src/generated/prisma/client';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
-import { DuplicateActivityRecordException } from '@src/activity/activity.exception';
 
 type NoteType = 'assessment' | 'parent-counseling' | 'fixed-memo' | 'temporary-memo';
 
@@ -92,7 +91,7 @@ export class StudentService {
 
     const savedStudent = await this.prisma.student.create({ data: newStudent });
     if (schedule) {
-      await this.activityService.generateActivityRecordsForSchedule({
+      await this.activityService.ensureScheduledActivityRecords({
         studentIds: [savedStudent.id],
         scheduleId: schedule.id,
         dayOfWeek: schedule.dayOfWeek,
@@ -135,7 +134,7 @@ export class StudentService {
         where: { id: studentId },
         data: { schedule: { connect: { id: schedule.id } } },
       });
-      await this.activityService.generateActivityRecordsForSchedule({
+      await this.activityService.ensureScheduledActivityRecords({
         studentIds: [savedStudent.id],
         scheduleId: schedule.id,
         dayOfWeek: schedule.dayOfWeek,
@@ -167,7 +166,7 @@ export class StudentService {
     const [yearMonth, day] = [dateForChange.slice(0, 6), dateForChange.slice(6)];
 
     await this.activityService.removeActivityRecordsByScheduleChange({ studentId, schedule: previousSchedule, dateForChange });
-    await this.activityService.generateActivityRecordsForSchedule({
+    await this.activityService.ensureScheduledActivityRecords({
       studentIds: [student.id],
       dayOfWeek: schedule.dayOfWeek,
       scheduleId,
@@ -188,17 +187,7 @@ export class StudentService {
   async registerMakeupSchedule({ studentId, scheduleId, dateForMakeup, movedAt }: { studentId: number; scheduleId: number; dateForMakeup: string; movedAt?: Date }) {
     await this.getStudentOrThrow(studentId);
     await this.scheduleService.getScheduleOrThrow(scheduleId);
-    const activityRecordExists = await this.activityService.hasActivityRecord({ studentId, scheduleId, date: dateForMakeup });
-    if (activityRecordExists) throw new DuplicateActivityRecordException();
-
-    try {
-      await this.activityService.createActivityRecord({ studentId, scheduleId, date: dateForMakeup, isMakeup: true, movedAt });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw new DuplicateActivityRecordException();
-      }
-      throw error;
-    }
+    await this.activityService.createMakeupActivityRecord({ studentId, scheduleId, date: dateForMakeup, movedAt });
     return true;
   }
 
