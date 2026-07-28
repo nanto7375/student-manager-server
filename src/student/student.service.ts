@@ -11,6 +11,7 @@ import { ActivityService } from '@src/activity/activity.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma } from '@src/generated/prisma/client';
 import { PrismaService } from '@src/configs/prisma/prisma.service';
+import { DuplicateActivityRecordException } from '@src/activity/activity.exception';
 
 type NoteType = 'assessment' | 'parent-counseling' | 'fixed-memo' | 'temporary-memo';
 
@@ -187,7 +188,17 @@ export class StudentService {
   async registerMakeupSchedule({ studentId, scheduleId, dateForMakeup, movedAt }: { studentId: number; scheduleId: number; dateForMakeup: string; movedAt?: Date }) {
     await this.getStudentOrThrow(studentId);
     await this.scheduleService.getScheduleOrThrow(scheduleId);
-    await this.activityService.generateActivityRecord({ studentId, scheduleId, date: dateForMakeup, isMakeup: true, movedAt });
+    const activityRecordExists = await this.activityService.hasActivityRecord({ studentId, scheduleId, date: dateForMakeup });
+    if (activityRecordExists) throw new DuplicateActivityRecordException();
+
+    try {
+      await this.activityService.createActivityRecord({ studentId, scheduleId, date: dateForMakeup, isMakeup: true, movedAt });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new DuplicateActivityRecordException();
+      }
+      throw error;
+    }
     return true;
   }
 

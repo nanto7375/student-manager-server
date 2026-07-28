@@ -71,6 +71,26 @@ export class ActivityService {
     });
   }
 
+  async hasActivityRecord({ studentId, scheduleId, date }: { studentId: number; scheduleId: number; date: string }) {
+    const activityRecord = await this.prisma.activityRecord.findFirst({
+      where: { studentId, scheduleId, date },
+      select: { id: true },
+    });
+    return !!activityRecord;
+  }
+
+  async createActivityRecord({ studentId, scheduleId, date, isMakeup = false, movedAt }: { studentId: number; scheduleId: number; date: string; isMakeup?: boolean; movedAt?: Date }) {
+    return this.prisma.activityRecord.create({
+      data: {
+        student: { connect: { id: studentId } },
+        scheduleId,
+        date,
+        ...(!isNullish(isMakeup) && { isMakeup }),
+        ...(!isNullish(movedAt) && { movedAt }),
+      },
+    });
+  }
+
   async generateActivityRecordsForSchedule({
     studentIds,
     scheduleId,
