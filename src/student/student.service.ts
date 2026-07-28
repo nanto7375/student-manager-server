@@ -95,6 +95,7 @@ export class StudentService {
         studentIds: [savedStudent.id],
         scheduleId: schedule.id,
         dayOfWeek: schedule.dayOfWeek,
+        monthsToGenerate: 2,
       });
     }
     return savedStudent;
@@ -137,6 +138,7 @@ export class StudentService {
         studentIds: [savedStudent.id],
         scheduleId: schedule.id,
         dayOfWeek: schedule.dayOfWeek,
+        monthsToGenerate: 2,
       });
     } else {
       const now = this.date.format(this.date.now(), 'YYYYMMDD');
@@ -170,6 +172,7 @@ export class StudentService {
       scheduleId,
       yearMonth,
       startDay: Number(day),
+      monthsToGenerate: 2,
     });
     await this.prisma.student.update({
       where: { id: studentId },

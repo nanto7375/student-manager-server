@@ -25,6 +25,7 @@ model ActivityRecord {
   student            Student             @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "FK_af5423ecbecaf2606b909307ca8")
   activityRecordLogs ActivityRecordLog[]
 
+  @@unique([studentId, scheduleId, date, isMakeup], map: "UQ_activity_record_student_schedule_date_makeup")
   @@index([studentId], map: "FK_af5423ecbecaf2606b909307ca8")
   @@index([date], map: "IDX_979544e3d084794e13c2d14a39")
   @@map("activity_record")

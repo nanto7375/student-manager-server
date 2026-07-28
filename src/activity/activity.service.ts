@@ -51,26 +51,70 @@ export class ActivityService {
   }
 
   async generateActivityRecord({ studentId, scheduleId, date, isMakeup = false, movedAt }: { studentId: number; scheduleId: number; date: string; isMakeup?: boolean; movedAt?: Date }) {
-    return this.prisma.activityRecord.create({
-      data: {
+    return this.prisma.activityRecord.upsert({
+      where: {
+        studentId_scheduleId_date_isMakeup: {
+          studentId,
+          scheduleId,
+          date,
+          isMakeup,
+        },
+      },
+      create: {
         student: { connect: { id: studentId } },
         scheduleId,
         date,
         ...(!isNullish(isMakeup) && { isMakeup }),
         ...(!isNullish(movedAt) && { movedAt }),
       },
+      update: {},
     });
   }
 
-  async generateActivityRecordsForSchedule({ studentIds, scheduleId, dayOfWeek, yearMonth = this.date.currentYearMonth(), startDay }: { studentIds: number[]; scheduleId: number; dayOfWeek: number; yearMonth?: string; startDay?: number }) {
-    const dates = this.date.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth, dayOfWeek, startDay });
+  async generateActivityRecordsForSchedule({
+    studentIds,
+    scheduleId,
+    dayOfWeek,
+    yearMonth = this.date.currentYearMonth(),
+    startDay,
+    monthsToGenerate = 1,
+  }: {
+    studentIds: number[];
+    scheduleId: number;
+    dayOfWeek: number;
+    yearMonth?: string;
+    startDay?: number;
+    monthsToGenerate?: number;
+  }) {
+    const dates = Array.from({ length: monthsToGenerate }, (_, monthOffset) => {
+      const targetYearMonth = this.date.addMonthsToYearMonth(yearMonth, monthOffset);
+      return this.date.getDatesInMonthCorrespondingToDayOfWeek({
+        yearMonth: targetYearMonth,
+        dayOfWeek,
+        startDay: monthOffset === 0 ? startDay : undefined,
+      });
+    }).flat();
     const activityRecords = studentIds.flatMap((studentId) => dates.map((date) => ({ studentId, date, scheduleId })));
-    return await this.prisma.activityRecord.createMany({ data: activityRecords });
+    return await this.prisma.activityRecord.createMany({ data: activityRecords, skipDuplicates: true });
   }
 
   async removeActivityRecordsByScheduleChange({ studentId, schedule, dateForChange }: { studentId: number; schedule: ScheduleResult; dateForChange: string }) {
-    const dates = this.date.getDatesInMonthCorrespondingToDayOfWeek({ yearMonth: dateForChange.slice(0, 6), dayOfWeek: schedule.dayOfWeek, startDay: Number(dateForChange.slice(6)) });
-    await this.prisma.activityRecord.deleteMany({ where: { studentId, date: { in: dates } } });
+    const yearMonth = dateForChange.slice(0, 6);
+    const dates = Array.from({ length: 2 }, (_, monthOffset) =>
+      this.date.getDatesInMonthCorrespondingToDayOfWeek({
+        yearMonth: this.date.addMonthsToYearMonth(yearMonth, monthOffset),
+        dayOfWeek: schedule.dayOfWeek,
+        startDay: monthOffset === 0 ? Number(dateForChange.slice(6)) : undefined,
+      }),
+    ).flat();
+    await this.prisma.activityRecord.deleteMany({
+      where: {
+        studentId,
+        scheduleId: schedule.id,
+        isMakeup: false,
+        date: { in: dates },
+      },
+    });
   }
 
   async generateARGLs({ yearMonth }: { yearMonth: string }) {

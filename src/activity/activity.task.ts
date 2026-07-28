@@ -30,21 +30,30 @@ export class ActivityTask {
   async generateActivityRecordsForAllStudents() {
     try {
       const currentYearMonth = this.date.currentYearMonth();
-      const thisMonthARGL = await this.activityService.getARGLsInThisMonth(currentYearMonth);
-      if (thisMonthARGL) return;
+      const targetYearMonths = [currentYearMonth, this.date.addMonthsToYearMonth(currentYearMonth, 1)];
+      const yearMonthsToGenerate: string[] = [];
+
+      for (const yearMonth of targetYearMonths) {
+        const generationLog = await this.activityService.getARGLsInThisMonth(yearMonth);
+        if (!generationLog) yearMonthsToGenerate.push(yearMonth);
+      }
+      if (!yearMonthsToGenerate.length) return;
 
       const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
-      for (const schedule of schedulesWithStudents) {
-        await this.activityService.generateActivityRecordsForSchedule({
-          studentIds: schedule.students.map((student) => student.id),
-          scheduleId: schedule.id,
-          dayOfWeek: schedule.dayOfWeek,
-          yearMonth: currentYearMonth,
-        });
+      for (const yearMonth of yearMonthsToGenerate) {
+        for (const schedule of schedulesWithStudents) {
+          await this.activityService.generateActivityRecordsForSchedule({
+            studentIds: schedule.students.map((student) => student.id),
+            scheduleId: schedule.id,
+            dayOfWeek: schedule.dayOfWeek,
+            yearMonth,
+          });
+        }
+        await this.activityService.generateARGLs({ yearMonth });
+        this.logger.log(`Activity records generated for ${yearMonth}`);
       }
-      await this.activityService.generateARGLs({ yearMonth: currentYearMonth });
+
       this.generateRetryCount = 0;
-      this.logger.log(`Activity records generated for ${currentYearMonth}`);
     } catch (error) {
       this.logger.error(error);
       if (this.generateRetryCount < ActivityTask.MAX_RETRIES) {

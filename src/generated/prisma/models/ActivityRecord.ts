@@ -304,6 +304,7 @@ export type ActivityRecordOrderByWithRelationInput = {
 
 export type ActivityRecordWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  studentId_scheduleId_date_isMakeup?: Prisma.ActivityRecordStudentIdScheduleIdDateIsMakeupCompoundUniqueInput
   AND?: Prisma.ActivityRecordWhereInput | Prisma.ActivityRecordWhereInput[]
   OR?: Prisma.ActivityRecordWhereInput[]
   NOT?: Prisma.ActivityRecordWhereInput | Prisma.ActivityRecordWhereInput[]
@@ -320,7 +321,7 @@ export type ActivityRecordWhereUniqueInput = Prisma.AtLeast<{
   movedAt?: Prisma.DateTimeNullableFilter<"ActivityRecord"> | Date | string | null
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   activityRecordLogs?: Prisma.ActivityRecordLogListRelationFilter
-}, "id">
+}, "id" | "studentId_scheduleId_date_isMakeup">
 
 export type ActivityRecordOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -469,6 +470,13 @@ export type ActivityRecordOrderByRelevanceInput = {
   fields: Prisma.ActivityRecordOrderByRelevanceFieldEnum | Prisma.ActivityRecordOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
+}
+
+export type ActivityRecordStudentIdScheduleIdDateIsMakeupCompoundUniqueInput = {
+  studentId: number
+  scheduleId: number
+  date: string
+  isMakeup: boolean
 }
 
 export type ActivityRecordCountOrderByAggregateInput = {

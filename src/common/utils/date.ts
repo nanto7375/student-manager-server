@@ -25,6 +25,10 @@ export class DateService {
     return this.dayjs().format('YYYYMM');
   }
 
+  addMonthsToYearMonth(yearMonth: string, months: number) {
+    return this.startOfMonth(yearMonth).add(months, 'month').format('YYYYMM');
+  }
+
   startOfMonth(yearMonth: string) {
     return this.dayjs(yearMonth, 'YYYYMM').startOf('month');
   }
