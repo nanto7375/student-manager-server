@@ -14,8 +14,10 @@ jobs:
         with:
           node-version: 20
 
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
+      - run: npm ci
+      - run: npm run prisma:generate
+      - run: npm test -- --runInBand
+      - run: npm run build
 
       - name: Copy files to server
         uses: appleboy/scp-action@v0.1.7
