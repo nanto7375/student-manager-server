@@ -62,6 +62,29 @@ describe('ActivityService', () => {
       });
     });
 
+    it('copies the monthly project status from another record for the same student and month', async () => {
+      activityRecord.findFirst.mockResolvedValueOnce(null).mockResolvedValueOnce({ monthlyProject: 'preview' });
+
+      await service.createMakeupActivityRecord(params);
+
+      expect(activityRecord.findFirst).toHaveBeenNthCalledWith(2, {
+        where: {
+          studentId: 1,
+          date: { startsWith: '202607' },
+        },
+        select: { monthlyProject: true },
+      });
+      expect(activityRecord.create).toHaveBeenCalledWith({
+        data: {
+          student: { connect: { id: 1 } },
+          scheduleId: 2,
+          date: '20260728',
+          isMakeup: true,
+          monthlyProject: 'preview',
+        },
+      });
+    });
+
     it('translates a concurrent duplicate into a dedicated conflict error', async () => {
       activityRecord.findFirst.mockResolvedValue(null);
       activityRecord.create.mockRejectedValue(

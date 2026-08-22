@@ -1,5 +1,5 @@
 import { plainToInstance, Transform, Type } from 'class-transformer';
-import { IsIn, IsNumber, IsOptional, validateSync } from 'class-validator';
+import { IsBoolean, IsIn, IsNumber, IsOptional, validateSync } from 'class-validator';
 
 export enum DatabaseDialect {
   Mysql = 'mysql',
@@ -40,6 +40,11 @@ export class EnvironmentVariables {
   SM_MYSQL_DB_HOST: string;
 
   SM_MYSQL_DB_PORT: number;
+
+  @Transform(({ value }) => value === true || value === 'true')
+  @IsBoolean()
+  @IsOptional()
+  SM_MYSQL_ALLOW_PUBLIC_KEY_RETRIEVAL: boolean = false;
 
   SM_JWT_SECRET: string;
 

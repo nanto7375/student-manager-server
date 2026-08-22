@@ -42,10 +42,23 @@ export class MyCacheService<T> {
 
   async getKeys(pattern?: string) {
     try {
-      return await this.cacheManager.store.keys(pattern);
+      const iterator = this.cacheManager.stores[0]?.iterator;
+      if (!iterator) return [];
+
+      const keys: string[] = [];
+      for await (const [key] of iterator(undefined)) {
+        const stringKey = String(key);
+        if (!pattern || this.matchesPattern(stringKey, pattern)) keys.push(stringKey);
+      }
+      return keys;
     } catch (e) {
       this.logger.error(e.message);
       throw new InternalServerErrorException('redis error');
     }
+  }
+
+  private matchesPattern(key: string, pattern: string): boolean {
+    const escapedPattern = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*');
+    return new RegExp(`^${escapedPattern}$`).test(key);
   }
 }

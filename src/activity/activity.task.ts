@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { Transactional } from '@nestjs-cls/transactional';
+import { TransactionHost } from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 
 import { MyLogger } from '@src/configs/logger/my-logger';
 import { MailService } from '@src/mail/mail.service';
@@ -19,37 +20,20 @@ export class ActivityTask {
     private readonly logger: MyLogger,
     private readonly date: DateService,
     private readonly mailService: MailService,
+    private readonly transactionHost: TransactionHost<TransactionalAdapterPrisma>,
   ) {
     this.logger.setContext('ActivityTask');
   }
 
   // TODO: queue로 처리?
   @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
-  @Transactional()
   async generateActivityRecordsForAllStudents() {
     try {
       const currentYearMonth = this.date.currentYearMonth();
       const targetYearMonths = [currentYearMonth, this.date.addMonthsToYearMonth(currentYearMonth, 1)];
-      const yearMonthsToGenerate: string[] = [];
 
       for (const yearMonth of targetYearMonths) {
-        const generationLog = await this.activityService.findActivityRecordGenerationLog(yearMonth);
-        if (!generationLog) yearMonthsToGenerate.push(yearMonth);
-      }
-      if (!yearMonthsToGenerate.length) return;
-
-      const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
-      for (const yearMonth of yearMonthsToGenerate) {
-        for (const schedule of schedulesWithStudents) {
-          await this.activityService.ensureScheduledActivityRecords({
-            studentIds: schedule.students.map((student) => student.id),
-            scheduleId: schedule.id,
-            dayOfWeek: schedule.dayOfWeek,
-            yearMonth,
-          });
-        }
-        await this.activityService.createActivityRecordGenerationLog(yearMonth);
-        this.logger.log(`Activity records generated for ${yearMonth}`);
+        await this.transactionHost.withTransaction(() => this.generateActivityRecordsForMonth(yearMonth));
       }
 
       this.generateRetryCount = 0;
@@ -72,5 +56,22 @@ export class ActivityTask {
         this.generateRetryCount = 0;
       }
     }
+  }
+
+  private async generateActivityRecordsForMonth(yearMonth: string): Promise<void> {
+    const generationLog = await this.activityService.findActivityRecordGenerationLog(yearMonth);
+    if (generationLog) return;
+
+    const schedulesWithStudents = await this.scheduleService.getSchedulesWithStudents();
+    for (const schedule of schedulesWithStudents) {
+      await this.activityService.ensureScheduledActivityRecords({
+        studentIds: schedule.students.map((student) => student.id),
+        scheduleId: schedule.id,
+        dayOfWeek: schedule.dayOfWeek,
+        yearMonth,
+      });
+    }
+    await this.activityService.createActivityRecordGenerationLog(yearMonth);
+    this.logger.log(`Activity records generated for ${yearMonth}`);
   }
 }

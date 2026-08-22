@@ -53,6 +53,11 @@ export class ActivityService {
     });
     if (existingActivityRecord) throw new DuplicateActivityRecordException();
 
+    const activityRecordInSameMonth = await this.prisma.activityRecord.findFirst({
+      where: { studentId, date: { startsWith: date.slice(0, 6) } },
+      select: { monthlyProject: true },
+    });
+
     try {
       return await this.prisma.activityRecord.create({
         data: {
@@ -61,6 +66,7 @@ export class ActivityService {
           date,
           isMakeup: true,
           ...(movedAt && { movedAt }),
+          ...(activityRecordInSameMonth && { monthlyProject: activityRecordInSameMonth.monthlyProject }),
         },
       });
     } catch (error) {

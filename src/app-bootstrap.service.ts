@@ -17,12 +17,20 @@ export class AppBootstrapService implements OnApplicationBootstrap {
     try {
       // DB connection warm-up: connection pool이 준비될 때까지 대기
       await this.waitForDatabase();
-      await this.activityTask.generateActivityRecordsForAllStudents();
-      await this.studentTask.changeSchedule();
+      await this.runBootstrapTask('Activity record generation', () => this.activityTask.generateActivityRecordsForAllStudents());
+      await this.runBootstrapTask('Schedule change', () => this.studentTask.changeSchedule());
       this.logger.log('Application bootstrap completed');
     } catch (error) {
       this.logger.error(error);
+      throw error;
     }
+  }
+
+  private async runBootstrapTask(name: string, task: () => Promise<unknown>): Promise<void> {
+    const startedAt = Date.now();
+    this.logger.log(`${name} started`);
+    await task();
+    this.logger.log(`${name} completed (${Date.now() - startedAt}ms)`);
   }
 
   private async waitForDatabase(retries = 5, delay = 2000): Promise<void> {
@@ -30,7 +38,9 @@ export class AppBootstrapService implements OnApplicationBootstrap {
       try {
         await this.prisma.$queryRawUnsafe('SELECT 1');
         return;
-      } catch {
+      } catch (error) {
+        if (i === retries - 1) throw error;
+
         this.logger.log(`Waiting for database connection... (${i + 1}/${retries})`);
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
